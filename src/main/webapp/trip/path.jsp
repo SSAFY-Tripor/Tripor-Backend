@@ -32,7 +32,7 @@
             rel="stylesheet"
             href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css"
         />
-        <link rel="stylesheet" href="/assets/css/style.css" />
+        <link rel="stylesheet" href="${root}/assets/css/style.css" />
     </head>
     <body>
     	<jsp:include page="/common/header.jsp"/>
@@ -160,8 +160,8 @@
 
 
 
-        <script src="./assets/js/main.js" type="text/javascript"></script>
-        <script src="./assets/js/search.js" type="text/javascript"></script>
+        <script src="${root}/assets/js/main.js" type="text/javascript"></script>
+        <script src="${root}/assets/js/search.js" type="text/javascript"></script>
 
     </body>
 </html>
