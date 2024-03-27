@@ -41,9 +41,9 @@ MemberDto member = (MemberDto) session.getAttribute("userinfo");
 					id="header_title">Tripor</a>
 
 				<div
-					class="dropdowns col-lg-8 col-md-12 d-flex flex-row justify-content-center"
+					class="dropdowns col-lg-7 col-md-12 d-flex flex-row justify-content-center"
 					id="searchPlace" style="display: block">
-					<span class="m-1" style="overflow: hidden; white-space: nowrap">관광지를
+					<span class="m-1 d-none d-xl-block" style="overflow: hidden; white-space: nowrap">관광지를
 						선택하세요!&nbsp;&nbsp;</span> <select id="region"
 						class="mr-sm-2 m-1 shadow-sm">
 						<option value="">도 선택</option>
@@ -56,7 +56,7 @@ MemberDto member = (MemberDto) session.getAttribute("userinfo");
 
 
 				<div
-					class="col-lg-2 d-none d-md-none d-lg-block collapse navbar-collapse d-flex flex-row"
+					class="col-lg-3 d-none d-md-none d-lg-none collapse navbar-collapse d-flex flex-row"
 					id="header_join_login"
 					style="display: block; overflow: hidden; white-space: nowrap;">
 
@@ -89,7 +89,7 @@ MemberDto member = (MemberDto) session.getAttribute("userinfo");
 		<div class="show_Home" id="home_div" style="position: relative">
 
 			<div id="search-map" class="search-map"
-				style="width: 1500px; height: 1000px"></div>
+				style="width: 2000px; height: 1000px"></div>
 		</div>
 	</div>
 	</div>

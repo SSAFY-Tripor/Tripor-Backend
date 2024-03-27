@@ -222,7 +222,7 @@ table {
   }
   .container {
     width: 1100px;
-    margin: 0 auto;
+    margin: 0;
   }
   .blind {
     position: absolute;
