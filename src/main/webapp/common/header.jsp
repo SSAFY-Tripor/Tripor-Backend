@@ -1,6 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-
+<%@ taglib prefix="c" uri="jakarta.tags.core"%>
+<c:set var="root" value="${pageContext.request.contextPath}" />
+<c:if test="${sessionScope.member ne null}">
+	<c:set var="member" value="${sessionScope.member}" />
+</c:if>
 <div class="fixed-top">
 	<div class="navbar navbar-expand-md bg-white navbar-light">
 		<div class="container-fluid justify-content-center">

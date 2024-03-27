@@ -161,7 +161,6 @@
 
 
         <script src="${root}/assets/js/main.js" type="text/javascript"></script>
-        <script src="${root}/assets/js/search.js" type="text/javascript"></script>
 
     </body>
 </html>
