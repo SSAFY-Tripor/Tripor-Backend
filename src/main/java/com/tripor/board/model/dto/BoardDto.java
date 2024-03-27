@@ -1,5 +1,5 @@
 package com.tripor.board.model.dto;
 
-public class Board {
+public class BoardDto {
 
 }
