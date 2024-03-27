@@ -17,6 +17,18 @@ public class MemberDto {
 		this.gugun = gugun;
 		this.joinDate = joinDate;
 	}
+	
+	public MemberDto(String userId, String userPw, String userName, String emailId, String emailDomain, int sido,
+			int gugun) {
+		super();
+		this.userId = userId;
+		this.userPw = userPw;
+		this.userName = userName;
+		this.emailId = emailId;
+		this.emailDomain = emailDomain;
+		this.sido = sido;
+		this.gugun = gugun;
+	}
 
 	public MemberDto() {
 		super();

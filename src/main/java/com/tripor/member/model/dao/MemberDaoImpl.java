@@ -54,7 +54,7 @@ public class MemberDaoImpl implements MemberDao {
 	}
 
 	@Override
-	public MemberDto searchById(String userId, String userPw) throws SQLException {
+	public MemberDto searchById(String userId) throws SQLException {
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -64,7 +64,6 @@ public class MemberDaoImpl implements MemberDao {
 			String sql = "select * from members where user_id = ?;";
 			ps = con.prepareStatement(sql);
 			ps.setString(1, userId);
-			ps.setString(2, userPw);
 			rs = ps.executeQuery();
 			if (rs.next()) {
 				memberDto = new MemberDto();

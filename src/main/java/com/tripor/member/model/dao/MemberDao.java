@@ -6,6 +6,6 @@ import com.tripor.member.model.dto.MemberDto;
 
 public interface MemberDao {
 	MemberDto searchByIdAndPassword(String userId, String userPw) throws SQLException;
-	MemberDto searchById(String userId, String userPw) throws SQLException;
+	MemberDto searchById(String userId) throws SQLException;
 	int insert(MemberDto memberDto) throws SQLException;
 }

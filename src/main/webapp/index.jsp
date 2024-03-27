@@ -6,10 +6,6 @@
 <c:if test="${sessionScope.member ne null}">
 	<c:set var="member" value="${sessionScope.member}" />
 </c:if>
-<%
-String root = request.getContextPath();
-MemberDto member = (MemberDto) session.getAttribute("userinfo");
-%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>

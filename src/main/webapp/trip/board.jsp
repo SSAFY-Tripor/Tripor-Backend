@@ -46,7 +46,7 @@
             <div
                 class="show_logIn p-5 mb-3 col-md-6 col-sm-4"
                 id="board_div"
-                style="position: relative; top: 1.5rem"
+                style="position: relative; top: 1.5rem; width: 740px"
             >
                 <h4
                     class="d-flex justify-content-center"
