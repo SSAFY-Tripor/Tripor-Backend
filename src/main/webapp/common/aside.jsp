@@ -5,7 +5,7 @@
     
 <div style="height: 90px"></div>
         <div
-            class="d-none d-lg-none d-xxl-block shadow-sm position-fixed ps-4 pt-4 container bg-white"
+            class="d-none d-none d-xl-block shadow-sm position-fixed ps-4 pt-4 container bg-white"
             style="width: 400px; height: 100%; z-index: 9; padding-right: 0"
         >
             <div style="cursor: pointer" class="p-3 m-1 rounded menu_button row">

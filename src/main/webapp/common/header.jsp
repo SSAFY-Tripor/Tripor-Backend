@@ -9,7 +9,7 @@
 
 
 			<div
-				class="col-lg-2 d-none d-md-none d-lg-block collapse navbar-collapse d-flex flex-row justify-content-end me-5 pe-5"
+				class="col-lg-2 d-none d-md-none d-lg-none collapse navbar-collapse d-flex flex-row justify-content-end me-5 pe-5"
 				id="header_join_login"
 				style="display: block; overflow: hidden; white-space: nowrap;">
 				<c:if test="${member eq null}">
