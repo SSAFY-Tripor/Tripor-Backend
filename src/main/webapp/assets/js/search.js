@@ -192,69 +192,70 @@ document.addEventListener("DOMContentLoaded", async function() {
 		var bounds = new kakao.maps.LatLngBounds(); // 모든 마커를 포함할 수 있는 LatLngBounds 객체 생성
 		// tourData는 API 호출 결과로 얻은 데이터 배열
 		tourData.forEach(function(item) {
-			if(tour == "all" || tour == item.contentTypeId)
-			var position = new kakao.maps.LatLng(item.latitude, item.longitude); // 각 항목의 위경도를 사용하여 위치 객체 생성
-
-			// 커스텀 이미지의 URL 생성
-			var imageUrl = contextPath + "/img/" + item.contentTypeId + ".png"; // 예: item.contentid 값이 "12"이면, 이미지 URL은 "./img/12.png"
-			var imageSize = new kakao.maps.Size(45, 45); // 마커 이미지의 크기 설정
-			// 마커 이미지 생성
-			var markerImage = new kakao.maps.MarkerImage(imageUrl, imageSize);
-			var marker = new kakao.maps.Marker({
-				position: position, // 마커 위치 설정
-				image: markerImage, // 커스텀 마커 이미지 설정
-			});
-
-			marker.setMap(map); // 마커를 지도에 표시
-			markers.push(marker); // 생성된 마커를 markers 배열에 추가
-			bounds.extend(position); // LatLngBounds 객체에 현재 마커의 위치를 추가
-
-			// 커스텀 오버레이에 표시될 내용 생성
-			var content =
-				'<div class="wrap">' +
-				'    <div class="info">' +
-				'        <div class="title">' +
-				item.title +
-				'            <div class="close" onclick="closeOverlay()" title="닫기"></div>' +
-				"        </div>" +
-				'        <div class="body">' +
-				'            <div class="img">' +
-				'                <img src="' +
-				(item.firstImage
-					? item.firstImage
-					: contextPath + "/img/no_image.jpg") +
-				'" alt="이미지" width="80px" height="80px">' +
-				"            </div>" +
-				'            <div class="desc">' +
-				'                <div class="ellipsis">주소: ' +
-				(item.addr ? item.addr : "정보 없음") +
-				"</div>" +
-				'                <div class="jibun ellipsis">전화번호: ' +
-				(item.tel ? item.tel : "정보 없음") +
-				"</div>" +
-				'                <div><a href="#" target="_blank" class="link">상세보기</a></div>' +
-				"            </div>" +
-				"        </div>" +
-				"    </div>" +
-				"</div>";
-
-			// 커스텀 오버레이 생성 및 지도에 추가하지 않음 (초기에는 숨김)
-			var overlay = new kakao.maps.CustomOverlay({
-				content: content,
-				map: null,
-				position: position,
-				// xAnchor: 0.3,
-				// yAnchor: 0.91,
-				// zIndex: 3,
-			});
-
-			// 마커 클릭 시 커스텀 오버레이 표시
-			kakao.maps.event.addListener(marker, "click", function() {
-				closeOverlay();
-				overlay.setMap(map); // 현재 오버레이 표시
-				currentOverlay = overlay; // 참조 업데이트
-				map.setCenter(position);
-			});
+			if(tour == "all" || tour == item.contentTypeId){
+				var position = new kakao.maps.LatLng(item.latitude, item.longitude); // 각 항목의 위경도를 사용하여 위치 객체 생성
+		
+				// 커스텀 이미지의 URL 생성
+				var imageUrl = contextPath + "/img/" + item.contentTypeId + ".png"; // 예: item.contentid 값이 "12"이면, 이미지 URL은 "./img/12.png"
+				var imageSize = new kakao.maps.Size(45, 45); // 마커 이미지의 크기 설정
+				// 마커 이미지 생성
+				var markerImage = new kakao.maps.MarkerImage(imageUrl, imageSize);
+				var marker = new kakao.maps.Marker({
+					position: position, // 마커 위치 설정
+					image: markerImage, // 커스텀 마커 이미지 설정
+				});
+		
+				marker.setMap(map); // 마커를 지도에 표시
+				markers.push(marker); // 생성된 마커를 markers 배열에 추가
+				bounds.extend(position); // LatLngBounds 객체에 현재 마커의 위치를 추가
+		
+				// 커스텀 오버레이에 표시될 내용 생성
+				var content =
+					'<div class="wrap">' +
+					'    <div class="info">' +
+					'        <div class="title">' +
+					item.title +
+					'            <div class="close" onclick="closeOverlay()" title="닫기"></div>' +
+					"        </div>" +
+					'        <div class="body">' +
+					'            <div class="img">' +
+					'                <img src="' +
+					(item.firstImage
+						? item.firstImage
+						: contextPath + "/img/no_image.jpg") +
+					'" alt="이미지" width="80px" height="80px">' +
+					"            </div>" +
+					'            <div class="desc">' +
+					'                <div class="ellipsis">주소: ' +
+					(item.addr ? item.addr : "정보 없음") +
+					"</div>" +
+					'                <div class="jibun ellipsis">전화번호: ' +
+					(item.tel ? item.tel : "정보 없음") +
+					"</div>" +
+					'                <div><a href="#" target="_blank" class="link">상세보기</a></div>' +
+					"            </div>" +
+					"        </div>" +
+					"    </div>" +
+					"</div>";
+		
+				// 커스텀 오버레이 생성 및 지도에 추가하지 않음 (초기에는 숨김)
+				var overlay = new kakao.maps.CustomOverlay({
+					content: content,
+					map: null,
+					position: position,
+					// xAnchor: 0.3,
+					// yAnchor: 0.91,
+					// zIndex: 3,
+				});
+		
+				// 마커 클릭 시 커스텀 오버레이 표시
+				kakao.maps.event.addListener(marker, "click", function() {
+					closeOverlay();
+					overlay.setMap(map); // 현재 오버레이 표시
+					currentOverlay = overlay; // 참조 업데이트
+					map.setCenter(position);
+				});
+			}
 		});
 		// 모든 마커가 포함되도록 지도의 중심과 줌 레벨 조정
 		map.setBounds(bounds);
@@ -263,7 +264,7 @@ document.addEventListener("DOMContentLoaded", async function() {
 	// 세 번째 드롭다운 선택 시 이벤트 리스너 추가
 	tourTypeSelect.addEventListener("change", function() {
 		const selectedContentId = this.value;
-
+		console.log(selectedContentId);
 		// 모든 마커를 지도에서 제거
 		markers.forEach(function(marker) {
 			marker.setMap(null);
@@ -271,13 +272,10 @@ document.addEventListener("DOMContentLoaded", async function() {
 		markers = []; // 마커 배열 초기화
 
 		var bounds = new kakao.maps.LatLngBounds();
-		console.log("Three")
-		console.log(selectedContentId)
 		let flag = false;
 		tourData.forEach(function(item) {
 			if (item.contentTypeId == selectedContentId) {
-				
-				console.log(item);
+				flag = true;
 				var position = new kakao.maps.LatLng(item.latitude, item.longitude);
 				var imageUrl = contextPath + "/img/" + item.contentTypeId + ".png";
 				var imageSize = new kakao.maps.Size(45, 45);
@@ -341,7 +339,14 @@ document.addEventListener("DOMContentLoaded", async function() {
 				bounds.extend(position); // 지도 범위 재설정
 			}
 		});
-		map.setBounds(bounds);
+		if(flag){
+			map.setBounds(bounds);
+		}else{
+			const areaCode = regionSelect.value;
+			const sigunguCode = subregionSelect.value;
+			alert("해당 관광 정보가 존재하지 않습니다.");
+			fetchAllTourData(areaCode, sigunguCode);
+		}
 		// 모든 마커가 포함되도록 지도의 범위를 재설정
 	});
 

@@ -37,14 +37,15 @@ public class TripDaoImpl implements TripDao {
 			StringBuilder sb = new StringBuilder();
 			sb.append("select ai.content_id, ai.content_type_id, ai.title, ai.addr1, ai.first_image,\n");
 			sb.append("ai.sido_code, ai.gugun_code, ai.latitude, ai.longitude, ad.overview\n");
-			sb.append("from attraction_info ai join attraction_description ad\n");
+			sb.append("from attraction_info ai left join attraction_description ad\n");
 			boolean typeFlag = false;
 			if(param.getType() == null) {
-				sb.append("where ai.content_id = ad.content_id and ai.sido_code=? and ai.gugun_code=?;");
+				sb.append("on ai.content_id = ad.content_id where ai.sido_code=? and ai.gugun_code=?;");
 			}else {
 				typeFlag = true;
-				sb.append("where ai.content_id = ad.content_id and ai.sido_code=? and ai.gugun_code=? and content_type_id=?;");
+				sb.append("on ai.content_id = ad.content_id where ai.sido_code=? and ai.gugun_code=? and content_type_id=?;");
 			}
+			
 			ps = con.prepareStatement(sb.toString());
 			System.out.println(sb.toString());
 			ps.setString(1, param.getSido());
@@ -52,7 +53,7 @@ public class TripDaoImpl implements TripDao {
 			if(typeFlag) ps.setString(3, param.getType());
 			
 			rs = ps.executeQuery();
-			
+
 			while(rs.next()) {
 				TripDto tripDto = new TripDto();
 				tripDto.setContentId(rs.getString(1));
@@ -67,6 +68,7 @@ public class TripDaoImpl implements TripDao {
 				tripDto.setOverview(rs.getString(10));
 				list.add(tripDto);
 			}
+			System.out.println(list.size());
 			return list;
 		} catch (SQLException e) {
 			throw e;

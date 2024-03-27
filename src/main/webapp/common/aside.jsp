@@ -1,18 +1,21 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core"%>
+<c:set var="root" value="${pageContext.request.contextPath}" />    
+    
 <div style="height: 90px"></div>
         <div
             class="d-none d-lg-none d-xxl-block shadow-sm position-fixed ps-4 pt-4 container bg-white"
             style="width: 400px; height: 100%; z-index: 9; padding-right: 0"
         >
             <div style="cursor: pointer" class="p-3 m-1 rounded menu_button row">
-                <div class="col-12" onclick="location.href = '${root}>'">
+                <div class="col-12" onclick="location.href = '${root}'">
                     <i class="bi bi-house-door-fill me-3"></i>
                     <span class="text-dark text-decoration-none">홈</span>
                 </div>
             </div>
             <div style="cursor: pointer" class="p-3 m-1 rounded menu_button row">
-                <div class="col-12" onclick="location.href = '${root}/plan.jsp'">
+                <div class="col-12" onclick="location.href = '${root}/board/plan.jsp'">
                     <i class="bi bi-search me-3"></i>
                     <span class="text-dark text-decoration-none"
                         >여행 계획</span
@@ -20,7 +23,7 @@
                 </div>
             </div>
             <div style="cursor: pointer" class="p-3 m-1 rounded menu_button row">
-                <div class="col-12" onclick="location.href = '${root}/board.jsp'">
+                <div class="col-12" onclick="location.href = '${root}/trip/path.jsp'">
                     <i class="bi bi-pencil-square me-3"></i>
                     <span class="text-dark text-decoration-none"
                         >여행 정보 공유</span
@@ -31,7 +34,7 @@
                 <div style="cursor: pointer" class="p-3 m-1 rounded menu_button row">
                     <div
                         class="col-10"
-                        onclick="location.href = '${root}/mypage.jsp'"
+                        onclick="location.href = '${root}/user/mypage.jsp'"
                         style="padding: 0 12px"
                     >
                         <i class="bi bi-person-circle me-3"></i>
