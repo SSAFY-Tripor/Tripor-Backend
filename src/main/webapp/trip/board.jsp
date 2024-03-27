@@ -52,7 +52,7 @@
                     class="d-flex justify-content-center"
                     style="overflow: hiddlen; white-space: nowrap"
                 >
-                    여행 정보를 공유해요~
+                    여행 정보를 공유해요
                 </h4>
 
                 <!-- board list area -->
