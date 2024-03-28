@@ -43,13 +43,25 @@ public class MemberServiceImpl implements MemberService{
 		}
 		return loginUser;
 	}
-
+	
 	@Override
 	public String findPassword(String userId) {
 		MemberDto user;
 		try {
 			user = memberDao.searchById(userId);
 			return user.getUserPw();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	@Override
+	public MemberDto findById(String userId) {
+		MemberDto user;
+		try {
+			user = memberDao.searchById(userId);
+			return user;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;

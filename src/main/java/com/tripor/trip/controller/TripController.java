@@ -29,7 +29,6 @@ public class TripController extends HttpServlet {
 		try {
 			if("sido".equals(action)) {
 				String json = tripService.getAllSido();
-				System.out.println(json);
 				returnJson(json, response);
 			}else if("gugun".equals(action)) {
 				int sidoCode = Integer.parseInt(request.getParameter("sido"));

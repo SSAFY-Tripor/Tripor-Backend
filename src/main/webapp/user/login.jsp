@@ -83,6 +83,7 @@
                             placeholder="비밀번호를 입력해주세요."
                             required
                         />
+                        <p id="pwd_ans" style="color:red;" class="d-flex justify-content-center">${msg}</p>
                         <button
                        	 	type="submit"
                        	 	id="regist"

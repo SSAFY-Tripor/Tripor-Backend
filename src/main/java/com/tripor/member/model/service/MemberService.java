@@ -7,5 +7,6 @@ import jakarta.servlet.http.HttpServletRequest;
 public interface MemberService {
 	int join(MemberDto memberDto);
 	MemberDto login(String userId, String userPw);
+	MemberDto findById(String userId);
 	String findPassword(String userId);
 }

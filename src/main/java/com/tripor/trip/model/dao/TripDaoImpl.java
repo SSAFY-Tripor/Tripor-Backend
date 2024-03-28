@@ -89,12 +89,10 @@ public class TripDaoImpl implements TripDao {
 			String sql = "select * from sido;";
 			ps = con.prepareStatement(sql);
 			rs = ps.executeQuery();
-			System.out.println("???");
 			while (rs.next()) {
 				SidoDto sidoDto = new SidoDto();
 				sidoDto.setSidoCode(rs.getInt("sido_code"));
 				sidoDto.setSidoName(rs.getString("sido_name"));
-				System.out.println(sidoDto);
 				list.add(sidoDto);
 			}
 			return list;
