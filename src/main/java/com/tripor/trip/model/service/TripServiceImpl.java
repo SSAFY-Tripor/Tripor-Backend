@@ -29,7 +29,6 @@ public class TripServiceImpl implements TripService{
 	@Override
 	public String getAllSido() throws Exception {
 		List<SidoDto> list = tripDao.searchAllSido();
-		System.out.println(list);
 		Gson gson = new Gson();
         String json = gson.toJson(list);
         return json;

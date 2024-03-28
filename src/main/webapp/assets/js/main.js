@@ -511,7 +511,4 @@ if(editorForm != null){
 	editorForm.addEventListener("submit", onEditorFormSubmit);
 }
 
-if (boardTableBody) {
-    assignIndex();
-    showBoardLists();
-}
+

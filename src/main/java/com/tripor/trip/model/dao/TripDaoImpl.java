@@ -47,7 +47,6 @@ public class TripDaoImpl implements TripDao {
 			}
 			
 			ps = con.prepareStatement(sb.toString());
-			System.out.println(sb.toString());
 			ps.setString(1, param.getSido());
 			ps.setString(2, param.getGugun());
 			if(typeFlag) ps.setString(3, param.getType());
@@ -68,7 +67,6 @@ public class TripDaoImpl implements TripDao {
 				tripDto.setOverview(rs.getString(10));
 				list.add(tripDto);
 			}
-			System.out.println(list.size());
 			return list;
 		} catch (SQLException e) {
 			throw e;

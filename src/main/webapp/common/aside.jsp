@@ -23,7 +23,7 @@
                 </div>
             </div>
             <div style="cursor: pointer" class="p-3 m-1 rounded menu_button row">
-                <div class="col-12" onclick="location.href = '${root}/trip/board.jsp'">
+                <div class="col-12" onclick="location.href = '${root}/board?action=list'">
                     <i class="bi bi-pencil-square me-3"></i>
                     <span class="text-dark text-decoration-none"
                         >여행 정보 공유</span
