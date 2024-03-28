@@ -86,10 +86,8 @@ public class MemberController extends HttpServlet {
 				}
 				String emailId = request.getParameter("emailid");
 				String emailDomain = request.getParameter("emaildomain");
-//			    int sido = Integer.parseInt(request.getParameter("sido"));
-//			    int gugun = Integer.parseInt(request.getParameter("gugun"));
-				int sido = 5; // 광주
-				int gugun = 1; // 광산구
+			    int sido = Integer.parseInt(request.getParameter("sido"));
+			    int gugun = Integer.parseInt(request.getParameter("gugun"));
 				MemberDto joinMember = new MemberDto(userId, userPw, userName, emailId, emailDomain, sido, gugun);
 				if (memberService.join(joinMember) == -1) {
 					request.setAttribute("msg", "이미 존재하는 회원입니다.");
@@ -151,6 +149,24 @@ public class MemberController extends HttpServlet {
 				session.removeAttribute("member");
 				path="";
 				redirect(path, root, response);
+			}else if("modify".equals(action)) {
+				HttpSession session = request.getSession();
+				MemberDto memberDto = (MemberDto) session.getAttribute("member");
+				if(memberDto == null) {
+					path="";
+					redirect(path, root, response);
+					return;
+				}
+				String userName = request.getParameter("username"); 
+				String userPwd = request.getParameter("userpwd");
+				String userEmail = request.getParameter("useremail");
+				String[] email = userEmail.split("@");
+				memberDto.setUserName(userName);
+				memberDto.setUserPw(userPwd);
+				memberDto.setEmailId(email[0]);
+				memberDto.setEmailDomain(email[1]);
+				memberService.modify(memberDto);
+				path= "/member?action=mvMypage";
 			}else {
 				path = "";
 				redirect(path, root, response);

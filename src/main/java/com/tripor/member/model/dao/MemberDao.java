@@ -9,4 +9,5 @@ public interface MemberDao {
 	MemberDto searchById(String userId) throws SQLException;
 	int insert(MemberDto memberDto) throws SQLException;
 	int delete(String userId) throws SQLException;
+	int update(MemberDto memberDto) throws SQLException;
 }

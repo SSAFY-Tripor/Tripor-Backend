@@ -55,10 +55,10 @@
 						<button id="joinButton" class="btn btn-outline-primary m-1"
 							onclick="location.href = '${root}/member?action=mvJoin'">
 							회원가입</button>
+						<button id="logInButton" class="btn text-white btn-primary m-1"
+							onclick="location.href = '${root}/member?action=mvLogin'">
+							로그인</button>
 					</c:if>
-					<button id="logInButton" class="btn text-white btn-primary m-1"
-						onclick="location.href = '${root}/member?action=mvLogin'">
-						로그인</button>
 					<c:if test="${member ne null}">
 						<div>
 							<span>${member.userName} 님 로그인 중</span>
@@ -67,10 +67,6 @@
 								로그아웃</button>
 						</div>
 					</c:if>
-
-
-
-
 				</div>
 			</div>
 		</div>
@@ -98,6 +94,7 @@
 		</div>
 
 	<script src="${root}/assets/js/main.js" type="text/javascript"></script>
+	<script src="${root}/assets/js/search.js" type="text/javascript"></script>
 
 </body>
 </html>

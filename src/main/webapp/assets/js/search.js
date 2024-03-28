@@ -5,7 +5,7 @@ const MOBILE_APP = "Travel";
 const TYPE = "json";
 const SERVICE_KEY =
 	"7alw40yMmyzXmXLifv2zp6RVJiKNrpyFeo4Rz3WNzNzzJOGwP7m1Y28i4OlOwLr%2B6yOiUHI%2FaDkMJw%2BQDqYgNw%3D%3D";
-var contextPath = document.querySelector('body').getAttribute('data-context-path');
+const contextPath = document.querySelector('body').getAttribute('data-context-path');
 const url = "http://localhost:8080/";
 
 const seoul = {lat: 37.566535, lng: 126.977969};

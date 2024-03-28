@@ -119,4 +119,25 @@ public class MemberDaoImpl implements MemberDao {
 		}
 	}
 
+	@Override
+	public int update(MemberDto memberDto) throws SQLException {
+		Connection con = null;
+		PreparedStatement ps = null;
+		try {
+			con = dbUtil.getConnection();
+			String sql = "update members set user_name=?, email_id=?, email_domain=?, user_pw=? where user_id=?;";
+			ps = con.prepareStatement(sql);
+			ps.setString(1, memberDto.getUserName());
+			ps.setString(2, memberDto.getEmailId());
+			ps.setString(3, memberDto.getEmailDomain());
+			ps.setString(4, memberDto.getUserPw());
+			ps.setString(5, memberDto.getUserId());
+			return ps.executeUpdate();
+		} finally {
+			dbUtil.close(ps, con);
+		}
+	}
+	
+	
+
 }

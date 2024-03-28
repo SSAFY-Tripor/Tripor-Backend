@@ -48,8 +48,8 @@
 						<div class="d-flex flex-row mb-3">
 							<label style="width: 90px">이름</label> <input
 								class="p-1 mb-3 ms-3" type="text" id="mypage_name"
-								name="userid"
-								style="width: 100%; text-align: right" value="${member.userId}"
+								name="userName"
+								style="width: 100%; text-align: right" value="${member.userName}"
 								required />
 						</div>
 						<div class="d-flex flex-row mb-3">

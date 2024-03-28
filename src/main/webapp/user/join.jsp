@@ -29,7 +29,7 @@
         />
         <link rel="stylesheet" href="${root}/assets/css/style.css" />
     </head>
-    <body>
+    <body data-context-path="${root}">
     	<jsp:include page="/common/header.jsp"/>
         <jsp:include page="/common/aside.jsp"/>
 
@@ -119,7 +119,7 @@
                         <div class="d-flex flex-row">
 			                <select
 			                  class="p-1 mb-3"
-			                  id="sido"
+			                  id="join-sido"
 			                  name="sido"
 			                  style="width: 50%"
 			                  aria-label="시도 선택"
@@ -129,7 +129,7 @@
 			                </select>
 			                <select
 			                  class="p-1 ms-1 mb-3"
-			                  id="emaildomain"
+			                  id="join-gugun"
 			                  style="width: 50%"
 			                  name="gugun"
 			                  aria-label="구군 선택"
