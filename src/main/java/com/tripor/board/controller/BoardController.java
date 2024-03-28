@@ -32,7 +32,7 @@ public class BoardController extends HttpServlet {
 		String root = request.getContextPath();
 		System.out.println(action);
 		try {
-			if("list".equals(action)) {
+			if ("list".equals(action)) {
 				HttpSession session = request.getSession();
 				MemberDto memberDto = (MemberDto) session.getAttribute("member");
 				if (memberDto != null) {
@@ -62,6 +62,45 @@ public class BoardController extends HttpServlet {
 					path = "/member?action=mvLogin";
 					redirect(path, root, response);
 				}
+			} else if ("detail".equals(action)) {
+				int boardNo = Integer.parseInt(request.getParameter("boardno"));
+				boardService.updateHit(boardNo);
+				BoardDto boardDto = boardService.getBoard(boardNo);
+				if (boardDto == null) {
+					path = "/board?action=list";
+					redirect(path, root, response);
+					return;
+				}
+				System.out.println(boardDto);
+				request.setAttribute("board", boardDto);
+				path = "/trip/detail.jsp";
+				forward(path, request, response);
+			} else if ("mvModify".equals(action)) {
+				int boardNo = Integer.parseInt(request.getParameter("boardno"));
+				BoardDto boardDto = boardService.getBoard(boardNo);
+				request.setAttribute("board", boardDto);
+				path = "/trip/modify.jsp";
+				forward(path, request, response);
+			} else if ("modify".equals(action)) {
+				int boardNo = Integer.parseInt(request.getParameter("boardno"));
+				BoardDto boardDto = boardService.getBoard(boardNo);
+				if (boardDto == null) {
+					path = "/board?action=list";
+					redirect(path, root, response);
+					return;
+				}
+				String subject = request.getParameter("subject");
+				String content = request.getParameter("content");
+				boardDto.setSubject(subject);
+				boardDto.setContent(content);
+				boardService.modifyBoard(boardDto);
+				path = "/board?action=detail&boardno=" + boardNo;
+				redirect(path, root, response);
+			} else if ("delete".equals(action)) {
+				int boardNo = Integer.parseInt(request.getParameter("boardno"));
+				boardService.deleteBoard(boardNo);
+				path = "/board?action=list";
+				redirect(path, root, response);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

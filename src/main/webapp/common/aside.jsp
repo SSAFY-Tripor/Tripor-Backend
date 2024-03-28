@@ -15,7 +15,7 @@
                 </div>
             </div>
             <div style="cursor: pointer" class="p-3 m-1 rounded menu_button row">
-                <div class="col-12" onclick="location.href = '${root}/board/plan.jsp'">
+                <div class="col-12" onclick="location.href = '${root}/trip/plan.jsp'">
                     <i class="bi bi-search me-3"></i>
                     <span class="text-dark text-decoration-none"
                         >여행 계획</span
@@ -51,7 +51,7 @@
                 </div>
                 <div class="ps-5 pt-1" id="myPageExpand" style="display: none">
                     <div>
-                        <a onclick="location.href = '${root}/member?action=mvMypage'"
+                        <a onclick="location.href = '${root}/member?action=mvMypage}'"
                             >-&nbsp;&nbsp;&nbsp;회원정보 수정</a
                         >
                     </div>

@@ -432,7 +432,7 @@ function showBoardListsNewPage(pageIndex) {
 
 
 const getSidoList = async () =>{
-	const contextPath = document.querySelector('body').getAttribute('data-context-path');
+	const contextPath = document.querySelector('body').getAttribute('data-context-path');	
 	const url = `http://localhost:8080/${contextPath}`;
 	const sidoParam = `/trip?action=sido`;
 	// 데이터 요청 및 처리

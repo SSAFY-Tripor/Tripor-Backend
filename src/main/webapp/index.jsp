@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@page import="com.tripor.member.model.dto.MemberDto"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <c:set var="root" value="${pageContext.request.contextPath}" />
 <c:if test="${sessionScope.member ne null}">
