@@ -33,10 +33,10 @@
     	<jsp:include page="/common/header.jsp"/>
         <jsp:include page="/common/aside.jsp"/>
 
-        <div class="container row">
-            <div class="col-2 d-none d-xxl-block"></div>
+        <div class="position-relative">
+            <div style="height:100px"></div>
             <div
-                class="show_logIn shadow-sm rounded border p-5 mb-3"
+                class="shadow-sm rounded border p-5 mb-3 position-absolute top-50 start-50 translate-middle-x"
                 id="join_div"
                 style="
                     position: relative;
@@ -93,19 +93,17 @@
                         <div class="d-flex flex-row">
 			                <input
 			                  type="text"
-			                  class="p-1 mb-3"
+			                  class="p-1 mb-3 me-1"
 			                  id="emailid"
 			                  name="emailid"
 			                  placeholder="이메일 아이디를 입력해주세요."
-			                  style="width: 45%"
-			                  name="emailid"
+			                  style="width: 46%"
 			                  required
 			                />
 			                <span>@</span>
 			                <select
 			                  class="p-1 ms-2 mb-3"
 			                  id="emaildomain"
-			                  name="emaildomain"
 			                  style="width: 50%"
 			                  name="emaildomain"
 			                  aria-label="이메일 도메인 선택"
@@ -115,6 +113,29 @@
 			                  <option value="google.com">구글</option>
 			                  <option value="naver.com">네이버</option>
 			                  <option value="kakao.com">카카오</option>
+			                </select>
+			              </div>
+			              <label>지역</label><br />
+                        <div class="d-flex flex-row">
+			                <select
+			                  class="p-1 mb-3"
+			                  id="sido"
+			                  name="sido"
+			                  style="width: 50%"
+			                  aria-label="시도 선택"
+			                >
+			                  <option selected>선택</option>
+			                  
+			                </select>
+			                <select
+			                  class="p-1 ms-1 mb-3"
+			                  id="emaildomain"
+			                  style="width: 50%"
+			                  name="gugun"
+			                  aria-label="구군 선택"
+			                >
+			                  <option selected>선택</option>
+			                  
 			                </select>
 			              </div>
 							<button
