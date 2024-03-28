@@ -1,5 +1,6 @@
 package com.tripor.trip.controller;
 
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -24,7 +25,7 @@ public class TripController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String action = request.getParameter("action");
 		String path = "";
-		System.out.println(action);
+		String root = request.getContextPath();
 		try {
 			if("sido".equals(action)) {
 				String json = tripService.getAllSido();
@@ -46,6 +47,14 @@ public class TripController extends HttpServlet {
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
+	}
+	protected void redirect(String path, String root, HttpServletResponse response) throws IOException{
+		response.sendRedirect(root + path);
+	}
+	
+	protected void forward(String path, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		RequestDispatcher dispatcher = request.getRequestDispatcher(path);
+		dispatcher.forward(request, response);
 	}
 	
 	protected void returnJson(String json, HttpServletResponse response) throws IOException{

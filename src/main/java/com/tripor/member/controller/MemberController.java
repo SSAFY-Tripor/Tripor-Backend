@@ -44,7 +44,7 @@ public class MemberController extends HttpServlet {
 					forward(path, request, response);
 					return;
 				}
-				path = root;
+				path = "";
 				// 세션 설정
 				HttpSession session = request.getSession();
 				session.setAttribute("member", member);
@@ -68,7 +68,7 @@ public class MemberController extends HttpServlet {
 						}
 					}
 				}
-				redirect(path, response);
+				redirect(path, root, response);
 			}else if("mvJoin".equals(action)) {
 				path = "/user/join.jsp";
 				forward(path, request, response);
@@ -76,10 +76,19 @@ public class MemberController extends HttpServlet {
 				String userName = request.getParameter("username");
 			    String userId = request.getParameter("userid");
 			    String userPw = request.getParameter("userpwd");
+			    String userPwCk = request.getParameter("userpwdcheck");
+			    if(userPw == null || !userPw.equals(userPwCk)) {
+			    	request.setAttribute("pwck", "비밀번호가 틀렸습니다.");
+			    	path = "/user/join.jsp";
+			    	forward(path, request, response);
+			    	return;
+			    }
 			    String emailId = request.getParameter("emailid");
 			    String emailDomain = request.getParameter("emaildomain");
-			    int sido = Integer.parseInt(request.getParameter("sido"));
-			    int gugun = Integer.parseInt(request.getParameter("gugun"));
+//			    int sido = Integer.parseInt(request.getParameter("sido"));
+//			    int gugun = Integer.parseInt(request.getParameter("gugun"));
+			    int sido = 5; // 광주
+			    int gugun = 1; // 광산구
 				MemberDto joinMember = new MemberDto(userId, userPw, userName, emailId, emailDomain, sido, gugun);
 				if(memberService.join(joinMember) == -1) {
 					request.setAttribute("msg", "이미 존재하는 회원입니다.");
@@ -87,14 +96,14 @@ public class MemberController extends HttpServlet {
 					forward(path, request, response);
 					return;
 				}
-				path = root + "/member?action=mvLogin";
-				redirect(path, response);
+				path = "/member?action=mvLogin";
+				redirect(path, root, response);
 			}else if("logout".equals(action)) {
-				path = root;
-				redirect(path, response);
+				path = "";
+				redirect(path, root, response);
 			}else {
-				path = root;
-				redirect(path, response);
+				path = "";
+				redirect(path, root, response);
 			}
 		}catch(Exception e) {
 			path = "/error.jsp";
@@ -104,8 +113,8 @@ public class MemberController extends HttpServlet {
 		
 	}
 	
-	protected void redirect(String path, HttpServletResponse response) throws IOException{
-		response.sendRedirect(path);
+	protected void redirect(String path, String root, HttpServletResponse response) throws IOException{
+		response.sendRedirect(root + path);
 	}
 	
 	protected void forward(String path, HttpServletRequest request, HttpServletResponse response) throws Exception{
