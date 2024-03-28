@@ -77,36 +77,25 @@
 		<div id="hr"></div>
 	</div>
 	<jsp:include page="/common/aside.jsp" />
+	
 
-
-
-	<div class="container" style="z-index: 1; padding-left: 0">
-		<div class="show_Home" id="home_div" style="position: relative">
-			<!-- <div class="dropdowns">
-                <select id="region">
-                    <option value="">도 선택</option>
-                </select>
-                <select id="subregion">
-                    <option value="">시/구 선택</option>
-                </select>
-                <select id="tourType">
-                    <option value="">관광 타입 선택</option>
-                </select>
-            </div> -->
-			<div id="search-map" class="search-map"
-				style="width: 1500px; height: 1000px">
-				<div id="planList"
-					class="plan-list position-absolute top-0 start-0 bg-light p-3"
-					style="width: 20%; height: 100%; overflow-y: auto; background-color: rgba(255, 255, 255, 0.5) !important; z-index: 1000; display: block;">
-					<h4 class="text-dark">여행 계획 목록</h4>
-					<ul id="planItems" class="list-unstyled"></ul>
-					<button id="savePlanButton"
-						class="btn btn-outline-primary mt-auto mb-3">일정 등록하기</button>
+	
+		<div class="container" style="z-index: 1; padding-left: 0">
+			<div class="show_Home" id="home_div" style="position: relative"> 
+				<div id="search-map" class="search-map position-relative"
+					style="width: 3000px; height: 1000px">
+					<div style="width: 300px; height: 1000px"></div>
+					<div id="planList"
+						class="plan-list position-absolute top-0 start-50 bg-light p-3"
+						style="width: 20%; height: 100%; overflow-y: auto; background-color: rgba(255, 255, 255, 0.6) !important; z-index: 1000; display: block;">
+						<h4 class="text-dark">여행 계획 목록</h4>
+						<ul id="planItems" class="list-unstyled"></ul>
+						<button id="savePlanButton"
+							class="btn btn-outline-primary mt-auto mb-3">일정 등록하기</button>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-
 
 	<script src="${root}/assets/js/main.js" type="text/javascript"></script>
 

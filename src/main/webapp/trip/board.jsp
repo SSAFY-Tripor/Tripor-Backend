@@ -41,10 +41,10 @@
         
 
 
-        <div class="container row">
-            <div class="col-1 d-none d-xxl-block"></div>
+        <div class="position-relative">
+            <div style="height:100px"></div>
             <div
-                class="show_logIn p-5 mb-3 col-md-6 col-sm-4"
+                class="position-absolute top-50 start-50 translate-middle-x"
                 id="board_div"
                 style="position: relative; top: 1.5rem; width: 740px"
             >
