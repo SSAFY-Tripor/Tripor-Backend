@@ -166,89 +166,13 @@ function makeBoard() {
 
 function secession() {
     const y = confirm("정말로 회원탈퇴하시겠습니까?");
+    const contextPath = document.querySelector('body').getAttribute('data-context-path');
     const curUser = localStorage.getItem("currentUser");
     if (y) {
-        localStorage.removeItem(curUser);
-        alert("회원탈퇴 완료");
+		location.href = `${contextPath}/member?action=delete`;
     }
 }
 
-function infoCorrection() {
-    const name = document.querySelector("#mypage_name").value;
-    const id = localStorage.getItem("currentUser");
-    const pwd = document.querySelector("#mypage_pwd").value;
-    const email = document.querySelector("#mypage_email").value;
-
-    const userInfo = {
-        name: name,
-        id: id,
-        pwd: pwd,
-        email: email,
-    };
-
-    localStorage.setItem(id, JSON.stringify(userInfo));
-    alert("회원정보가 수정되었습니다");
-}
-
-function logIn() {
-    const id = document.querySelector("#login_id").value;
-    const pwd = document.querySelector("#login_pwd").value;
-
-    if (JSON.parse(localStorage.getItem(id)).pwd == pwd) {
-        localStorage.setItem("login", true);
-        localStorage.setItem("currentUser", id);
-        alert("로그인 성공");
-    } else {
-        alert("로그인 실패");
-    }
-}
-
-function join() {
-    const name = document.querySelector("#join_name").value;
-    const id = document.querySelector("#join_id").value;
-    const pwd = document.querySelector("#join_pwd").value;
-    const pwd_check = document.querySelector("#join_pwd_check").value;
-    const email = document.querySelector("#join_email").value;
-
-    if (pwd != pwd_check) {
-        alert("비밀번호를 확인하세요");
-        return;
-    }
-
-    const userInfo = {
-        name: name,
-        id: id,
-        pwd: pwd,
-        email: email,
-    };
-    console.log(userInfo);
-    localStorage.setItem(id, JSON.stringify(userInfo));
-}
-
-function logOut() {
-    localStorage.removeItem("login");
-    location.reload();
-}
-
-function findPwd() {
-    const name = document.querySelector("#findPwd_name").value;
-    const email = document.querySelector("#findPwd_email").value;
-    const id = document.querySelector("#findPwd_id").value;
-
-    const answer = document.querySelector("#pwd_ans");
-
-    if (
-        localStorage.getItem(id) == null ||
-        JSON.parse(localStorage.getItem(id)).name != name ||
-        JSON.parse(localStorage.getItem(id)).email != email
-    )
-        answer.innerText = "입력 정보를 다시 확인해주세요.";
-    else
-        answer.innerText =
-            "비밀번호는 " +
-            JSON.parse(localStorage.getItem(id)).pwd +
-            " 입니다.";
-}
 
 // 게시판
 

@@ -129,7 +129,29 @@ public class MemberController extends HttpServlet {
 				}
 				request.setAttribute("findpwd", member.getUserPw());
 				forward(path, request, response);
-			} else {
+			}else if("mvMypage".equals(action)) {
+				HttpSession session = request.getSession();
+				MemberDto member = (MemberDto) session.getAttribute("member");
+				if(member == null) {
+					path = "/member?action=mvLogin";
+					redirect(path, root, response);
+					return;
+				}
+				path= "/user/mypage.jsp";
+				forward(path, request, response);
+			}else if("delete".equals(action)) {
+				HttpSession session = request.getSession();
+				MemberDto memberDto = (MemberDto) session.getAttribute("member");
+				if(memberDto == null) {
+					path="";
+					redirect(path, root, response);
+					return;
+				}
+				memberService.remove(memberDto.getUserId());
+				session.removeAttribute("member");
+				path="";
+				redirect(path, root, response);
+			}else {
 				path = "";
 				redirect(path, root, response);
 			}

@@ -34,7 +34,7 @@
                 <div style="cursor: pointer" class="p-3 m-1 rounded menu_button row">
                     <div
                         class="col-10"
-                        onclick="location.href = '${root}/user/mypage.jsp'"
+                        onclick="location.href = '${root}/member?action=mvMypage'"
                         style="padding: 0 12px"
                     >
                         <i class="bi bi-person-circle me-3"></i>
@@ -51,7 +51,7 @@
                 </div>
                 <div class="ps-5 pt-1" id="myPageExpand" style="display: none">
                     <div>
-                        <a onclick="location.href = '${root}/mypage.jsp'"
+                        <a onclick="location.href = '${root}/member?action=mvMypage'"
                             >-&nbsp;&nbsp;&nbsp;회원정보 수정</a
                         >
                     </div>

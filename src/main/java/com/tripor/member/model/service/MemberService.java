@@ -9,4 +9,5 @@ public interface MemberService {
 	MemberDto login(String userId, String userPw);
 	MemberDto findById(String userId);
 	String findPassword(String userId);
+	void remove(String userId);
 }

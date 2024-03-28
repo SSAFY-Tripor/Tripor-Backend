@@ -67,5 +67,16 @@ public class MemberServiceImpl implements MemberService{
 			return null;
 		}
 	}
+
+	@Override
+	public void remove(String userId) {
+		try {
+			memberDao.delete(userId);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
 	
 }

@@ -83,6 +83,21 @@ public class MemberDaoImpl implements MemberDao {
 	}
 
 	@Override
+	public int delete(String userId) throws SQLException {
+		Connection con = null;
+		PreparedStatement ps = null;
+		try {
+			con = dbUtil.getConnection();
+			String sql = "delete from members where user_id=?";
+			ps = con.prepareStatement(sql);
+			ps.setString(1, userId);
+			return ps.executeUpdate();
+		} finally {
+			dbUtil.close(ps, con);
+		}
+	}
+
+	@Override
 	public int insert(MemberDto memberDto) throws SQLException {
 		Connection con = null;
 		PreparedStatement ps = null;
