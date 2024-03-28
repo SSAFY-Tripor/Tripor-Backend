@@ -36,7 +36,7 @@ public class MemberController extends HttpServlet {
 			}else if("login".equals(action)) {
 				String userId = request.getParameter("userid");
 				String userPw = request.getParameter("userpwd");
-				String checkBox = request.getParameter("idck");
+				String saveId = request.getParameter("saveid");
 				MemberDto member = memberService.login(userId, userPw);
 				if(member == null) {
 					path = "/user/login.jsp";
@@ -49,10 +49,10 @@ public class MemberController extends HttpServlet {
 				HttpSession session = request.getSession();
 				session.setAttribute("member", member);
 				// 쿠키 설정
-				if ("on".equals(checkBox)) {
+				if ("on".equals(saveId)) {
 					// 쿠키 생성
-					Cookie cookie = new Cookie("rememberid", userId);
-					cookie.setPath(request.getContextPath());
+					Cookie cookie = new Cookie("saveid", userId);
+					cookie.setPath(root);
 					cookie.setMaxAge(60 * 60 * 24 * 365);
 					response.addCookie(cookie);
 				} else {
@@ -60,7 +60,7 @@ public class MemberController extends HttpServlet {
 					Cookie[] cookies = request.getCookies();
 					if (cookies != null) {
 						for (Cookie cookie : cookies) {
-							if ("rememberid".equals(cookie.getName())) {
+							if ("saveid".equals(cookie.getName())) {
 								cookie.setMaxAge(0);
 								response.addCookie(cookie);
 								break;
@@ -99,6 +99,8 @@ public class MemberController extends HttpServlet {
 				path = "/member?action=mvLogin";
 				redirect(path, root, response);
 			}else if("logout".equals(action)) {
+				HttpSession session = request.getSession();
+				session.removeAttribute("member");
 				path = "";
 				redirect(path, root, response);
 			}else {

@@ -5,6 +5,10 @@
 <c:if test="${sessionScope.member ne null}">
 	<c:set var="member" value="${sessionScope.member}" />
 </c:if>
+<c:if test="${cookie.saveid.value ne null}">
+	<c:set var="idck" value="checked"/>
+	<c:set var="saveid" value="${cookie.saveid.value}"/>
+</c:if>
 <!DOCTYPE html>
 <html lang="ko">
     <head>
@@ -54,7 +58,7 @@
                     <div class="d-flex flex-row justify-content-between">
                         <label>아이디</label><br />
                         <span>
-                        	<input style="width:15px; height:15px" class="m-1" type="checkbox" id="saveid" name="saveid" /> 아이디 저장 <br/>
+                        	<input style="width:15px; height:15px" class="m-1" type="checkbox" ${idck} id="saveid" name="saveid" /> 아이디 저장 <br/>
                         </span>
                      </div>  
                         <input
@@ -62,6 +66,7 @@
                             type="text"
                             id="userid" 
                             name="userid"
+                            value="${saveid}"
                             style="width: 100%"
                             placeholder="아이디를 입력해주세요."
                             required
