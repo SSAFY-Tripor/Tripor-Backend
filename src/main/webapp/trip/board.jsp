@@ -50,6 +50,7 @@
 							onclick='location.href="${root}/board?action=mvWrite"'>
 							글쓰기</button>
 
+
 						<table class="board-table">
 							<thead class="board__table-head">
 								<tr class="board__titles">

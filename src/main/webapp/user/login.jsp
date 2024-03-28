@@ -35,14 +35,14 @@
     </head>
     <body>
     	<jsp:include page="/common/header.jsp"/>
-        <jsp:include page="/common/aside.jsp"/>
+        <jsp:include page="/common/aside.jsp"/> 
         
         
 
-        <div class="container row">
-            <div class="col-2 d-none d-xxl-block"></div>
+        <div class="position-relative">
+            <div style="height:100px"></div>
             <div
-                class="show_logIn shadow-sm rounded border p-5 mb-3"
+                class="shadow-sm rounded border p-5 mb-3 position-absolute top-50 start-50 translate-middle-x"
                 id="login_div"
                 style="
                     position: relative;
