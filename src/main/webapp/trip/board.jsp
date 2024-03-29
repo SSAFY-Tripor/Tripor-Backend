@@ -33,16 +33,15 @@
 	<jsp:include page="/common/header.jsp" />
 	<jsp:include page="/common/aside.jsp" />
 
-	<div class="container row">
-		<div class="col-1 d-none d-xxl-block"></div>
-		<div class="show_logIn p-5 mb-3 col-md-6 col-sm-4" id="board_div"
-			style="position: relative; top: 1.5rem; width: 740px">
+	<div class="position-relative">
+		<div style="height:100px"></div>
+		<div class="mb-3 position-absolute top-50 start-50 translate-middle-x" id="board_div"
+			style="position: relative; top: 1.5rem; width: 47%">
 			<h4 class="d-flex justify-content-center"
-				style="overflow: hiddlen; white-space: nowrap">여행 정보를 공유해요</h4>
+				style="overflow: hidden; white-space: nowrap">여행 정보를 공유해요</h4>
 
 			<!-- board list area -->
-			<div id="board-list">
-				<div class="container md-6">
+			<div id="board-list" style="overflow: hidden; white-space: nowrap">
 					<div class="board__container" id="board-container">
 						<button
 							class="btn btn-primary ms-auto me-3 d-flex justify-content-end mb-3"
@@ -54,28 +53,27 @@
 						<table class="board-table">
 							<thead class="board__table-head">
 								<tr class="board__titles">
-									<th class="board__column th-num col-2">번호</th>
-									<th class="board__column th-title col-4">제목</th>
-									<th class="board__column th-author col-2">작성자</th>
-									<th class="board__column th-date col-2">작성일</th>
-									<th class="board__column th-views col-1">조회</th>
+									<th class="board__column th-num col-2 col-sm-2">번호</th>
+									<th class="board__column th-title col-4 col-sm-5">제목</th>
+									<th class="board__column th-author col-2 col-sm-3">작성자</th>
+									<th class="board__column th-date col-3 d-none d-md-block">작성일</th>
+									<th class="board__column th-views col-1 col-sm-2">조회</th>
 								</tr>
 							</thead>
 							<tbody class="board__contents" id="board-body">
 								<c:forEach var="board" items="${boards}">
 									<tr>
-										<td>${board.boardNo}</td>
-										<th><a
+										<td class="board__column col-2 col-sm-2">${board.boardNo}</td>
+										<th class="board__column col-4 col-sm-5"><a
 											href="${root}/board?action=detail&boardno=${board.boardNo}">${board.subject}</a></th>
-										<td>${board.userId}</td>
-										<td>${board.registerDate}</td>
-										<td>${board.hit}</td>
+										<td class="board__column col-2 col-sm-3">${board.userId}</td>
+										<td class="board__column col-3 d-none d-md-block">${board.registerDate}</td>
+										<td class="board__column col-1 col-sm-2">${board.hit}</td>
 									</tr>
 								</c:forEach>
 							</tbody>
 						</table>
 					</div>
-				</div>
 				<!-- 
 				<div class="p-5" id="contents_container" style="display: none">
 					<button class="btn mb-3" id="back_btn" onclick="javascript:post()">

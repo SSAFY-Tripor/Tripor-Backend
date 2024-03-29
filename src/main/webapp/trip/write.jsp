@@ -31,9 +31,13 @@
 <body>
 	<jsp:include page="/common/header.jsp" />
 	<jsp:include page="/common/aside.jsp" />
-	<div class="container row">
-		<form action="${root}/board" method="POST" class="editor__form"
-			id="editor-form" style="width: 770px">
+	<div class="position-relative">
+		<div style="height:100px"></div>
+		<form action="${root}/board" method="POST" class="editor__form mb-3 position-absolute top-50 start-50 translate-middle-x"
+			id="editor-form" style="width: 45%">
+			<h4 class="d-flex justify-content-center"
+				style="overflow: hidden; white-space: nowrap">여행 정보를 공유해요</h4>
+			<div style="height:10px"></div>
 			<input type="hidden" name="action" value="write" />
 			<div class="d-flex flex-row mb-3 mt-3">
 				<label style="width: 90px">제목</label> <input

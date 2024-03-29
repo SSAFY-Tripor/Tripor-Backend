@@ -430,6 +430,13 @@ function showBoardListsNewPage(pageIndex) {
 	});
 }
 
+function deleteArticle(){
+			if (window.confirm('게시물을 삭제하시겠습니까?'))
+			{
+			    location.href="${root}/board?action=delete&boardno=${board.boardNo}";
+			}
+}
+
 
 const getSidoList = async () =>{
 	const contextPath = document.querySelector('body').getAttribute('data-context-path');	
