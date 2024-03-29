@@ -14,163 +14,64 @@ window.onload = function() {
 		expandIcon.style.display = "block";
 		foldIcon.style.display = "none";
 	});
-
-	// 여행지 검색 입력 필드와 검색 버튼 숨기기
-	//document.querySelector(
-	//    "#makePlace"
-	//).style.cssText = `display: none !important;`;
-	//document.querySelector("#planList").style.display = "none";
-
-	// 로그인, 회원가입 버튼 / 로그아웃 버튼
-	const joinBtn = document.querySelector("#joinButton");
-	const logInBtn = document.querySelector("#logInButton");
-	const logOutBtn = document.querySelector("#logOutButton");
-
-	// 테이블 만들기
-	const tableBody = document.querySelector("#table_body");
-	let idx = localStorage.getItem("cnt");
-	for (let i = idx; i >= 1; i--) {
-		const postdata = JSON.parse(localStorage.getItem(i));
-		tableBody.innerHTML += `
-      <tr>
-          <td>3</td>
-          <th>
-          <a href="#!">[공지사항] 개인정보 처리방침 변경안내처리방침</a>
-          </th>
-          <td>김민선</td>
-          <td>2017.07.13</td>
-      </tr>
-    `;
-	}
 };
-
-/*
-const homeDiv = document.querySelector("#home_div");
-const loginDiv = document.querySelector("#login_div");
-const joinDiv = document.querySelector("#join_div");
-const myPageDiv = document.querySelector("#myPage_div");
-const findPwdDiv = document.querySelector("#findPwd_div");
-const boardDiv = document.querySelector("#board_div");
-const planList = document.querySelector("#planList");
-
-function makeHome() {
-	homeDiv.style.display = "block";
-	loginDiv.style.display = "none";
-	joinDiv.style.display = "none";
-	myPageDiv.style.display = "none";
-	findPwdDiv.style.display = "none";
-	boardDiv.style.display = "none";
-	planList.style.display = "none";
-
-	// 관광지 선택 드롭다운 보여주기
-	document.querySelector("#searchPlace").style.cssText = `
-		display: flex !important;
-		flex-direction: row !important;
-		justify-content: center; 
-		align-items: center; 
-		`;
-	// 여행지 검색 입력 필드와 검색 버튼 숨기기
-	element = document.querySelector("#makePlace");
-	element.style.cssText += "display: none !important;";
-	document.querySelector("#planList").style.display = "none !important";
-}
-
-
-function makeJoin() {
-	homeDiv.style.display = "none";
-	loginDiv.style.display = "none";
-	joinDiv.style.display = "block";
-	myPageDiv.style.display = "none";
-	findPwdDiv.style.display = "none";
-	boardDiv.style.display = "none";
-	planList.style.display = "none";
-}
-
-function makeLogIn() {
-	homeDiv.style.display = "none";
-	loginDiv.style.display = "block";
-	joinDiv.style.display = "none";
-	myPageDiv.style.display = "none";
-	findPwdDiv.style.display = "none";
-	boardDiv.style.display = "none";
-	planList.style.display = "none";
-}
-
-function makePlan() {
-	homeDiv.style.display = "block";
-	loginDiv.style.display = "none";
-	joinDiv.style.display = "none";
-	myPageDiv.style.display = "none";
-	findPwdDiv.style.display = "none";
-	boardDiv.style.display = "none";
-	planList.style.display = "block";
-
-	// 관광지 선택 드롭다운 숨기기
-	document.querySelector("#searchPlace").style.cssText +=
-		"display: none !important;";
-	// 여행지 검색 입력 필드와 검색 버튼 보여주기
-	document.querySelector("#makePlace").style.cssText = `
-		display: flex !important;
-		flex-direction: row !important;
-		justify-content: center; 
-		align-items: center; 
-		`;
-	document.querySelector("#planList").style.display = "block !important";
-}
-
-function makeMyPage() {
-	// 로그인이 안 되어 있을 경우
-	if (localStorage.getItem("login") == null) {
-		alert("로그인 후 이용 가능합니다.");
-		return;
-	}
-
-	homeDiv.style.display = "none";
-	loginDiv.style.display = "none";
-	joinDiv.style.display = "none";
-	myPageDiv.style.display = "block";
-	findPwdDiv.style.display = "none";
-	boardDiv.style.display = "none";
-
-	const curUser = localStorage.getItem("currentUser");
-	console.log(curUser);
-	document.querySelector("#mypage_name").value = JSON.parse(
-		localStorage.getItem(curUser)
-	).name;
-	document.querySelector("#mypage_email").value = JSON.parse(
-		localStorage.getItem(curUser)
-	).email;
-	document.querySelector("#mypage_pwd").value = JSON.parse(
-		localStorage.getItem(curUser)
-	).pwd;
-}
-
-function makeFindPwd() {
-	homeDiv.style.display = "none";
-	loginDiv.style.display = "none";
-	joinDiv.style.display = "none";
-	myPageDiv.style.display = "none";
-	findPwdDiv.style.display = "block";
-	boardDiv.style.display = "none";
-}
-
-function makeBoard() {
-	homeDiv.style.display = "none";
-	loginDiv.style.display = "none";
-	joinDiv.style.display = "none";
-	myPageDiv.style.display = "none";
-	findPwdDiv.style.display = "none";
-	boardDiv.style.display = "block";
-}
-*/
 
 function secession() {
 	const contextPath = document.querySelector('body').getAttribute('data-context-path');
 	const y = confirm("정말로 회원탈퇴하시겠습니까?");
-	const curUser = localStorage.getItem("currentUser");
-	if (y) {
+	const session = require('web.session');
+	if (y && session.memeber != null) {
 		location.href = `${contextPath}/member?action=delete`;
 	}
+}
+
+const getSidoList = async () =>{
+	const contextPath = document.querySelector('body').getAttribute('data-context-path');	
+	const url = `http://localhost:8080/${contextPath}`;
+	const sidoParam = `/trip?action=sido`;
+	// 데이터 요청 및 처리
+
+	const response = await fetch(url + sidoParam);
+	const data = await response.json();
+	// 기본 옵션 추가
+	joinSidoSelector.innerHTML = '<option value="">도 선택</option>';
+	// 받은 데이터를 통해 옵션 추가
+	data.forEach((item) => {
+		const option = document.createElement("option");
+		option.value = item.sidoCode;
+		option.textContent = item.sidoName;
+		joinSidoSelector.appendChild(option);
+	});
+
+	// 상수 정의
+	// 두번째 드롭다운
+	const joinGugunSelector = document.querySelector("#join-gugun");
+
+	joinSidoSelector.addEventListener("change", async function() {
+		const selectedRegionCode = this.value;
+		const gugunParam = `/trip?action=gugun&sido=${selectedRegionCode}`;
+		// 이전에 선택된 서브리전 옵션을 초기화
+		joinGugunSelector.innerHTML = '<option value="">시/구 선택</option>';
+
+		const response = await fetch(url + gugunParam)
+		const data = await response.json();
+		data.forEach((item) => {
+			const option = document.createElement("option");
+			option.value = item.gugunCode;
+			option.textContent = item.gugunName;
+			joinGugunSelector.appendChild(option);
+		});
+	});
+}
+
+const joinSidoSelector = document.querySelector("#join-sido")
+if (joinSidoSelector != null) {
+	getSidoList();
+}
+
+
+if (editorForm != null) {
+	editorForm.addEventListener("submit", onEditorFormSubmit);
 }
 
 
@@ -199,68 +100,7 @@ function post() {
 	makepost.style.display = "none";
 	contentView.style.display = "none";
 }
-/*
-const BOARDLIST_LS = "boardLists";
-const boardListsObj = [];
-let nums = 0;
-let author = JSON.parse(
-	localStorage.getItem(localStorage.getItem("currentUser"))
-).name;
-let date = new Date();
-let views = Math.floor(Math.random() * 99) + 1;
 
-function onTitleClick(e) {
-	postlist.style.display = "none";
-	makepost.style.display = "none";
-	contentView.style.display = "block";
-	contentsContainer.textContent = "";
-	const lists = JSON.parse(localStorage.getItem(BOARDLIST_LS));
-	const index = e.target.parentNode.id.replace(/[a-z|-]/gi, "");
-
-	const contentsTitles = document.createElement("div");
-	contentsTitles.classList.add("contents__titles");
-
-	const contentsColumnFirst = document.createElement("div");
-	contentsColumnFirst.classList.add("contents__column");
-
-	const contentsTitle = document.createElement("div");
-	contentsTitle.classList.add("contents__title");
-	contentsTitle.textContent = lists[index].title;
-	contentsTitle.setAttribute("style", "font-size: 40px");
-
-	// contents__titles > column >author, date, views
-	const contentsColumnSecond = document.createElement("div");
-	contentsColumnSecond.classList.add("contents__column");
-
-	const contentsAuthor = document.createElement("span");
-	contentsAuthor.classList.add("contents__author");
-	contentsAuthor.textContent = lists[index].author + " | ";
-
-	const contentsDate = document.createElement("span");
-	contentsDate.classList.add("contents__date");
-	contentsDate.textContent = lists[index].date + " | ";
-
-	const contentsViews = document.createElement("span");
-	contentsViews.classList.add("contents__views");
-
-	const contentsContent = document.createElement("div");
-	contentsContent.classList.add("contents__content");
-	contentsContent.textContent = lists[index].content;
-	contentsContent.setAttribute("style", "font-size: 20px");
-
-	contentsColumnFirst.appendChild(contentsTitle);
-
-	contentsColumnSecond.appendChild(contentsAuthor);
-	contentsColumnSecond.appendChild(contentsDate);
-	contentsColumnSecond.appendChild(contentsViews);
-
-	contentsTitles.appendChild(contentsColumnFirst);
-	contentsTitles.appendChild(contentsColumnSecond);
-
-	contentsContainer.appendChild(contentsTitles);
-	contentsContainer.appendChild(contentsContent);
-}
-*/
 function assignIndex() {
 	const lists = JSON.parse(localStorage.getItem(BOARDLIST_LS));
 	if (!lists) {
@@ -430,54 +270,14 @@ function showBoardListsNewPage(pageIndex) {
 	});
 }
 
-
-const getSidoList = async () =>{
-	const contextPath = document.querySelector('body').getAttribute('data-context-path');	
-	const url = `http://localhost:8080/${contextPath}`;
-	const sidoParam = `/trip?action=sido`;
-	// 데이터 요청 및 처리
-
-	const response = await fetch(url + sidoParam);
-	const data = await response.json();
-	// 기본 옵션 추가
-	joinSidoSelector.innerHTML = '<option value="">도 선택</option>';
-	// 받은 데이터를 통해 옵션 추가
-	data.forEach((item) => {
-		const option = document.createElement("option");
-		option.value = item.sidoCode;
-		option.textContent = item.sidoName;
-		joinSidoSelector.appendChild(option);
-	});
-
-	// 상수 정의
-	// 두번째 드롭다운
-	const joinGugunSelector = document.querySelector("#join-gugun");
-
-	joinSidoSelector.addEventListener("change", async function() {
-		const selectedRegionCode = this.value;
-		const gugunParam = `/trip?action=gugun&sido=${selectedRegionCode}`;
-		// 이전에 선택된 서브리전 옵션을 초기화
-		joinGugunSelector.innerHTML = '<option value="">시/구 선택</option>';
-
-		const response = await fetch(url + gugunParam)
-		const data = await response.json();
-		data.forEach((item) => {
-			const option = document.createElement("option");
-			option.value = item.gugunCode;
-			option.textContent = item.gugunName;
-			joinGugunSelector.appendChild(option);
-		});
-	});
-}
-
-const joinSidoSelector = document.querySelector("#join-sido")
-if (joinSidoSelector != null) {
-	getSidoList();
+function deleteArticle(){
+			if (window.confirm('게시물을 삭제하시겠습니까?'))
+			{
+			    location.href="${root}/board?action=delete&boardno=${board.boardNo}";
+			}
 }
 
 
-if (editorForm != null) {
-	editorForm.addEventListener("submit", onEditorFormSubmit);
-}
+
 
 

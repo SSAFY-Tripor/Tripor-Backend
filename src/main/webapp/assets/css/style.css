@@ -1,4 +1,7 @@
 @charset "UTF-8";
+a{
+	text-decoration-line: none;
+}
 .navbar{
     padding-left: 120px; padding-right: 120px;
     padding-top: 10px; padding-bottom: 10px;
