@@ -80,9 +80,10 @@ const closeOverlay = (item = null) => {
 	}
 }
 
-const updateMapMarkers = (tour) => {
+const updateMapMarkers = (tour = "all") => {
 	let bounds = new kakao.maps.LatLngBounds(); // 모든 마커를 포함할 수 있는 LatLngBounds 객체 생성
 	let flag = false;
+	console.log(tourData);
 
 	// tourData는 API 호출 결과로 얻은 데이터 배열
 	tourData.forEach((item) => {
@@ -153,10 +154,13 @@ const updateMapMarkers = (tour) => {
 	}
 }
 
-const fetchAllTourData = async (areaCode, sigunguCode) => {
+const fetchAllTourData = async (areaCode, sigunguCode, tourType) => {
 	// 기존 데이터 초기화
 	tourData = [];
-	const tourListParam = `/trip?action=mapping&sido=${areaCode}&gugun=${sigunguCode}`;
+	let tourListParam = `/trip?action=mapping&sido=${areaCode}&gugun=${sigunguCode}`;
+	if(tourType != "all" && tourType != null){
+		tourListParam += `&type=${tourType}`;
+	}
 	// await를 사용하여 fetch 요청의 완료를 기다림
 	const response = await fetch(`${url}${tourListParam}`);
 	const data = await response.json(); // 응답을 JSON으로 변환
@@ -164,10 +168,10 @@ const fetchAllTourData = async (areaCode, sigunguCode) => {
 		tourData.push(item);
 	});
 	// 데이터를 모두 가져온 후의 추가 처리
-	updateMapMarkers("all");
+	updateMapMarkers(tourType);
 }
 
-const tourChangeListener = async (tourSelect) => {
+const tourChangeListener = async (region, subRegion, tourSelect) => {
 	const selectedContentId = tourSelect.value;
 	console.log(selectedContentId);
 	// 모든 마커를 지도에서 제거
@@ -175,7 +179,11 @@ const tourChangeListener = async (tourSelect) => {
 		marker.setMap(null);
 	});
 	markers = []; // 마커 배열 초기화
-	updateMapMarkers(selectedContentId);
+	
+	const areaCode = region.value;
+	const sigunguCode = subRegion.value;
+	
+	await fetchAllTourData(areaCode, sigunguCode, selectedContentId);
 }
 
 const tourLoadingListener = async (region, subRegion) => {
@@ -192,15 +200,13 @@ const tourLoadingListener = async (region, subRegion) => {
 	const areaCode = region.value;
 	const sigunguCode = subRegion.value;
 
-	console.log("시군구 코드", sigunguCode);
-
 	// 두 항목이 선택되었는지 확인
 	if (!areaCode || !sigunguCode) {
 		alert("시/도 및 구/군 정보를 선택해주세요.");
 		return;
 	}
 	await fetchAllTourData(areaCode, sigunguCode);
-	tourTypeSelect.addEventListener("change", () => { tourChangeListener(tourTypeSelect) });
+	tourTypeSelect.addEventListener("change", () => { tourChangeListener(region, subRegion, tourTypeSelect) });
 }
 
 const gugunLoadingListener = async (region) => {
