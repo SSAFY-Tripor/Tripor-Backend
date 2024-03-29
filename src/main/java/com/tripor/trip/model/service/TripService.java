@@ -12,4 +12,5 @@ public interface TripService {
 	String getAllGugun(int sidoCode) throws Exception;
 
 	String getTripList(TripSearchDto param) throws Exception;
+	String getTripList(String keyword) throws Exception;
 }

@@ -38,10 +38,16 @@ public class TripController extends HttpServlet {
 				String sido= request.getParameter("sido");
 				String gugun= request.getParameter("gugun");
 				String type = request.getParameter("type");
+				String keyword = request.getParameter("keyword");
+				if(keyword == null) {
+					TripSearchDto param = new TripSearchDto(sido, gugun, type);
+					String json = tripService.getTripList(param);
+					returnJson(json, response);
+				}else {
+					System.out.println(keyword);
+					String json = tripService.getTripList(keyword);
+				}
 				
-				TripSearchDto param = new TripSearchDto(sido, gugun, type);
-				String json = tripService.getTripList(param);
-				returnJson(json, response);
 			}
 		}catch(Exception e) {
 			e.printStackTrace();

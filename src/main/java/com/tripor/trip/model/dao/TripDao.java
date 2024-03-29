@@ -11,4 +11,5 @@ public interface TripDao {
 	List<SidoDto> searchAllSido() throws Exception;
 	List<GugunDto> searchGugunBySido(int sidoCode) throws Exception;
 	List<TripDto> searchAll(TripSearchDto param) throws Exception;
+	List<TripDto> searchAll(String keyword) throws Exception;
 }

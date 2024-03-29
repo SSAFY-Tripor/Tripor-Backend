@@ -27,6 +27,48 @@ public class TripDaoImpl implements TripDao {
 	
 
 	@Override
+	public List<TripDto> searchAll(String keyword) throws Exception {
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		List<TripDto> list = new ArrayList<>();
+		try {
+			con = dbUtil.getConnection();
+			StringBuilder sb = new StringBuilder();
+			sb.append("select ai.content_id, ai.content_type_id, ai.title, ai.addr1, ai.first_image,\n");
+			sb.append("ai.sido_code, ai.gugun_code, ai.latitude, ai.longitude, ad.overview\n");
+			sb.append("from attraction_info ai left join attraction_description ad\n");
+			sb.append("where ai.title like concat('%', ?, '%')");
+			
+			ps = con.prepareStatement(sb.toString());
+			ps.setString(1, keyword);
+			
+			rs = ps.executeQuery();
+
+			while(rs.next()) {
+				TripDto tripDto = new TripDto();
+				tripDto.setContentId(rs.getString(1));
+				tripDto.setContentTypeId(rs.getInt(2));
+				tripDto.setTitle(rs.getString(3));
+				tripDto.setAddr(rs.getString(4));
+				tripDto.setFirstImage(rs.getString(5));
+				tripDto.setSidoCode(rs.getInt(6));
+				tripDto.setGugunCode(rs.getInt(7));
+				tripDto.setLatitude(rs.getString(8));
+				tripDto.setLongitude(rs.getString(9));
+				tripDto.setOverview(rs.getString(10));
+				list.add(tripDto);
+			}
+			System.out.println(list);
+			return list;
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			dbUtil.close(rs, ps, con);
+		}
+	}
+
+	@Override
 	public List<TripDto> searchAll(TripSearchDto param) throws Exception {
 		Connection con = null;
 		PreparedStatement ps = null;

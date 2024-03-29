@@ -20,6 +20,13 @@ public class TripServiceImpl implements TripService{
 	
 	
 	@Override
+	public String getTripList(String keyword) throws Exception {
+		List<TripDto> list = tripDao.searchAll(keyword);
+		Gson gson = new Gson();
+        String json = gson.toJson(list);
+        return json;
+	}
+	@Override
 	public String getTripList(TripSearchDto param) throws Exception {
 		List<TripDto> list = tripDao.searchAll(param);
 		Gson gson = new Gson();

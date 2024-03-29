@@ -361,7 +361,8 @@ const performSearch = async () => {
 	}
 	const encodedKeyword = encodeURIComponent(searchInput.trim());
 	console.log(encodedKeyword)
-	const planParam = `/trip?action=mapping&keyWord=${encodedKeyword}`;
+	const planParam = `/trip?action=mapping&keyword=${encodedKeyword}`;
+	console.log(`${url}${planParam}`);
 	// API 호출
 	const response = await fetch(`${url}${planParam}`);
 	const data = await response.json();
