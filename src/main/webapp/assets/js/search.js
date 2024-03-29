@@ -80,10 +80,9 @@ const closeOverlay = (item = null) => {
 	}
 }
 
-const updateMapMarkers = (tour = "all") => {
+const updateMapMarkers = (areaCode, sigunguCode, tour) => {
 	let bounds = new kakao.maps.LatLngBounds(); // 모든 마커를 포함할 수 있는 LatLngBounds 객체 생성
 	let flag = false;
-	console.log(tourData);
 
 	// tourData는 API 호출 결과로 얻은 데이터 배열
 	tourData.forEach((item) => {
@@ -147,14 +146,12 @@ const updateMapMarkers = (tour = "all") => {
 	if (flag) {
 		map.setBounds(bounds);
 	} else {
-		const areaCode = regionSelect.value;
-		const sigunguCode = subregionSelect.value;
-		alert("해당 관광 정보가 존재하지 않습니다.");
+		alert("해당 관광 정보 지역이 없습니다.");
 		fetchAllTourData(areaCode, sigunguCode);
 	}
 }
 
-const fetchAllTourData = async (areaCode, sigunguCode, tourType) => {
+const fetchAllTourData = async (areaCode, sigunguCode, tourType = "all") => {
 	// 기존 데이터 초기화
 	tourData = [];
 	let tourListParam = `/trip?action=mapping&sido=${areaCode}&gugun=${sigunguCode}`;
@@ -168,12 +165,14 @@ const fetchAllTourData = async (areaCode, sigunguCode, tourType) => {
 		tourData.push(item);
 	});
 	// 데이터를 모두 가져온 후의 추가 처리
-	updateMapMarkers(tourType);
+	updateMapMarkers(areaCode, sigunguCode, tourType);
 }
 
 const tourChangeListener = async (region, subRegion, tourSelect) => {
-	const selectedContentId = tourSelect.value;
-	console.log(selectedContentId);
+	let selectedContentId = tourSelect.value;
+	if(selectedContentId == ""){
+		selectedContentId = "all";
+	}
 	// 모든 마커를 지도에서 제거
 	markers.forEach((marker) => {
 		marker.setMap(null);
@@ -262,7 +261,18 @@ const sidoLoadingListener = async () => {
 
 document.addEventListener("DOMContentLoaded", sidoLoadingListener);
 
+
+
 // ================ 여행 검색 =======================
+// ================ 여행 검색 =======================
+// ================ 여행 검색 =======================
+// ================ 여행 검색 =======================
+// ================ 여행 검색 =======================
+// ================ 여행 검색 =======================
+// ================ 여행 검색 =======================
+// ================ 여행 검색 =======================
+// ================ 여행 검색 =======================
+
 // 목록에서 항목 제거하는 함수
 const removeFromPlanList = (listItem, title) =>{
 	// 항목 제거
@@ -351,9 +361,9 @@ const performSearch = async () => {
 	}
 	const encodedKeyword = encodeURIComponent(searchInput.trim());
 	console.log(encodedKeyword)
-	const API_URL = url + `/trip?action=mapping&keyWord=${encodedKeyword}`;
+	const planParam = `/trip?action=mapping&keyWord=${encodedKeyword}`;
 	// API 호출
-	const response = await fetch(API_URL)
+	const response = await fetch(`${url}${planParam}`);
 	const data = await response.json();
 	console.log(data);
 	const bounds = new kakao.maps.LatLngBounds();
@@ -424,6 +434,7 @@ const performSearch = async () => {
 const searchBtn = document.querySelector("#searchButton");
 // 검색 입력 필드에 엔터 키 이벤트 리스너 추가
 const searchInput = document.querySelector("#searchInput");
+
 if (searchBtn != null) {
 	searchBtn.addEventListener("click", () => { performSearch() });
 }
@@ -454,8 +465,10 @@ const planBtnClickEventListener = () => {
 }
 
 // plan
+// 일정 등록하기 버튼
 const planBtn = document.querySelector("#savePlanButton");
 if (planBtn != null) {
 	planBtn.addEventListener("click", planBtnClickEventListener);
 } 
+
 
