@@ -47,6 +47,16 @@ public class TripServiceImpl implements TripService{
         String json = gson.toJson(list);
         return json;
 	}
+	@Override
+	public void registerTripPlan(String tripJson, String userId, String planName) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public List<TripDto> getTripPlan(String userId) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	
 }
