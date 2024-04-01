@@ -10,8 +10,10 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 import com.tripor.member.model.dto.MemberDto;
+import com.tripor.trip.model.dto.TripPlanDto;
 import com.tripor.trip.model.dto.TripSearchDto;
 import com.tripor.trip.model.service.TripService;
 import com.tripor.trip.model.service.TripServiceImpl;
@@ -55,7 +57,13 @@ public class TripController extends HttpServlet {
 				}
 
 			} else if ("mvPlan".equals(action)) {
-				// 로그인 블락 추가하기
+				HttpSession session = request.getSession();
+				MemberDto memberDto = (MemberDto) session.getAttribute("member");
+				if (memberDto == null) {
+					path = "/member?action=login";
+					redirect(path, root, response);
+					return;
+				}
 				path = "/trip/plan.jsp";
 				forward(path, request, response);
 			} else if ("planAdd".equals(action)) {
@@ -76,6 +84,19 @@ public class TripController extends HttpServlet {
 				// 여행 계획 페이지로 redirect
 				path = "/trip?action=mvPlan";
 				redirect(path, root, response);
+			}else if("mvMyPlan".equals(action)) {
+				HttpSession session = request.getSession();
+				MemberDto memberDto = (MemberDto) session.getAttribute("member");
+				if (memberDto == null) {
+					path = "/member?action=login";
+					redirect(path, root, response);
+					return;
+				}
+				
+				List<TripPlanDto> list = tripService.getTripPlan(memberDto.getUserId()); 
+				request.setAttribute("plans", list);
+				path="/trip/myplan.jsp";
+				forward(path, request, response);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

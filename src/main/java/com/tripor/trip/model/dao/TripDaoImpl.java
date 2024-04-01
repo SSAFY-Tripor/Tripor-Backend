@@ -235,7 +235,7 @@ public class TripDaoImpl implements TripDao {
 			sb.append("ai.sido_code, ai.gugun_code, ai.latitude, ai.longitude, ad.overview\n");
 			sb.append("from attraction_info ai left join attraction_description ad\n");
 			sb.append("on ai.content_id = ad.content_id\n");
-			sb.append("where=?");
+			sb.append("where ai.content_id=?");
 			ps = con.prepareStatement(sb.toString());
 			ps.setInt(1, contentId);
 			rs = ps.executeQuery();

@@ -61,6 +61,12 @@
                             >-&nbsp;&nbsp;&nbsp;회원탈퇴</a
                         >
                     </div>
+                    <div style="height: 10px"></div>
+                     <div>
+                        <a onclick="location.href='${root}/trip?action=mvMyPlan'"
+                            >-&nbsp;&nbsp;&nbsp;나의 여행계획</a
+                        >
+                    </div>
                 </div>
             </div>
         </div>
