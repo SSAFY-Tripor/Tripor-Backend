@@ -37,11 +37,6 @@ const categoryItems = [
 	{ code: 39, name: "음식점" },
 ];
 
-
-// ================ 여행 검색 =======================
-let polylines = []; // 선분을 저장할 배열
-let tempListItems = []; // makePlan 임시 버퍼
-let planItems = []; // plan에 저장될 임시 리스트
 // 지도 설정
 let markers = [];
 const container = document.getElementById("search-map");
@@ -109,7 +104,7 @@ const updateMapMarkers = (areaCode, sigunguCode, tour) => {
                                     </div>
                                     <div class="body">
                                         <div class="img">
-                                            <img src="${item.firstimage ? item.firstimage : contextPath}/img/no_image.jpg" width="80px" height="80px">
+                                            <img src="${item.firstImage ? item.firstImage : contextPath}/img/no_image.jpg" width="80px" height="80px">
                                         </div>
                                         <div class="desc">
                                             <div class="ellipsis">주소: ${item.addr ? item.addr : "정보 없음"}</div>
@@ -272,6 +267,11 @@ document.addEventListener("DOMContentLoaded", sidoLoadingListener);
 // ================ 여행 검색 =======================
 // ================ 여행 검색 =======================
 // ================ 여행 검색 =======================
+// ================ 여행 검색 =======================
+let polylines = []; // 선분을 저장할 배열
+let tempListItems = []; // makePlan 임시 버퍼
+let planItems = []; // plan에 저장될 임시 리스트
+let planIdItems = [];
 
 // 목록에서 항목 제거하는 함수
 const removeFromPlanList = (listItem, title) =>{
@@ -293,8 +293,8 @@ const removeFromPlanList = (listItem, title) =>{
 		var endItem = planItems[i];
 		var polyline = new kakao.maps.Polyline({
 			path: [
-				new kakao.maps.LatLng(startItem.mapy, startItem.mapx),
-				new kakao.maps.LatLng(endItem.mapy, endItem.mapx),
+				new kakao.maps.LatLng(startItem.latitude, startItem.longitude),
+				new kakao.maps.LatLng(endItem.latitude, endItem.longitude),
 			],
 			// 선분 스타일 설정
 		});
@@ -303,41 +303,52 @@ const removeFromPlanList = (listItem, title) =>{
 	}
 }
 
+const removeAllPlanList = (plans) =>{
+	plans.innerHTML = "";
+    polylines.forEach((polyline) => {
+        polyline.setMap(null); // 각 선분을 Map에서 제거
+    });
+    polylines = []; // 배열 초기화
+    planItems = [];
+    planIdItems = [];
+}
 
 // 여행 계획 목록에 추가
 const addToPlanList = async (index) =>{
 	const item = tempListItems[index];
 	// 중복 검사
 	if (planItems.some((planItem) => planItem.title === item.title)) {
-		console.log("이미 추가된 항목입니다.");
+		alert("이미 추가된 항목입니다.");
 		return; // 이미 목록에 존재하는 항목이면 함수 실행을 종료
 	}
 
 	// 목록 항목 생성
-	const planList = document.getElementById("planItems");
+	const planList = document.querySelector("#planItems");
 	const listItem = document.createElement("li");
 	listItem.innerHTML = `<div class="list-group-item">
         <h5 class="mb-1">${item.title}</h5>
-        <p class="mb-1">${item.addr1 || "주소 정보 없음"}</p>
+        <p class="mb-1">${item.addr || "주소 정보 없음"}</p>
         <p class="mb-1">${item.tel || "전화번호 정보 없음"}</p>
-        <img src="${item.firstimage || contextPath + "/img/no_image.jpg"
+        <img src="${item.firstImage || contextPath + "/img/no_image.jpg"
 		}" width="80" height="80" class="rounded float-right">
         <button onclick="removeFromPlanList(this.parentElement, '${item.title
 		}')" class="btn btn-danger btn-sm">X</button>
-    </div>`;
+    </div>
+    <hr/>`;
 	listItem.dataset.title = item.title; // 중복 검사를 위한 데이터 속성 설정
 	planList.appendChild(listItem);
 
 	// 추가된 아이템 정보를 planItems 배열에 저장
 	planItems.push(item);
+	planIdItems.push(item.contentId);
 
 	// 새로운 아이템과 마지막 아이템을 연결하는 선분 추가
 	if (planItems.length > 1) {
 		var lastItem = planItems[planItems.length - 2]; // 마지막에서 두 번째 아이템
 		var polyline = new kakao.maps.Polyline({
 			path: [
-				new kakao.maps.LatLng(lastItem.mapy, lastItem.mapx),
-				new kakao.maps.LatLng(item.mapy, item.mapx),
+				new kakao.maps.LatLng(lastItem.latitude, lastItem.longitude),
+				new kakao.maps.LatLng(item.latitude, item.longitude),
 			],
 			strokeWeight: 3,
 			strokeColor: "#db4040",
@@ -366,14 +377,13 @@ const performSearch = async () => {
 	// API 호출
 	const response = await fetch(`${url}${planParam}`);
 	const data = await response.json();
-	console.log(data);
 	const bounds = new kakao.maps.LatLngBounds();
 	await data.forEach((item, index) => {
 		// 각 항목의 위치에 마커 생성
-		const position = new kakao.maps.LatLng(item.mapy, item.mapx);
+		const position = new kakao.maps.LatLng(item.latitude, item.longitude);
 		const marker = new kakao.maps.Marker({
-			map: map,
-			position: position,
+			map,
+			position,
 		});
 
 		// 마커를 markers 배열에 추가
@@ -391,21 +401,21 @@ const performSearch = async () => {
                                         </div>
                                         <div class="body">
                                             <div class="img">
-                                                <img src="${item.firstimage
-				? item.firstimage
+                                                <img src="${item.firstImage
+				? item.firstImage
 				: contextPath + "/img/no_image.jpg"
 			}" width="80px" height="80px">
                                             </div>
                                             <div class="desc">
-                                                <div class="ellipsis">주소: ${item.addr1
-				? item.addr1
+                                                <div class="ellipsis">주소: ${item.addr
+				? item.addr
 				: "정보 없음"
 			}</div>
                                                 <div class="jibun ellipsis">전화번호: ${item.tel
 				? item.tel
 				: "정보 없음"
 			}</div>
-                                                <button onclick="addToPlanList(${index})">추가하기</button>
+                                                <button type="button" onclick="addToPlanList(${index})">추가하기</button>
                                             </div>
                                         </div>
                                     </div>
@@ -416,6 +426,7 @@ const performSearch = async () => {
 			position: marker.getPosition(),
 		});
 		overlay.setMap(null); // 초기에는 숨김
+		tempListItems.push(item);
 
 		// 마커 클릭 이벤트: 정보 창 표시
 		kakao.maps.event.addListener(marker, "click", function() {
@@ -425,8 +436,8 @@ const performSearch = async () => {
 		});
 	});
 	// 모든 마커가 포함되도록 지도 범위를 조정
+	console.log(bounds)
 	map.setBounds(bounds);
-	console.log("검색 결과:", items);
 };
 
 
@@ -453,23 +464,31 @@ if (searchInput != null) {
 
 const planBtnClickEventListener = () => {
 		// 고유한 planId 생성 (예시: 현재 날짜와 시간을 이용)
-		const planId = "plan_" + new Date().toISOString();
+		//const planId = "plan_" + new Date().toISOString();
 
 		// planItems 배열을 로컬 스토리지에 저장
-		localStorage.setItem(planId, JSON.stringify(planItems));
+		//localStorage.setItem(planId, JSON.stringify(planItems));
 
 		alert("여행 계획이 등록되었습니다.");
-
+		
+		const planListForm = document.querySelector("#planListForm");
+		const planIdList = document.querySelector("#planIdList");
+		planIdList.setAttribute("value", JSON.stringify(planIdItems));
 		// 등록 후 planItems 배열 초기화 및 목록 UI 업데이트
 		planItems = [];
-		document.getElementById("planItems").innerHTML = "";
+		removeAllPlanList(document.getElementById("planItems"));
+		planListForm.submit();
 }
 
 // plan
 // 일정 등록하기 버튼
 const planBtn = document.querySelector("#savePlanButton");
+const cancelBtn = document.querySelector("#canclePlanButton");
 if (planBtn != null) {
 	planBtn.addEventListener("click", planBtnClickEventListener);
-} 
+}
+if(cancelBtn != null){
+	cancelBtn.addEventListener("click", () => {removeAllPlanList(document.getElementById("planItems"))});
+}
 
 

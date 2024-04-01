@@ -75,23 +75,28 @@
 	<jsp:include page="/common/aside.jsp" />
 	
 
-	
+	<form id="planListForm" method="POST" action="${root}/trip">
+		<input type="hidden" name="action" value="planAdd"/>
+		<input type="hidden" id="planIdList" name="planIdList" value=""/>
 		<div class="container" style="z-index: 1; padding-left: 0">
 			<div class="show_Home" id="home_div" style="position: relative"> 
 				<div id="search-map" class="search-map position-relative"
 					style="width: 3000px; height: 1000px">
-					<div style="width: 300px; height: 1000px"></div>
+					<div style="width: 2000px; height: 1000px"></div>
 					<div id="planList"
 						class="plan-list position-absolute top-0 start-50 bg-light p-3"
 						style="width: 20%; height: 100%; overflow-y: auto; background-color: rgba(255, 255, 255, 0.6) !important; z-index: 1000; display: block;">
 						<h4 class="text-dark">여행 계획 목록</h4>
 						<ul id="planItems" class="list-unstyled"></ul>
-						<button id="savePlanButton"
+						<button type="button" id="savePlanButton"
 							class="btn btn-outline-primary mt-auto mb-3">일정 등록하기</button>
+						<button type="button" id="canclePlanButton"
+							class="btn btn-outline-danger mt-auto mb-3">일정 삭제하기</button>
 					</div>
 				</div>
 			</div>
 		</div>
+	</form>
 
 	<script src="${root}/assets/js/main.js" type="text/javascript"></script>
 	<script src="${root}/assets/js/search.js" type="text/javascript"></script>

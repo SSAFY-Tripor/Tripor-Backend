@@ -38,6 +38,7 @@ public class TripDaoImpl implements TripDao {
 			sb.append("select ai.content_id, ai.content_type_id, ai.title, ai.addr1, ai.first_image,\n");
 			sb.append("ai.sido_code, ai.gugun_code, ai.latitude, ai.longitude, ad.overview\n");
 			sb.append("from attraction_info ai left join attraction_description ad\n");
+			sb.append("on ai.content_id = ad.content_id\n");
 			sb.append("where ai.title like concat('%', ?, '%')");
 			
 			ps = con.prepareStatement(sb.toString());
@@ -59,7 +60,6 @@ public class TripDaoImpl implements TripDao {
 				tripDto.setOverview(rs.getString(10));
 				list.add(tripDto);
 			}
-			System.out.println(list);
 			return list;
 		} catch (SQLException e) {
 			throw e;

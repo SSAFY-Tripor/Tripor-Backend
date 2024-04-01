@@ -26,6 +26,7 @@ public class TripController extends HttpServlet {
 		String action = request.getParameter("action");
 		String path = "";
 		String root = request.getContextPath();
+		System.out.println("TRIP : " + action);
 		try {
 			if("sido".equals(action)) {
 				String json = tripService.getAllSido();
@@ -44,10 +45,12 @@ public class TripController extends HttpServlet {
 					String json = tripService.getTripList(param);
 					returnJson(json, response);
 				}else {
-					System.out.println(keyword);
 					String json = tripService.getTripList(keyword);
+					returnJson(json, response);
 				}
 				
+			}else if("planAdd".equals(action)) {
+				String planIdList = request.getParameter("planIdList");
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
