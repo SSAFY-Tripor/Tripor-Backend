@@ -1,3 +1,17 @@
+let expandFlag = false;
+const expandClickEventListener = (expandDiv, expandIcon, foldIcon) => {
+	if (expandFlag) {
+		expandFlag = false;
+		expandDiv.style.display = "none";
+		expandIcon.style.display = "block";
+		foldIcon.style.display = "none";
+	} else {
+		expandFlag = true;
+		expandDiv.style.display = "block";
+		expandIcon.style.display = "none";
+		foldIcon.style.display = "block";
+	}
+}
 const expandIconClickEventListener = (expandDiv, expandIcon, foldIcon) => {
 	expandDiv.style.display = "block";
 	expandIcon.style.display = "none";
@@ -9,14 +23,13 @@ const foldIconClickEventListener = (expandDiv, expandIcon, foldIcon) => {
 	foldIcon.style.display = "none";
 }
 
+const myPageDiv = document.querySelector("#myPageDiv");
 const myPageExpandDiv = document.querySelector("#myPageExpand");
 const expandIcon = document.querySelector("#expandIcon");
+const expandDiv = document.querySelector("#expandDiv");
 const foldIcon = document.querySelector("#foldIcon");
-if (expandIcon != null) {
-	expandIcon.addEventListener("click", () => { expandIconClickEventListener(myPageExpandDiv, expandIcon, foldIcon) });
-}
-if (foldIcon != null) {
-	foldIcon.addEventListener("click", () => { foldIconClickEventListener(myPageExpandDiv, expandIcon, foldIcon) });
+if (expandDiv != null) {
+	expandDiv.addEventListener("click", () => { expandClickEventListener(myPageExpandDiv, expandIcon, foldIcon) });
 }
 
 // 회원 탈퇴 버튼 클릭 이벤트리스너
