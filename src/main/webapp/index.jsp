@@ -80,7 +80,7 @@
 
 
 
-	<div class="container" style="z-index: 1; padding-left: 0">
+	<div class="container" style="z-index: 1; padding-left: 0; width: 100%; height: 100%">
 		<div class="show_Home" id="home_div" style="position: relative">
 
 			<div id="search-map" class="search-map"

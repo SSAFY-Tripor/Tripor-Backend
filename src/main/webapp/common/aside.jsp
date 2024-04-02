@@ -6,7 +6,7 @@
 <div style="height: 90px"></div>
         <div
             class="d-none d-none d-xl-block shadow-sm position-fixed ps-2 pt-4 pe-2 container bg-white"
-            style="width: 20%; height: 100%; z-index: 9; padding-right: 0"
+            style="width: 380px; height: 100%; z-index: 9; padding-right: 0"
         >
             <div style="cursor: pointer" class="p-3 m-1 rounded menu_button row">
                 <div class="col-12" onclick="location.href = '${root}'">
@@ -51,6 +51,13 @@
                     ></i>
                 </div>
                 <div class="ps-5 pt-1" id="myPageExpand" style="display: none">
+                
+                     <div>
+                        <a style="cursor: pointer" onclick="location.href='${root}/trip?action=mvMyPlan'"
+                            >-&nbsp;&nbsp;&nbsp;나의 여행계획</a
+                        >
+                    </div>
+                    <div style="height: 10px"></div>
                     <div>
                         <a style="cursor: pointer" onclick="location.href = '${root}/member?action=mvMypage'"
                             >-&nbsp;&nbsp;&nbsp;회원정보 수정</a
@@ -62,12 +69,7 @@
                             >-&nbsp;&nbsp;&nbsp;회원탈퇴</a
                         >
                     </div>
-                    <div style="height: 10px"></div>
-                     <div>
-                        <a style="cursor: pointer" onclick="location.href='${root}/trip?action=mvMyPlan'"
-                            >-&nbsp;&nbsp;&nbsp;나의 여행계획</a
-                        >
-                    </div>
+                    
                 </div>
             </div>
         </div>
