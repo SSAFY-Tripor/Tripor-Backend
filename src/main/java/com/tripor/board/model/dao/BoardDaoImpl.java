@@ -6,11 +6,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.tripor.board.model.dto.BoardDto;
 import com.tripor.util.DBUtil;
 
-public class BoardDaoImpl implements BoardDao{
+public class BoardDaoImpl implements BoardDao {
 	private static BoardDao instance = new BoardDaoImpl();
 	DBUtil dbUtil = DBUtil.getInstance();
 
@@ -114,18 +115,37 @@ public class BoardDaoImpl implements BoardDao{
 	}
 
 	@Override
-	public List<BoardDto> searchAll() throws SQLException {
+	public List<BoardDto> searchAll(Map<String, Object> map) throws SQLException {
 		List<BoardDto> list = new ArrayList<>();
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
+		String key = (String) map.get("key");
+		String word = (String) map.get("word");
+
 		try {
 			con = dbUtil.getConnection();
 			StringBuilder sql = new StringBuilder();
 			sql.append("select board_no, user_id, subject, content, hit, register_date \n");
 			sql.append("from board \n");
-			sql.append("order by board_no desc");
+			if (!key.isEmpty() && !word.isEmpty()) {
+				// 제목은 LIKE, 그외는 == 연산
+				if ("subject".equals(key)) {
+					sql.append("where subject like concat('%', ? , '%') \n");
+				} else {
+					sql.append("where ").append(key).append("=?\n");
+				}
+			}
+			sql.append("order by board_no desc \n");
+			sql.append("limit ?, ?");
 			ps = con.prepareStatement(sql.toString());
+			int idx = 0;
+			if (!key.isEmpty() && !word.isEmpty()) {
+				ps.setString(++idx, word); // word가 없다면, 생략되나봄. 증감연산자 동작 X
+			}
+			ps.setInt(++idx, (int) map.get("start"));
+			ps.setInt(++idx, (int) map.get("listsize"));
+			System.out.println((int) map.get("start"));
 			rs = ps.executeQuery();
 			while (rs.next()) {
 				BoardDto boardDto = new BoardDto();
@@ -141,6 +161,41 @@ public class BoardDaoImpl implements BoardDao{
 			dbUtil.close(rs, ps, con);
 		}
 		return list;
+	}
+	
+	
+
+	@Override
+	public int searchCount(Map<String, Object> map) throws SQLException {
+		int cnt = 0;
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		String key = (String) map.get("key");
+		String word = (String) map.get("word");
+		try {
+			con = dbUtil.getConnection();
+			StringBuilder sql = new StringBuilder();
+			sql.append("select count(board_no) from board \n");
+			if (!key.isEmpty() && !word.isEmpty()) {
+				// 제목은 LIKE, 그외는 == 연산
+				if ("subject".equals(key)) {
+					sql.append("where subject like concat('%', ? , '%') \n");
+				} else {
+					sql.append("where ").append(key).append("=?\n");
+				}
+			}
+			ps = con.prepareStatement(sql.toString());
+			if (!key.isEmpty() && !word.isEmpty()) {
+				ps.setString(1, word);
+			}
+			rs = ps.executeQuery();
+			rs.next();
+			cnt = rs.getInt(1);
+			return cnt;
+		} finally {
+			dbUtil.close(rs, ps, con);
+		}
 	}
 
 	@Override
