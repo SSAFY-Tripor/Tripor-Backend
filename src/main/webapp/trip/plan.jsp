@@ -30,48 +30,7 @@
 </head>
 <body data-context-path="${root}">
 	<div class="fixed-top">
-		<div class="navbar navbar-expand-md bg-white navbar-light">
-			<div class="container-fluid justify-content-center">
-				<a href="${root}" class="navbar-brand fw-bold fs-1 col-lg-2"
-					id="header_title">Tripor</a>
-
-
-
-				<div class="col-lg-8 col-md-12 d-flex flex-row" id="makePlace">
-					<input class="form-control mr-sm-2 m-2 w-75 shadow-sm"
-						type="search" placeholder="여행지를 검색하세요!" aria-label="Search"
-						id="searchInput" />
-					<button class="btn text-white btn-primary m-2"
-						style="overflow: hiddlen; white-space: nowrap" id="searchButton">
-						검색</button>
-				</div>
-				<div
-					class="col-lg-2 d-none d-md-none d-lg-block collapse navbar-collapse d-flex flex-row"
-					id="header_join_login"
-					style="display: block; overflow: hidden; white-space: nowrap;">
-
-
-					<c:if test="${member eq null}">
-						<button id="joinButton" class="btn btn-outline-primary m-1"
-							onclick="location.href = '${root}/member?action=mvJoin'">
-							회원가입</button>
-						<button id="logInButton" class="btn text-white btn-primary m-1"
-							onclick="location.href = '${root}/member?action=mvLogin'">
-							로그인</button>
-					</c:if>
-					<c:if test="${member ne null}">
-						<div>
-							<span>${member.userName} 님 로그인 중</span>
-							<button id="logOutButton" class="btn text-white btn-primary m-1"
-								onclick="location.href = '${root}/member?action=logout'">
-								로그아웃</button>
-						</div>
-					</c:if>
-				</div>
-			</div>
-		</div>
-		<div id="hr"></div>
-	</div>
+	<jsp:include page="/common/header.jsp" />
 	<jsp:include page="/common/aside.jsp" />
 	
 
@@ -82,16 +41,32 @@
 			<div class="show_Home" id="home_div" style="position: relative"> 
 				<div id="search-map" class="search-map position-relative"
 					style="width: 3000px; height: 1000px">
-					<div style="width: 2000px; height: 1000px"></div>
+					
 					<div id="planList"
-						class="plan-list position-absolute top-0 start-50 bg-light p-3"
-						style="width: 20%; height: 100%; overflow-y: auto; background-color: rgba(255, 255, 255, 0.6) !important; z-index: 1000; display: block;">
-						<h4 class="text-dark">여행 계획 목록</h4>
-						<ul id="planItems" class="list-unstyled"></ul>
+						class="plan-list bg-light p-3"
+						style="position: absolute; left: 380px; width: 15%; height: 100%; overflow-y: auto; background-color: rgba(255, 255, 255, 0.7) !important; z-index: 1000; display: block;">
+						
+						<span class="mb-3 ms-2" id="planNameGroup">
+						     <i class="bi bi-pen-fill me-1"></i>		
+							<input 
+								value="민선의 여행 계획"
+								id="planName" />
+									
+						</span>
+					
+						<div class="d-flex flex-row" id="makePlace">
+								<input class="form-control mr-sm-2 m-2 w-75 shadow-sm"
+									type="search" placeholder="여행지를 검색하세요!" aria-label="Search"
+									id="searchInput" />
+								<button class="btn text-white btn-primary m-2" type="button"
+									style="overflow: hiddlen; white-space: nowrap" id="searchButton">
+									검색</button>
+							</div>
+							<ul id="planItems" class="list-unstyled m-2"></ul>
 						<button type="button" id="savePlanButton"
-							class="btn btn-outline-primary mt-auto mb-3">일정 등록하기</button>
+							class="btn btn-outline-primary mt-auto mb-3 ms-2">일정 등록하기</button>
 						<button type="button" id="canclePlanButton"
-							class="btn btn-outline-danger mt-auto mb-3">일정 삭제하기</button>
+							class="btn btn-outline-danger mt-auto mb-3">일정 초기화</button>
 					</div>
 				</div>
 			</div>
