@@ -77,7 +77,7 @@ public class TripController extends HttpServlet {
 					return;
 				}
 				if (planName == null || planName.length() == 0) {
-					planName = memberDto.getUserName() + "의 여행 정보";
+					planName = memberDto.getUserName() + "의 여행 계획";
 				}
 				tripService.registerTripPlan(tripJson, memberDto.getUserId(), planName);
 

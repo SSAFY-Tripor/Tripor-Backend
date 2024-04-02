@@ -337,8 +337,9 @@ const addToPlanList = async (index) => {
 		}" width="80" height="80" class="rounded float-right">
         <button onclick="removeFromPlanList(this.parentElement, '${item.title
 		}')" class="btn btn-danger btn-sm">X</button>
+		 <hr/>
     </div>
-    <hr/>`;
+   `;
 	listItem.dataset.title = item.title; // 중복 검사를 위한 데이터 속성 설정
 	planList.appendChild(listItem);
 
@@ -452,7 +453,9 @@ const searchBtn = document.querySelector("#searchButton");
 const searchInput = document.querySelector("#searchInput");
 
 if (searchBtn != null) {
-	searchBtn.addEventListener("click", () => { performSearch() });
+	searchBtn.addEventListener("click", () => {
+		performSearch();
+	});
 }
 if (searchInput != null) {
 	searchInput.addEventListener("keypress", (event) => {
