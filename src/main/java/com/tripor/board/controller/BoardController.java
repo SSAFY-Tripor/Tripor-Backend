@@ -101,10 +101,6 @@ public class BoardController extends HttpServlet {
 				boardService.deleteBoard(boardNo);
 				path = "/board?action=list";
 				redirect(path, root, response);
-			}else if("mvPlan".equals(action)) {
-				// 로그인 블락 추가하기
-				path = "/trip/plan.jsp";
-				forward(path, request, response);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

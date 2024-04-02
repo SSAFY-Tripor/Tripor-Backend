@@ -16,4 +16,5 @@ public interface TripDao {
 	int insertTripPlan(String tripJson, String userId, String planName) throws Exception;
 	List<TripPlanDto> searchPlansByUserId(String userId) throws Exception;
 	TripDto searchByContentId(int contentId) throws Exception;
+	TripPlanDto searchPlanByPlanId(int planId) throws Exception;
 }

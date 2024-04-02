@@ -195,7 +195,6 @@ public class TripDaoImpl implements TripDao {
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		Gson gson = new Gson();
 		List<TripPlanDto> list = new ArrayList<TripPlanDto>();
 		try {
 			con = dbUtil.getConnection();
@@ -207,9 +206,7 @@ public class TripDaoImpl implements TripDao {
 				TripPlanDto tripPlanDto = new TripPlanDto();
 				tripPlanDto.setPlanId(rs.getInt(1));
 				tripPlanDto.setPlanName(rs.getString(2));
-				String tripListJson = rs.getString(3);
-				List<String> tripList = gson.fromJson(tripListJson, List.class);
-				tripPlanDto.setTripList(searchByContentIds(tripList));
+				tripPlanDto.setTripList(planJsonToTripList(rs.getString(3)));
 				tripPlanDto.setPlanUserId(rs.getString(4));
 				tripPlanDto.setPlanRegisterDate(rs.getString(5));
 				list.add(tripPlanDto);
@@ -258,6 +255,42 @@ public class TripDaoImpl implements TripDao {
 		} finally {
 			dbUtil.close(rs, ps, con);
 		}
+	}
+	
+	
+	
+
+	@Override
+	public TripPlanDto searchPlanByPlanId(int planId) throws Exception {
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			con = dbUtil.getConnection();
+			String sql = "select * from trip_plan where plan_id=?";
+			ps = con.prepareStatement(sql);
+			ps.setInt(1, planId);
+			rs = ps.executeQuery();
+			TripPlanDto tripPlanDto = new TripPlanDto();
+			if (rs.next()) {
+				tripPlanDto.setPlanId(rs.getInt(1));
+				tripPlanDto.setPlanName(rs.getString(2));
+				tripPlanDto.setTripList(planJsonToTripList(rs.getString(3)));
+				tripPlanDto.setPlanUserId(rs.getString(4));
+				tripPlanDto.setPlanRegisterDate(rs.getString(5));
+			}
+			return tripPlanDto;
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			dbUtil.close(rs, ps, con);
+		}
+	}
+	
+	public List<TripDto> planJsonToTripList(String json) throws Exception{
+		Gson gson = new Gson();
+		List<String> tripList = gson.fromJson(json, List.class);
+		return searchByContentIds(tripList);
 	}
 
 	public List<TripDto> searchByContentIds(List<String> list) throws Exception{

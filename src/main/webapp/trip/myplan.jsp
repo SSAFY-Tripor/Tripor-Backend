@@ -15,7 +15,7 @@
 <body>
 	<c:forEach var="plan" items="${plans}">
 		<div>${plan.planId}</div>
-		<div><a href="#">${plan.planName}</a></div>
+		<div><a href="${root}/trip?action=detail&planid=${plan.planId}">${plan.planName}</a></div>
 		<div>${plan.planRegisterDate}</div>
 	</c:forEach>
 </body>
