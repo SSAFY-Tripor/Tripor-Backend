@@ -39,6 +39,22 @@ public class TripServiceImpl implements TripService {
 	}
 
 	@Override
+	public String getTrip(int contentId) throws Exception {
+		TripDto tripDto = tripDao.searchByContentId(contentId);
+		Gson gson = new Gson();
+		String json = gson.toJson(tripDto);
+		return json;
+	}
+
+	@Override
+	public String getTripList(int planId) throws Exception {
+		List<TripDto> list = tripDao.searchPlanByPlanId(planId).getTripList();
+		Gson gson = new Gson();
+		String json = gson.toJson(list);
+		return json;
+	}
+
+	@Override
 	public String getAllSido() throws Exception {
 		List<SidoDto> list = tripDao.searchAllSido();
 		Gson gson = new Gson();
@@ -69,7 +85,5 @@ public class TripServiceImpl implements TripService {
 	public TripPlanDto getTripPlanDetail(int planId) throws Exception {
 		return tripDao.searchPlanByPlanId(planId);
 	}
-	
-	
 
 }

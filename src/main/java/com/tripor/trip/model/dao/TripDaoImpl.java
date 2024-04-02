@@ -218,8 +218,7 @@ public class TripDaoImpl implements TripDao {
 			dbUtil.close(rs, ps, con);
 		}
 	}
-	
-	
+
 	@Override
 	public TripDto searchByContentId(int contentId) throws Exception {
 		Connection con = null;
@@ -256,9 +255,6 @@ public class TripDaoImpl implements TripDao {
 			dbUtil.close(rs, ps, con);
 		}
 	}
-	
-	
-	
 
 	@Override
 	public TripPlanDto searchPlanByPlanId(int planId) throws Exception {
@@ -286,16 +282,16 @@ public class TripDaoImpl implements TripDao {
 			dbUtil.close(rs, ps, con);
 		}
 	}
-	
-	public List<TripDto> planJsonToTripList(String json) throws Exception{
+
+	public List<TripDto> planJsonToTripList(String json) throws Exception {
 		Gson gson = new Gson();
 		List<String> tripList = gson.fromJson(json, List.class);
 		return searchByContentIds(tripList);
 	}
 
-	public List<TripDto> searchByContentIds(List<String> list) throws Exception{
+	public List<TripDto> searchByContentIds(List<String> list) throws Exception {
 		List<TripDto> returnList = new ArrayList<>();
-		for(String contentId : list) {
+		for (String contentId : list) {
 			returnList.add(searchByContentId(Integer.parseInt(contentId)));
 		}
 		return returnList;

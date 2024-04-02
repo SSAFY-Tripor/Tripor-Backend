@@ -103,6 +103,14 @@ public class TripController extends HttpServlet {
 				request.setAttribute("plan", tripPlanDto);
 				path = "/trip/myplandetail.jsp";
 				forward(path, request, response);
+			}else if("mappingPlan".equals(action)) {
+				int planId = Integer.parseInt(request.getParameter("planid"));
+				String json = tripService.getTripList(planId);
+				returnJson(json, response);
+			}else if("getTrip".equals(action)) {
+				int contentId = Integer.parseInt(request.getParameter("contentid"));
+				String json = tripService.getTrip(contentId);
+				returnJson(json, response);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

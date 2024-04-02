@@ -39,7 +39,7 @@ const categoryItems = [
 
 // 지도 설정
 let markers = [];
-const container = document.getElementById("search-map");
+const container = document.querySelector("#search-map");
 const options = {
 	center: new window.kakao.maps.LatLng(
 		locationMap.서울.lat,
@@ -47,7 +47,11 @@ const options = {
 	),
 	level: 5,
 };
-let map = new kakao.maps.Map(container, options);
+
+let map;
+if (container != null) {
+	map = new kakao.maps.Map(container, options);
+}
 let currentOverlay = null;
 
 const setMapCenter = (lat, lng, selectedRegionName) => {
@@ -150,7 +154,7 @@ const fetchAllTourData = async (areaCode, sigunguCode, tourType = "all") => {
 	// 기존 데이터 초기화
 	tourData = [];
 	let tourListParam = `/trip?action=mapping&sido=${areaCode}&gugun=${sigunguCode}`;
-	if(tourType != "all" && tourType != null){
+	if (tourType != "all" && tourType != null) {
 		tourListParam += `&type=${tourType}`;
 	}
 	// await를 사용하여 fetch 요청의 완료를 기다림
@@ -165,7 +169,7 @@ const fetchAllTourData = async (areaCode, sigunguCode, tourType = "all") => {
 
 const tourChangeListener = async (region, subRegion, tourSelect) => {
 	let selectedContentId = tourSelect.value;
-	if(selectedContentId == ""){
+	if (selectedContentId == "") {
 		selectedContentId = "all";
 	}
 	// 모든 마커를 지도에서 제거
@@ -173,10 +177,10 @@ const tourChangeListener = async (region, subRegion, tourSelect) => {
 		marker.setMap(null);
 	});
 	markers = []; // 마커 배열 초기화
-	
+
 	const areaCode = region.value;
 	const sigunguCode = subRegion.value;
-	
+
 	await fetchAllTourData(areaCode, sigunguCode, selectedContentId);
 }
 
@@ -236,7 +240,7 @@ const gugunLoadingListener = async (region) => {
 
 const sidoLoadingListener = async () => {
 	const regionSelect = document.getElementById("region");
-	if(regionSelect == null) return;
+	if (regionSelect == null) return;
 	const regionParam = "/trip?action=sido";
 	// 데이터 요청 및 처리
 	const response = await fetch(`${url}${regionParam}`);
@@ -274,9 +278,9 @@ let planItems = []; // plan에 저장될 임시 리스트
 let planIdItems = [];
 
 // 목록에서 항목 제거하는 함수
-const removeFromPlanList = (listItem, title) =>{
+const removeFromPlanList = (listItem, title) => {
 	// 항목 제거
-	listItem.remove(); 
+	listItem.remove();
 
 	// planItems 배열에서 해당 아이템 정보 제거
 	planItems = planItems.filter((planItem) => planItem.title !== title);
@@ -303,18 +307,18 @@ const removeFromPlanList = (listItem, title) =>{
 	}
 }
 
-const removeAllPlanList = (plans) =>{
+const removeAllPlanList = (plans) => {
 	plans.innerHTML = "";
-    polylines.forEach((polyline) => {
-        polyline.setMap(null); // 각 선분을 Map에서 제거
-    });
-    polylines = []; // 배열 초기화
-    planItems = [];
-    planIdItems = [];
+	polylines.forEach((polyline) => {
+		polyline.setMap(null); // 각 선분을 Map에서 제거
+	});
+	polylines = []; // 배열 초기화
+	planItems = [];
+	planIdItems = [];
 }
 
 // 여행 계획 목록에 추가
-const addToPlanList = async (index) =>{
+const addToPlanList = async (index) => {
 	const item = tempListItems[index];
 	// 중복 검사
 	if (planItems.some((planItem) => planItem.title === item.title)) {
@@ -463,21 +467,21 @@ if (searchInput != null) {
 }
 
 const planBtnClickEventListener = () => {
-		// 고유한 planId 생성 (예시: 현재 날짜와 시간을 이용)
-		//const planId = "plan_" + new Date().toISOString();
+	// 고유한 planId 생성 (예시: 현재 날짜와 시간을 이용)
+	//const planId = "plan_" + new Date().toISOString();
 
-		// planItems 배열을 로컬 스토리지에 저장
-		//localStorage.setItem(planId, JSON.stringify(planItems));
+	// planItems 배열을 로컬 스토리지에 저장
+	//localStorage.setItem(planId, JSON.stringify(planItems));
 
-		alert("여행 계획이 등록되었습니다.");
-		
-		const planListForm = document.querySelector("#planListForm");
-		const planIdList = document.querySelector("#planIdList");
-		planIdList.setAttribute("value", JSON.stringify(planIdItems));
-		// 등록 후 planItems 배열 초기화 및 목록 UI 업데이트
-		planItems = [];
-		removeAllPlanList(document.getElementById("planItems"));
-		planListForm.submit();
+	alert("여행 계획이 등록되었습니다.");
+
+	const planListForm = document.querySelector("#planListForm");
+	const planIdList = document.querySelector("#planIdList");
+	planIdList.setAttribute("value", JSON.stringify(planIdItems));
+	// 등록 후 planItems 배열 초기화 및 목록 UI 업데이트
+	planItems = [];
+	removeAllPlanList(document.getElementById("planItems"));
+	planListForm.submit();
 }
 
 // plan
@@ -487,8 +491,59 @@ const cancelBtn = document.querySelector("#canclePlanButton");
 if (planBtn != null) {
 	planBtn.addEventListener("click", planBtnClickEventListener);
 }
-if(cancelBtn != null){
-	cancelBtn.addEventListener("click", () => {removeAllPlanList(document.getElementById("planItems"))});
+if (cancelBtn != null) {
+	cancelBtn.addEventListener("click", () => { removeAllPlanList(document.getElementById("planItems")) });
 }
 
+
+
+/*
+===== 여행 디테일 정보 생성 부분 =====
+===== 여행 디테일 정보 생성 부분 =====
+===== 여행 디테일 정보 생성 부분 =====
+===== 여행 디테일 정보 생성 부분 =====
+===== 여행 디테일 정보 생성 부분 =====
+===== 여행 디테일 정보 생성 부분 =====
+*/
+const planMap = document.querySelector("#plan-map");
+const getContents = async () => {
+	const planId = document.querySelector("#plan-div-id").innerText;
+	const planIdParam = `/trip?action=mappingPlan&planid=${planId}`;
+	const response = await fetch(`${url}${planIdParam}`);
+	const data = await response.json();
+	return data;
+}
+
+const planMapLoading = async () => {
+	// 모든 마커가 포함되도록 지도의 중심과 확대 레벨 조정
+	const bounds = new kakao.maps.LatLngBounds();
+	const contents = await getContents();
+	console.log(contents);
+	for (const content of contents) {
+		console.log(content)
+		/*
+		const contentParam = `/trip?action=getTrip&contentid=${content.contentId}`;
+		const response = await fetch(`${url}${contentParam}`);
+		const item = await response.json();
+		*/
+
+		// 위치 정보를 이용하여 마커 생성
+		const markerPosition = new kakao.maps.LatLng(content.latitude, content.longitude);
+		const marker = new kakao.maps.Marker({
+			position: markerPosition,
+			map: map
+		});
+
+		// 마커를 지도에 추가
+		marker.setMap(map);
+		// LatLngBounds 객체에 현재 마커의 위치를 추가
+		bounds.extend(new kakao.maps.LatLng(content.latitude, content.longitude));
+	};
+	map.setBounds(bounds);
+}
+
+if (planMap != null) {
+	map = new kakao.maps.Map(planMap, options);
+	planMapLoading();
+}
 

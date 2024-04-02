@@ -13,6 +13,8 @@ public interface TripService {
 
 	String getAllGugun(int sidoCode) throws Exception;
 
+	String getTrip(int contentId) throws Exception;
+
 	String getTripList(TripSearchDto param) throws Exception;
 
 	String getTripList(String keyword) throws Exception;
@@ -20,6 +22,8 @@ public interface TripService {
 	void registerTripPlan(String tripJson, String userId, String planName) throws Exception;
 
 	List<TripPlanDto> getTripPlan(String userId) throws Exception;
-	
+
 	TripPlanDto getTripPlanDetail(int planId) throws Exception;
+
+	String getTripList(int planId) throws Exception;
 }

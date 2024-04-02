@@ -48,8 +48,6 @@
 							style="overflow: hidden; white-space: nowrap"
 							onclick='location.href="${root}/board?action=mvWrite"'>
 							글쓰기</button>
-
-
 						<table class="board-table">
 							<thead class="board__table-head">
 								<tr class="board__titles">
@@ -63,7 +61,7 @@
 							<tbody class="board__contents" id="board-body">
 								<c:forEach var="board" varStatus="status" items="${boards}">
 									<tr>
-										<td class="board__column col-2 col-sm-2">${status.count}</td>
+										<td class="board__column col-2 col-sm-2">${boards.size() - status.index}</td>
 										<th class="board__column col-4 col-sm-5"><a
 											href="${root}/board?action=detail&boardno=${board.boardNo}">${board.subject}</a></th>
 										<td class="board__column col-2 col-sm-3">${board.userId}</td>
