@@ -65,4 +65,11 @@ public class TripServiceImpl implements TripService {
 		return tripPlanDto;
 	}
 
+	@Override
+	public TripPlanDto getTripPlanDetail(int planId) throws Exception {
+		return tripDao.searchPlanByPlanId(planId);
+	}
+	
+	
+
 }

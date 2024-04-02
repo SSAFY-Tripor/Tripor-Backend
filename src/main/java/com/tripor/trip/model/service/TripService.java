@@ -20,4 +20,6 @@ public interface TripService {
 	void registerTripPlan(String tripJson, String userId, String planName) throws Exception;
 
 	List<TripPlanDto> getTripPlan(String userId) throws Exception;
+	
+	TripPlanDto getTripPlanDetail(int planId) throws Exception;
 }

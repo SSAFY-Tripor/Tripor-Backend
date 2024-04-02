@@ -61,9 +61,9 @@
 								</tr>
 							</thead>
 							<tbody class="board__contents" id="board-body">
-								<c:forEach var="board" items="${boards}">
+								<c:forEach var="board" varStatus="status" items="${boards}">
 									<tr>
-										<td class="board__column col-2 col-sm-2">${board.boardNo}</td>
+										<td class="board__column col-2 col-sm-2">${status.count}</td>
 										<th class="board__column col-4 col-sm-5"><a
 											href="${root}/board?action=detail&boardno=${board.boardNo}">${board.subject}</a></th>
 										<td class="board__column col-2 col-sm-3">${board.userId}</td>

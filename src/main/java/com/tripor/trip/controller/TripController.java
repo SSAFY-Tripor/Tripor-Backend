@@ -60,7 +60,7 @@ public class TripController extends HttpServlet {
 				HttpSession session = request.getSession();
 				MemberDto memberDto = (MemberDto) session.getAttribute("member");
 				if (memberDto == null) {
-					path = "/member?action=login";
+					path = "/member?action=mvLogin";
 					redirect(path, root, response);
 					return;
 				}
@@ -72,7 +72,7 @@ public class TripController extends HttpServlet {
 				HttpSession session = request.getSession();
 				MemberDto memberDto = (MemberDto) session.getAttribute("member");
 				if (memberDto == null) {
-					path = "/member?action=login";
+					path = "/member?action=mvLogin";
 					redirect(path, root, response);
 					return;
 				}
@@ -88,7 +88,7 @@ public class TripController extends HttpServlet {
 				HttpSession session = request.getSession();
 				MemberDto memberDto = (MemberDto) session.getAttribute("member");
 				if (memberDto == null) {
-					path = "/member?action=login";
+					path = "/member?action=mvLogin";
 					redirect(path, root, response);
 					return;
 				}
@@ -96,6 +96,12 @@ public class TripController extends HttpServlet {
 				List<TripPlanDto> list = tripService.getTripPlan(memberDto.getUserId()); 
 				request.setAttribute("plans", list);
 				path="/trip/myplan.jsp";
+				forward(path, request, response);
+			}else if("detail".equals(action)) {
+				int planId = Integer.parseInt(request.getParameter("planid"));
+				TripPlanDto tripPlanDto = tripService.getTripPlanDetail(planId);
+				request.setAttribute("plan", tripPlanDto);
+				path = "/trip/myplandetail.jsp";
 				forward(path, request, response);
 			}
 		} catch (Exception e) {
