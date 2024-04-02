@@ -34,7 +34,7 @@
 	<jsp:include page="/common/aside.jsp" />
 	<div class="position-relative">
 		<div style="height:100px"></div>
-		<div class="mb-3 position-absolute top-50 start-50 translate-middle-x" style="width:45%">
+		<div class="mb-3" style="position: absolute; left: 400px; top: 10px">
 			<span class="mb-3 text-primary" onclick="location.href = '${root}/board?action=list'" style="cursor: pointer">&lt; 뒤로가기</span>
 			
 			<h3 class="mt-3">${board.subject}</h3>
