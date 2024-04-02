@@ -29,24 +29,51 @@
 <link rel="stylesheet" href="${root}/assets/css/style.css" />
 </head>
 <body data-context-path="${root}">
-	<div id="plan-map" style="width: 1000px; height: 700px"></div>
-	<div id="plan-div-id">${plan.planId}</div>
-	<div>${plan.planUserId}</div>
-	<div>${plan.planName}</div>
-	<hr/>
+	<jsp:include page="/common/header.jsp" />
+	<jsp:include page="/common/aside.jsp" />
 	
-	<c:forEach var="trip" varStatus="status" items="${plan.tripList}">
-		<div>
-			<div>카운트: ${status.count}</div>
-			<div>여행 타입: ${trip.contentTypeId}</div>
-			<div>여행 제목: ${trip.title}</div>
-			<div>여행 주소: ${trip.addr}</div>
-			<div><img src="${trip.firstImage}"/></div>
+	<div class="position-relative">
+		<div style="height: 100px"></div>
+		<div
+			class="p-5 mb-3"
+			style="position: absolute; left: 400px; top: 10px">
+			
+			<!-- <div>${plan.planUserId}</div> -->
+			<span class="text-primary" onclick='window.history.back();' style="cursor: pointer">&lt; 뒤로가기</span>
+			<h3 class="d-flex justify-content-center mb-3"
+				style="overflow: hidden; white-space: nowrap; font-weight: bold">${plan.planName}</h3>
+			<h6 class="d-flex justify-content-center mb-3">${plan.planRegisterDate}</h6>	
+			
+			
+			
+			<div class="d-flex flex-row">
+				<div>
+					<div id="plan-map" style="width: 800px; height: 600px"></div>
+					
+					<div id="plan-div-id" style="display:none">${plan.planId}</div>
+				</div>
+				<div style="width: 20px"></div>
+				<div>
+					<c:forEach var="trip" varStatus="status" items="${plan.tripList}">
+
+							<h5>${status.count}) ${trip.title}</h5>
+							<div><i class="bi bi-geo-alt"></i>&nbsp;${trip.addr}</div>
+							<!-- <div><img style="width: 300px" src="${trip.firstImage}"/></div> -->
+							
+							<div style="height: 20px"></div>
+					</c:forEach>
+				</div>
+			
+			</div>
+
+		
 		</div>
-		<hr/>
-	</c:forEach>
+	</div>
 	
-	<button type="button" onclick='window.history.back();'>이전으로</button>
+	
+	
+	
+	
 	<script src="${root}/assets/js/main.js" type="text/javascript"></script>
 	<script src="${root}/assets/js/search.js" type="text/javascript"></script>
 </body>

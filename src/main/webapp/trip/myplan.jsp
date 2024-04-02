@@ -36,18 +36,28 @@
 		<div class="position-relative">
 		<div style="height: 100px"></div>
 		<div
-			class="shadow-sm rounded border p-5 mb-3 position-absolute top-50 start-50 translate-middle-x"
-			style="position: relative; top: 3rem; width: 630px;">
+			class="p-5 mb-3 d-flex flex-row"
+			style="position: absolute; left: 400px; top: 10px">
 			
 			
 			
 			<c:forEach var="plan" items="${plans}">
-					<div>${plan.planId}</div>
-					<div><a href="${root}/trip?action=detail&planid=${plan.planId}">${plan.planName}</a></div>
-					<div>${plan.planRegisterDate}</div>
+			<div class="card m-1" style="width: 18rem;">
+			  <img class="card-img-top" src="${plan.tripList[0].firstImage}" alt="Card image cap">
+			  <div class="card-body">
+			    <h5 class="card-title">${plan.planName}</h5>
+			    <p class="card-text h6">${plan.tripList[0].title} ~ ${plan.tripList[plan.tripList.size() - 1].title}</p>
+			    <a class="btn btn-primary" href="${root}/trip?action=detail&planid=${plan.planId}">자세히보기</a>
+			  </div>
+			</div>
+			
+				
+			
 				</c:forEach>
 		</div>
 	</div>
+	
+			
 
 	<script src="${root}/assets/js/main.js" type="text/javascript"></script>
 	
