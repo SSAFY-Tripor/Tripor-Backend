@@ -17,4 +17,5 @@ public interface TripDao {
 	List<TripPlanDto> searchPlansByUserId(String userId) throws Exception;
 	TripDto searchByContentId(int contentId) throws Exception;
 	TripPlanDto searchPlanByPlanId(int planId) throws Exception;
+	int deleteTripPlan(int planId) throws Exception;
 }

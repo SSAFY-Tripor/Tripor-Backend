@@ -49,7 +49,7 @@
 						<span class="mb-3 ms-2" id="planNameGroup">
 						     <i class="bi bi-pen-fill me-1"></i>		
 							<input 
-								value="민선의 여행 계획"
+								value="${member.userName}의 여행 계획"
 								id="planName" />
 									
 						</span>

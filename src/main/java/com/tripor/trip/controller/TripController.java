@@ -111,6 +111,11 @@ public class TripController extends HttpServlet {
 				int contentId = Integer.parseInt(request.getParameter("contentid"));
 				String json = tripService.getTrip(contentId);
 				returnJson(json, response);
+			}else if("deletePlan".equals(action)) {
+				int planId = Integer.parseInt(request.getParameter("planid"));
+				tripService.removeTripPlan(planId);
+				path = "/trip?action=mvPlan";
+				redirect(path, root, response);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
