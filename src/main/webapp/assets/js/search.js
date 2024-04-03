@@ -483,7 +483,6 @@ const planBtnClickEventListener = () => {
 	}
 
 	alert("여행 계획이 등록되었습니다.");
-
 	const planListForm = document.querySelector("#planListForm");
 	const planIdList = document.querySelector("#planIdList");
 	planIdList.setAttribute("value", JSON.stringify(planIdItems));

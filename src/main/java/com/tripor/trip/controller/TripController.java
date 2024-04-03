@@ -82,7 +82,7 @@ public class TripController extends HttpServlet {
 				tripService.registerTripPlan(tripJson, memberDto.getUserId(), planName);
 
 				// 여행 계획 페이지로 redirect
-				path = "/trip?action=mvPlan";
+				path = "/trip?action=mvMyPlan";
 				redirect(path, root, response);
 			}else if("mvMyPlan".equals(action)) {
 				HttpSession session = request.getSession();
