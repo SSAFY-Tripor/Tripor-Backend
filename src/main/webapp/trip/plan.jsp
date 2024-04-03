@@ -50,6 +50,7 @@
 						     <i class="bi bi-pen-fill me-1"></i>		
 							<input 
 								value="${member.userName}의 여행 계획"
+								name="planname"
 								id="planName" />
 									
 						</span>

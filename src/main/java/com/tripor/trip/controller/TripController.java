@@ -68,7 +68,7 @@ public class TripController extends HttpServlet {
 				forward(path, request, response);
 			} else if ("planAdd".equals(action)) {
 				String tripJson = request.getParameter("planIdList");
-				String planName = request.getParameter("planName");
+				String planName = request.getParameter("planname");
 				HttpSession session = request.getSession();
 				MemberDto memberDto = (MemberDto) session.getAttribute("member");
 				if (memberDto == null) {
