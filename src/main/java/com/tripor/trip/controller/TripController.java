@@ -114,7 +114,7 @@ public class TripController extends HttpServlet {
 			}else if("deletePlan".equals(action)) {
 				int planId = Integer.parseInt(request.getParameter("planid"));
 				tripService.removeTripPlan(planId);
-				path = "/trip?action=mvPlan";
+				path = "/trip?action=mvMyPlan";
 				redirect(path, root, response);
 			}
 		} catch (Exception e) {

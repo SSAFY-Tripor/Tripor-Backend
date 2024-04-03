@@ -53,22 +53,23 @@
 									</c:if>
 								</c:forEach>
 							</c:if>
-							<c:if test="${not loop_flag}">
-								<img class="card-img-top" style="height: 200px;  object-fit: cover" src="${root}/img/no_image_logo.png"
-									alt="Tripor 로고">
-							</c:if>
-							<div class="card-body">
-								<h5 class="card-title">${plan.planName}</h5>
-								<p class="card-text h6">${plan.tripList[0].title}~
-									${plan.tripList[plan.tripList.size() - 1].title}</p>
-								<a class="btn btn-primary"
-									href="${root}/trip?action=detail&planid=${plan.planId}">자세히보기</a>
-							    <a class="btn btn-outline-danger" href="">삭제하기</a>
-							    
-							  </div>
-							</div>
+
+					<c:if test="${not loop_flag}">
+						<img class="card-img-top" src="${root}/img/no_image_logo.png"
+							alt="Tripor 로고">
+					</c:if>
+					<div class="card-body">
+						<h5 class="card-title">${plan.planName}</h5>
+						<p class="card-text h6">${plan.tripList[0].title}~
+							${plan.tripList[plan.tripList.size() - 1].title}</p>
+						<a class="btn btn-primary"
+							href="${root}/trip?action=detail&planid=${plan.planId}">자세히보기</a>
+					    <a class="btn btn-outline-danger" href="${root}/trip?action=deletePlan&planid=${plan.planId}">삭제하기</a>
+					    
+					  </div>
+					</div>
 		
-				</c:forEach>s
+				</c:forEach>
 					</div>
 					
 					
