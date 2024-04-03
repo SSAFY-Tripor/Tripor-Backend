@@ -398,7 +398,7 @@ const performSearch = async () => {
 		bounds.extend(position);
 
 		// 커스텀 오버레이에 표시될 내용 생성
-		var content = `<div class="wrap">
+		const overlayContent = `<div class="wrap">
                                     <div class="info">
                                         <div class="title">
                                             ${item.title}
@@ -425,8 +425,8 @@ const performSearch = async () => {
                                         </div>
                                     </div>
                                 </div>`;
-		var overlay = new kakao.maps.CustomOverlay({
-			content: content,
+		const overlay = new kakao.maps.CustomOverlay({
+			content: overlayContent,
 			map: map,
 			position: marker.getPosition(),
 		});
@@ -516,6 +516,7 @@ const getContents = async () => {
 	const data = await response.json();
 	return data;
 }
+let planOverlay = [];
 
 const planMapLoading = async () => {
 	// 모든 마커가 포함되도록 지도의 중심과 확대 레벨 조정
@@ -537,6 +538,40 @@ const planMapLoading = async () => {
 			map: map
 		});
 
+		// 커스텀 오버레이에 표시될 내용 생성
+		const overlayContent = `<div class="wrap">
+                                    <div class="info">
+                                        <div class="title">
+                                            ${content.title}
+                                            <div class="close" onclick="currentOverlay.setMap(null);" title="닫기"></div>
+                                        </div>
+                                        <div class="body">
+                                            <div class="img">
+                                                <img src="${content.firstImage
+				? content.firstImage
+				: contextPath + "/img/no_image_logo.png"
+			}" width="80px" height="80px">
+                                            </div>
+                                            <div class="desc">
+                                                <div class="ellipsis">주소: ${content.addr
+				? content.addr
+				: "정보 없음"
+			}</div>
+                                                <div class="jibun ellipsis">전화번호: ${content.tel
+				? content.tel
+				: "정보 없음"
+			}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>`;
+		const overlay = new kakao.maps.CustomOverlay({
+			content: overlayContent,
+			map: map,
+			position: marker.getPosition(),
+		});
+		overlay.setMap(null); // 초기에는 숨김
+		planOverlay.push(overlay);
 		// 마커를 지도에 추가
 		marker.setMap(map);
 		// LatLngBounds 객체에 현재 마커의 위치를 추가
@@ -545,8 +580,15 @@ const planMapLoading = async () => {
 	map.setBounds(bounds);
 }
 
+const openOverlay = (index) => {
+	closeOverlay();
+	planOverlay[index].setMap(map);
+	currentOverlay = planOverlay[index];
+}
+
 if (planMap != null) {
 	map = new kakao.maps.Map(planMap, options);
 	planMapLoading();
 }
+
 
