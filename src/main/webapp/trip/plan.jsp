@@ -29,7 +29,7 @@
 <link rel="stylesheet" href="${root}/assets/css/style.css" />
 </head>
 <body data-context-path="${root}">
-	<div class="fixed-top">
+
 	<jsp:include page="/common/header.jsp" />
 	<jsp:include page="/common/aside.jsp" />
 	
@@ -39,12 +39,12 @@
 		<input type="hidden" id="planIdList" name="planIdList" value=""/>
 		<div class="container" style="z-index: 1; padding-left: 0">
 			<div class="show_Home" id="home_div" style="position: relative"> 
-				<div id="search-map" class="search-map position-relative"
-					style="width: 3000px; height: 1000px">
-					
+				<div id="search-map" class="search-map position-relative d-flex flex-row"
+					style="width: 2000px; height: 1000px">
+					<div style="width: 400px; height: 100%" class="d-none d-xl-block"></div>
 					<div id="planList"
 						class="plan-list bg-light p-3"
-						style="position: absolute; left: 380px; width: 15%; height: 100%; overflow-y: auto; background-color: rgba(255, 255, 255, 0.7) !important; z-index: 1000; display: block;">
+						style="width: 15%; height: 100%; overflow-y: auto; background-color: rgba(255, 255, 255, 0.7) !important; z-index: 1000; display: block;">
 						
 						<span class="mb-3 ms-2" id="planNameGroup">
 						     <i class="bi bi-pen-fill me-1"></i>		
