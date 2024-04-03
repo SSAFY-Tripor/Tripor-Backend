@@ -475,6 +475,12 @@ const planBtnClickEventListener = () => {
 
 	// planItems 배열을 로컬 스토리지에 저장
 	//localStorage.setItem(planId, JSON.stringify(planItems));
+	
+	const planText = document.getElementById("planItems").innerText;
+	if(planText == "" || planText == null){
+		alert("여행을 추가하고 등록해주세요.");
+		return;
+	}
 
 	alert("여행 계획이 등록되었습니다.");
 
