@@ -35,41 +35,52 @@
 	
 		<div class="position-relative">
 		<div class="d-flex flex-row">
-				<div style="width: 770px; height: 100%" class="d-none d-xl-block"></div>
-				<div id="planListDiv"
-					class="justify-content-center">
+				<div style="width: 540px; height: 100%" class="d-none d-xl-block"></div>
+				<div id="planListDiv" style="width: 100%">
+					<c:if test="${ empty plans }">
+						<div class="position-absolute top-50 start-50 translate-middle-x">
+							<h4>
+								아직 여행 계획이 없어요							
+							</h4>
+							<div>
+								여행 계획 만들러 가기 &gt;&gt;
+								<a class="link-primary" href="${root}/trip?action=mvPlan">GO!</a>
+							</div>
+						</div>
+						</c:if>
 					<div class="p-5 mb-3 d-flex flex-row flex-wrap">
+					
 						<c:forEach var="plan" items="${plans}">
-					<c:set var="loop_flag" value="false" />
-						<div class="card m-1" style="width: 24rem;">
-							<c:if test="${not empty plan.tripList}">
-								<c:forEach var="trip" items="${plan.tripList}">
-									<c:if test="${not loop_flag }">
-										<c:if test="${not empty trip.firstImage}">
-											<img class="card-img-top" style="height: 200px; object-fit: cover" src="${trip.firstImage}"
-												alt="Card image cap">
-											<c:set var="loop_flag" value="true" />
-										</c:if>
+							<c:set var="loop_flag" value="false" />
+								<div class="card m-1" style="width: 24rem;">
+									<c:if test="${not empty plan.tripList}">
+										<c:forEach var="trip" items="${plan.tripList}">
+											<c:if test="${not loop_flag }">
+												<c:if test="${not empty trip.firstImage}">
+													<img class="card-img-top" style="height: 200px; object-fit: cover" src="${trip.firstImage}"
+														alt="Card image cap">
+													<c:set var="loop_flag" value="true" />
+												</c:if>
+											</c:if>
+										</c:forEach>
 									</c:if>
-								</c:forEach>
-							</c:if>
-
-					<c:if test="${not loop_flag}">
-						<img class="card-img-top" style="height: 200px; object-fit: cover" src="${root}/img/no_image_logo.png"
-							alt="Tripor 로고">
-					</c:if>
-					<div class="card-body">
-						<h5 class="card-title">${plan.planName}</h5>
-						<p class="card-text h6">${plan.tripList[0].title}~
-							${plan.tripList[plan.tripList.size() - 1].title}</p>
-						<a class="btn btn-primary"
-							href="${root}/trip?action=detail&planid=${plan.planId}">자세히보기</a>
-					    <a class="btn btn-outline-danger" href="${root}/trip?action=deletePlan&planid=${plan.planId}">삭제하기</a>
-					    
-					  </div>
-					</div>
 		
-				</c:forEach>
+							<c:if test="${not loop_flag}">
+								<img class="card-img-top" style="height: 200px; object-fit: cover" src="${root}/img/no_image_logo.png"
+									alt="Tripor 로고">
+							</c:if>
+							<div class="card-body">
+								<h5 class="card-title">${plan.planName}</h5>
+								<p class="card-text h6">${plan.tripList[0].title}~
+									${plan.tripList[plan.tripList.size() - 1].title}</p>
+								<a class="btn btn-primary"
+									href="${root}/trip?action=detail&planid=${plan.planId}">자세히보기</a>
+							    <a class="btn btn-outline-danger" href="${root}/trip?action=deletePlan&planid=${plan.planId}">삭제하기</a>
+							    
+							  </div>
+							</div>
+				
+						</c:forEach>
 					</div>
 					
 					

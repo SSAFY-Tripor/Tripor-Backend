@@ -55,7 +55,7 @@
 				<div style="width: 20px"></div>
 				<div>
 					<c:forEach var="trip" varStatus="status" items="${plan.tripList}">
-							<h5 style="pointer: cursor" onclick="openOverlay(${status.index})">${status.count}) ${trip.title}</h5>
+							<h5 style="cursor: pointer" onclick="openOverlay(${status.index})">${status.count}) ${trip.title}</h5>
 							<div><i class="bi bi-geo-alt"></i>&nbsp;${trip.addr}</div>
 							<!-- <div><img style="width: 300px" src="${trip.firstImage}"/></div> -->
 							<div style="height: 20px"></div>
