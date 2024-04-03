@@ -10,10 +10,11 @@ public class TripDto {
 	private int gugunCode;
 	private String latitude;
 	private String longitude;
+	private String tel;
 	private String overview;
 
 	public TripDto(String contentId, int contentTypeId, String title, String addr, String firstImage, int sidoCode,
-			int gugunCode, String latitude, String longitude, String overview) {
+			int gugunCode, String latitude, String longitude, String tel, String overview) {
 		super();
 		this.contentId = contentId;
 		this.contentTypeId = contentTypeId;
@@ -24,6 +25,7 @@ public class TripDto {
 		this.gugunCode = gugunCode;
 		this.latitude = latitude;
 		this.longitude = longitude;
+		this.tel = tel;
 		this.overview = overview;
 	}
 
@@ -111,11 +113,20 @@ public class TripDto {
 		this.overview = overview;
 	}
 
+	public String getTel() {
+		return tel;
+	}
+
+	public void setTel(String tel) {
+		this.tel = tel;
+	}
+
 	@Override
 	public String toString() {
 		return "TripDto [contentId=" + contentId + ", contentTypeId=" + contentTypeId + ", title=" + title + ", addr="
 				+ addr + ", firstImage=" + firstImage + ", sidoCode=" + sidoCode + ", gugunCode=" + gugunCode
-				+ ", latitude=" + latitude + ", longitude=" + longitude + ", overview=" + overview + "]";
+				+ ", latitude=" + latitude + ", longitude=" + longitude + ", tel=" + tel + ", overview=" + overview
+				+ "]";
 	}
 
 }

@@ -578,6 +578,13 @@ const planMapLoading = async () => {
 		overlay.setMap(null); // 초기에는 숨김
 		
 		
+		// 마커 클릭 시 커스텀 오버레이 표시
+		kakao.maps.event.addListener(marker, "click", () => {
+			closeOverlay();
+			overlay.setMap(map); // 현재 오버레이 표시
+			currentOverlay = overlay; // 참조 업데이트
+			map.setCenter(position);
+		});
 		
 		planOverlay.push(overlay);
 		// 마커를 지도에 추가
@@ -609,9 +616,13 @@ const planMapLoading = async () => {
 }
 
 const openOverlay = (index) => {
-	closeOverlay();
-	planOverlay[index].setMap(map);
-	currentOverlay = planOverlay[index];
+	if(currentOverlay == planOverlay[index]){
+		closeOverlay();
+	}else{
+		closeOverlay();
+		planOverlay[index].setMap(map);
+		currentOverlay = planOverlay[index];
+	}
 }
 
 if (planMap != null) {

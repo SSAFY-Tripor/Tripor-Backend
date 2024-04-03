@@ -36,7 +36,7 @@ public class TripDaoImpl implements TripDao {
 			con = dbUtil.getConnection();
 			StringBuilder sb = new StringBuilder();
 			sb.append("select ai.content_id, ai.content_type_id, ai.title, ai.addr1, ai.first_image,\n");
-			sb.append("ai.sido_code, ai.gugun_code, ai.latitude, ai.longitude, ad.overview\n");
+			sb.append("ai.sido_code, ai.gugun_code, ai.latitude, ai.longitude, ai.tel, ad.overview\n");
 			sb.append("from attraction_info ai left join attraction_description ad\n");
 			sb.append("on ai.content_id = ad.content_id\n");
 			sb.append("where ai.title like concat('%', ?, '%')");
@@ -57,7 +57,8 @@ public class TripDaoImpl implements TripDao {
 				tripDto.setGugunCode(rs.getInt(7));
 				tripDto.setLatitude(rs.getString(8));
 				tripDto.setLongitude(rs.getString(9));
-				tripDto.setOverview(rs.getString(10));
+				tripDto.setTel(rs.getString(10));
+				tripDto.setOverview(rs.getString(11));
 				list.add(tripDto);
 			}
 			return list;
@@ -78,7 +79,7 @@ public class TripDaoImpl implements TripDao {
 			con = dbUtil.getConnection();
 			StringBuilder sb = new StringBuilder();
 			sb.append("select ai.content_id, ai.content_type_id, ai.title, ai.addr1, ai.first_image,\n");
-			sb.append("ai.sido_code, ai.gugun_code, ai.latitude, ai.longitude, ad.overview\n");
+			sb.append("ai.sido_code, ai.gugun_code, ai.latitude, ai.longitude, ai.tel, ad.overview\n");
 			sb.append("from attraction_info ai left join attraction_description ad\n");
 			boolean typeFlag = false;
 			if (param.getType() == null) {
@@ -108,7 +109,8 @@ public class TripDaoImpl implements TripDao {
 				tripDto.setGugunCode(rs.getInt(7));
 				tripDto.setLatitude(rs.getString(8));
 				tripDto.setLongitude(rs.getString(9));
-				tripDto.setOverview(rs.getString(10));
+				tripDto.setTel(rs.getString(10));
+				tripDto.setOverview(rs.getString(11));
 				list.add(tripDto);
 			}
 			return list;
@@ -228,7 +230,7 @@ public class TripDaoImpl implements TripDao {
 			con = dbUtil.getConnection();
 			StringBuilder sb = new StringBuilder();
 			sb.append("select ai.content_id, ai.content_type_id, ai.title, ai.addr1, ai.first_image,\n");
-			sb.append("ai.sido_code, ai.gugun_code, ai.latitude, ai.longitude, ad.overview\n");
+			sb.append("ai.sido_code, ai.gugun_code, ai.latitude, ai.longitude, ai.tel, ad.overview\n");
 			sb.append("from attraction_info ai left join attraction_description ad\n");
 			sb.append("on ai.content_id = ad.content_id\n");
 			sb.append("where ai.content_id=?");
@@ -246,7 +248,8 @@ public class TripDaoImpl implements TripDao {
 				tripDto.setGugunCode(rs.getInt(7));
 				tripDto.setLatitude(rs.getString(8));
 				tripDto.setLongitude(rs.getString(9));
-				tripDto.setOverview(rs.getString(10));
+				tripDto.setTel(rs.getString(10));
+				tripDto.setOverview(rs.getString(11));
 			}
 			return tripDto;
 		} catch (SQLException e) {
