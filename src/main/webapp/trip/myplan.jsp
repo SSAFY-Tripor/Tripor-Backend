@@ -63,7 +63,7 @@
 							${plan.tripList[plan.tripList.size() - 1].title}</p>
 						<a class="btn btn-primary"
 							href="${root}/trip?action=detail&planid=${plan.planId}">자세히보기</a>
-					    <a class="btn btn-outline-danger" href="">삭제하기</a>
+					    <a class="btn btn-outline-danger" href="${root}/trip?action=deletePlan&planid=${plan.planId}">삭제하기</a>
 					    
 					  </div>
 					</div>
