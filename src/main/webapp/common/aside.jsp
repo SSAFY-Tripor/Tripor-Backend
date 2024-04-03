@@ -54,7 +54,7 @@
                 
                      <div>
                         <a style="cursor: pointer" onclick="location.href='${root}/trip?action=mvMyPlan'"
-                            >-&nbsp;&nbsp;&nbsp;나의 여행계획</a
+                            >-&nbsp;&nbsp;&nbsp;나의 여행 계획</a
                         >
                     </div>
                     <div style="height: 10px"></div>
