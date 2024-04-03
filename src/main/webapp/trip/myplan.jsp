@@ -35,24 +35,25 @@
 	
 		<div class="position-relative">
 		<div class="d-flex flex-row">
-				<div style="width: 400px; height: 100%" class="d-none d-xl-block"></div>
-				<div id="planListDiv" style="width: 1300px;"
-					class="p-5 mb-3 d-flex flex-row flex-wrap justify-content-center">
-					
-					<c:forEach var="plan" items="${plans}">
+				<div style="width: 770px; height: 100%" class="d-none d-xl-block"></div>
+				<div id="planListDiv"
+					class="justify-content-center">
+					<div class="p-5 mb-3 d-flex flex-row flex-wrap">
+						<c:forEach var="plan" items="${plans}">
 					<c:set var="loop_flag" value="false" />
-				<div class="card m-1" style="width: 18rem;">
-					<c:if test="${not empty plan.tripList}">
-						<c:forEach var="trip" items="${plan.tripList}">
-							<c:if test="${not loop_flag }">
-								<c:if test="${not empty trip.firstImage}">
-									<img class="card-img-top" src="${trip.firstImage}"
-										alt="Card image cap">
-									<c:set var="loop_flag" value="true" />
-								</c:if>
+						<div class="card m-1" style="width: 24rem;">
+							<c:if test="${not empty plan.tripList}">
+								<c:forEach var="trip" items="${plan.tripList}">
+									<c:if test="${not loop_flag }">
+										<c:if test="${not empty trip.firstImage}">
+											<img class="card-img-top" style="height: 200px; object-fit: cover" src="${trip.firstImage}"
+												alt="Card image cap">
+											<c:set var="loop_flag" value="true" />
+										</c:if>
+									</c:if>
+								</c:forEach>
 							</c:if>
-						</c:forEach>
-					</c:if>
+
 					<c:if test="${not loop_flag}">
 						<img class="card-img-top" src="${root}/img/no_image_logo.png"
 							alt="Tripor 로고">
@@ -69,6 +70,9 @@
 					</div>
 		
 				</c:forEach>
+					</div>
+					
+					
 			</div>
 		</div>
 				
