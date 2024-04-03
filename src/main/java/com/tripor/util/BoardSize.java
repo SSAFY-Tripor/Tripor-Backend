@@ -1,7 +1,7 @@
 package com.tripor.util;
 
 public enum BoardSize {
-	LIST(20), NAVIGATION(10);
+	LIST(20), NAVIGATION(5);
 	
 	private int boardSize;
 	private BoardSize(int boardSize) {
