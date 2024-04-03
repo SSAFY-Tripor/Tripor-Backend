@@ -32,16 +32,15 @@
 <body>
 	<jsp:include page="/common/header.jsp" />
 	<jsp:include page="/common/aside.jsp" />
-
-	<div class="position-relative">
-		<div style="height: 100px"></div>
-		<div class="p-5 mb-3 d-flex flex-row"
-			style="position: absolute; left: 400px; top: 10px">
-
-
-
-			<c:forEach var="plan" items="${plans}">
-				<c:set var="loop_flag" value="false" />
+	
+		<div class="position-relative">
+		<div class="d-flex flex-row">
+				<div style="width: 400px; height: 100%" class="d-none d-xl-block"></div>
+				<div id="planListDiv" style="width: 1300px;"
+					class="p-5 mb-3 d-flex flex-row flex-wrap justify-content-center">
+					
+					<c:forEach var="plan" items="${plans}">
+					<c:set var="loop_flag" value="false" />
 				<div class="card m-1" style="width: 18rem;">
 					<c:if test="${not empty plan.tripList}">
 						<c:forEach var="trip" items="${plan.tripList}">
@@ -64,13 +63,16 @@
 							${plan.tripList[plan.tripList.size() - 1].title}</p>
 						<a class="btn btn-primary"
 							href="${root}/trip?action=detail&planid=${plan.planId}">자세히보기</a>
+					    <a class="btn btn-outline-danger" href="">삭제하기</a>
+					    
+					  </div>
 					</div>
-				</div>
-			</c:forEach>
+		
+				</c:forEach>
+			</div>
 		</div>
+				
 	</div>
-
-
 
 	<script src="${root}/assets/js/main.js" type="text/javascript"></script>
 
