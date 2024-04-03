@@ -55,7 +55,7 @@
 							</c:if>
 
 					<c:if test="${not loop_flag}">
-						<img class="card-img-top" src="${root}/img/no_image_logo.png"
+						<img class="card-img-top" style="height: 200px; object-fit: cover" src="${root}/img/no_image_logo.png"
 							alt="Tripor 로고">
 					</c:if>
 					<div class="card-body">

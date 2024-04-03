@@ -41,7 +41,7 @@
 			<div class="show_Home" id="home_div" style="position: relative"> 
 				<div id="search-map" class="search-map position-relative d-flex flex-row"
 					style="width: 2000px; height: 1000px">
-					<div style="width: 400px; height: 100%" class="d-none d-xl-block"></div>
+					<div style="width: 380px; height: 100%" class="d-none d-xl-block"></div>
 					<div id="planList"
 						class="plan-list bg-light p-3"
 						style="width: 15%; height: 100%; overflow-y: auto; background-color: rgba(255, 255, 255, 0.7) !important; z-index: 1000; display: block;">
