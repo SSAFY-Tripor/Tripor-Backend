@@ -26,4 +26,6 @@ public interface TripService {
 	TripPlanDto getTripPlanDetail(int planId) throws Exception;
 
 	String getTripList(int planId) throws Exception;
+	
+	void removeTripPlan(int planId) throws Exception;
 }

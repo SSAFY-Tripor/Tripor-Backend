@@ -282,6 +282,26 @@ public class TripDaoImpl implements TripDao {
 			dbUtil.close(rs, ps, con);
 		}
 	}
+	
+	
+	
+
+	@Override
+	public int deleteTripPlan(int planId) throws Exception {
+		Connection con = null;
+		PreparedStatement ps = null;
+		try {
+			con = dbUtil.getConnection();
+			String sql = "delete from trip_plan where plan_id=?";
+			ps = con.prepareStatement(sql);
+			ps.setInt(1, planId);
+			return ps.executeUpdate();
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			dbUtil.close(ps, con);
+		}
+	}
 
 	public List<TripDto> planJsonToTripList(String json) throws Exception {
 		Gson gson = new Gson();

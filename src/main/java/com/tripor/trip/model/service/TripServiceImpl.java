@@ -86,4 +86,8 @@ public class TripServiceImpl implements TripService {
 		return tripDao.searchPlanByPlanId(planId);
 	}
 
+	@Override
+	public void removeTripPlan(int planId) throws Exception {
+		tripDao.deleteTripPlan(planId);
+	}
 }
