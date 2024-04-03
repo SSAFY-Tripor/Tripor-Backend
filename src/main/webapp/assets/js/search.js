@@ -576,12 +576,35 @@ const planMapLoading = async () => {
 			position: marker.getPosition(),
 		});
 		overlay.setMap(null); // 초기에는 숨김
+		
+		
+		
 		planOverlay.push(overlay);
 		// 마커를 지도에 추가
 		marker.setMap(map);
 		// LatLngBounds 객체에 현재 마커의 위치를 추가
 		bounds.extend(new kakao.maps.LatLng(content.latitude, content.longitude));
 	};
+	// 선분 추가
+	if (contents.length > 1) {
+		let lastItem = contents[0]; // 마지막에서 두 번째 아이템
+		for (let i=1;i<contents.length;i++) {
+			let polyline = new kakao.maps.Polyline({
+				path: [
+					new kakao.maps.LatLng(lastItem.latitude, lastItem.longitude),
+					new kakao.maps.LatLng(contents[i].latitude, contents[i].longitude),
+				],
+				strokeWeight: 3,
+				strokeColor: "#db4040",
+				strokeOpacity: 0.8,
+				strokeStyle: "solid",
+			});
+			polyline.setMap(map);
+			lastItem = contents[i];
+		}
+	}
+	// 선분 추가
+	
 	map.setBounds(bounds);
 }
 
