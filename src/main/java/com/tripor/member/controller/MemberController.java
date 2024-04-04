@@ -95,8 +95,11 @@ public class MemberController extends HttpServlet {
 					forward(path, request, response);
 					return;
 				}
-				path = "/member?action=mvLogin";
+				path = "/member?action=mvJoinOK";
 				redirect(path, root, response);
+			} else if ("mvJoinOK".equals(action)) {
+				path = "/user/join_ok.jsp";
+				forward(path, request, response);
 			} else if ("logout".equals(action)) {
 				HttpSession session = request.getSession();
 				session.removeAttribute("member");
