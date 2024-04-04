@@ -109,10 +109,10 @@
 			                  aria-label="이메일 도메인 선택"
 			                >
 			                  <option selected>선택</option>
-			                  <option value="ssafy.com">싸피</option>
-			                  <option value="google.com">구글</option>
-			                  <option value="naver.com">네이버</option>
-			                  <option value="kakao.com">카카오</option>
+			                  <option value="ssafy.com">ssafy.com</option>
+			                  <option value="gmail.com">gmail.com</option>
+			                  <option value="naver.com">naver.com</option>
+			                  <option value="kakao.com">kakao.com</option>
 			                </select>
 			              </div>
 			              <label>지역</label><br />
