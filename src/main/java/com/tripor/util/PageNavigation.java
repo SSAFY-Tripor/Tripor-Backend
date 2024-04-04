@@ -1,7 +1,7 @@
 package com.tripor.util;
 
 public class PageNavigation {
-	
+
 	private boolean startRange; // 현재 페이지가 이전이 눌려지지 않는 범위의 페이지 체크
 	private boolean endRange; // 현재 페이지가 다음이 눌려지지 않는 범위의 페이지 체크
 	private int totalCount; // 총 게시글 개수
@@ -74,22 +74,23 @@ public class PageNavigation {
 	public void makeNavigator() {
 		int startPage = (currentPage - 1) / naviSize * naviSize + 1;
 		int endPage = startPage + naviSize - 1;
-		if(totalPageCount < endPage)
+		if (totalPageCount < endPage)
 			endPage = totalPageCount;
-		System.out.println(startPage + " " + endPage);
-		
 		StringBuilder builder = new StringBuilder();
 		builder.append("		<ul class=\"pagination  justify-content-center\"> \n");
 		builder.append("			<li class=\"page-item\" data-pg=\"1\"> \n");
 		builder.append("				<a href=\"#\" class=\"page-link\">최신</a> \n");
 		builder.append("			</li> \n");
-		builder.append("			<li class=\"page-item\" data-pg=\"" + (this.startRange ? 1 : (startPage - 1)) + "\"> \n");
+		builder.append(
+				"			<li class=\"page-item\" data-pg=\"" + (this.startRange ? 1 : (startPage - 1)) + "\"> \n");
 		builder.append("				<a href=\"#\" class=\"page-link\">이전</a> \n");
 		builder.append("			</li> \n");
-		for(int i=startPage;i<=endPage;i++) {
-			builder.append("			<li class=\"" + (currentPage == i ? "page-item active" : "page-item") + "\" data-pg=\"" + i + "\"><a href=\"#\" class=\"page-link\">" + i + "</a></li> \n");
+		for (int i = startPage; i <= endPage; i++) {
+			builder.append("			<li class=\"" + (currentPage == i ? "page-item active" : "page-item")
+					+ "\" data-pg=\"" + i + "\"><a href=\"#\" class=\"page-link\">" + i + "</a></li> \n");
 		}
-		builder.append("			<li class=\"page-item\" data-pg=\"" + (this.endRange ? endPage : (endPage + 1)) + "\"> \n");
+		builder.append(
+				"			<li class=\"page-item\" data-pg=\"" + (this.endRange ? endPage : (endPage + 1)) + "\"> \n");
 		builder.append("				<a href=\"#\" class=\"page-link\">다음</a> \n");
 		builder.append("			</li> \n");
 		builder.append("			<li class=\"page-item\" data-pg=\"" + totalPageCount + "\"> \n");

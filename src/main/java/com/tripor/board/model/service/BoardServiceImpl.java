@@ -48,10 +48,10 @@ public class BoardServiceImpl implements BoardService {
 		pageNavigation.setTotalCount(totalCount);
 		int totalPageCount = (totalCount - 1) / listSize + 1;
 		pageNavigation.setTotalPageCount(totalPageCount);
-		boolean startRange = currentPage <= naviSize;
+		boolean startRange = (currentPage <= naviSize);
 		pageNavigation.setStartRange(startRange);
-		boolean endRange = (totalPageCount - 1) / naviSize * naviSize < currentPage;
-		pageNavigation.setStartRange(endRange);
+		boolean endRange = ((totalPageCount - 1) / naviSize * naviSize < currentPage);
+		pageNavigation.setEndRange(endRange);
 		pageNavigation.makeNavigator();
 		return pageNavigation;
 	}

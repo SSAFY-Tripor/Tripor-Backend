@@ -145,7 +145,6 @@ public class BoardDaoImpl implements BoardDao {
 			}
 			ps.setInt(++idx, (int) map.get("start"));
 			ps.setInt(++idx, (int) map.get("listsize"));
-			System.out.println((int) map.get("start"));
 			rs = ps.executeQuery();
 			while (rs.next()) {
 				BoardDto boardDto = new BoardDto();
@@ -265,7 +264,6 @@ public class BoardDaoImpl implements BoardDao {
 			ps.setString(1, boardDto.getUserId());
 			ps.setString(2, boardDto.getSubject());
 			ps.setString(3, boardDto.getContent());
-			System.out.println(boardDto);
 			return ps.executeUpdate();
 		} finally {
 			dbUtil.close(ps, con);

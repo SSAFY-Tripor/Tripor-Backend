@@ -43,7 +43,13 @@ public class BoardController extends HttpServlet {
 				.map(Integer::parseInt).orElse(1);
 		key = Optional.ofNullable(request.getParameter("key")).orElse("");
 		word = Optional.ofNullable(request.getParameter("word")).orElse("");
-		queryString = "pgno=" + pgno + "&key=" + key + "&word=" + word;
+		queryString = "&pgno=" + pgno;
+		if (key.length() > 0) {
+			queryString = queryString + "&key=" + key;
+			if (word.length() > 0) {
+				queryString = queryString + "&word=" + word;
+			}
+		}
 
 		String path = "";
 		String root = request.getContextPath();
@@ -82,11 +88,8 @@ public class BoardController extends HttpServlet {
 					String subject = request.getParameter("subject");
 					String content = request.getParameter("content");
 					boardDto = new BoardDto(memberDto.getUserId(), subject, content);
-					for (int i = 0; i < 30; i++) {
-						boardDto.setSubject(boardDto.getSubject() + "" + i);
-						boardService.writeBoard(boardDto);
-					}
-					path = "/board?action=list?" + queryString;
+					boardService.writeBoard(boardDto);
+					path = "/board?action=list" + queryString;
 					redirect(path, root, response);
 				} else {
 					path = "/member?action=mvLogin";
@@ -101,7 +104,6 @@ public class BoardController extends HttpServlet {
 					redirect(path, root, response);
 					return;
 				}
-				System.out.println(boardDto);
 				request.setAttribute("board", boardDto);
 				path = "/trip/detail.jsp";
 				forward(path, request, response);
