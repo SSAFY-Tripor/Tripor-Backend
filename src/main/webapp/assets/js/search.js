@@ -39,6 +39,7 @@ const categoryItems = [
 
 // 지도 설정
 let markers = [];
+let checkMarkers = [];
 const container = document.querySelector("#search-map");
 const options = {
 	center: new window.kakao.maps.LatLng(
@@ -278,13 +279,14 @@ let planItems = []; // plan에 저장될 임시 리스트
 let planIdItems = [];
 
 // 목록에서 항목 제거하는 함수
-const removeFromPlanList = (listItem, title) => {
+const removeFromPlanList = (listItem, title, index) => {
 	// 항목 제거
 	listItem.remove();
 
 	// planItems 배열에서 해당 아이템 정보 제거
 	planItems = planItems.filter((planItem) => planItem.title !== title);
-
+	checkMarkers = checkMarkers.filter((_, idx) => idx !== index);
+	
 	// 모든 선분 제거
 	for (var i = 0; i < polylines.length; i++) {
 		polylines[i].setMap(null);
@@ -315,17 +317,24 @@ const removeAllPlanList = (plans) => {
 	polylines = []; // 배열 초기화
 	planItems = [];
 	planIdItems = [];
+	
+	
+	
+	checkMarkers = [];
 }
 
 // 여행 계획 목록에 추가
 const addToPlanList = async (index) => {
+	console.log(index);
 	const item = tempListItems[index];
 	// 중복 검사
 	if (planItems.some((planItem) => planItem.title === item.title)) {
 		alert("이미 추가된 항목입니다.");
 		return; // 이미 목록에 존재하는 항목이면 함수 실행을 종료
 	}
-
+	
+	checkMarkers.push(markers[index]);
+	
 	// 목록 항목 생성
 	const planList = document.querySelector("#planItems");
 	const listItem = document.createElement("li");
@@ -336,8 +345,8 @@ const addToPlanList = async (index) => {
         <img src="${item.firstImage || contextPath + "/img/no_image.jpg"
 		}" width="80" height="80" class="rounded float-right">
         <button onclick="removeFromPlanList(this.parentElement, '${item.title
-		}')" class="btn btn-danger btn-sm">X</button>
-		 <hr/>
+		}', ${checkMarkers.length - 1})" class="btn btn-danger btn-sm">X</button>
+		<hr/>
     </div>
    `;
 	listItem.dataset.title = item.title; // 중복 검사를 위한 데이터 속성 설정
@@ -382,7 +391,33 @@ const performSearch = async () => {
 	// API 호출
 	const response = await fetch(`${url}${planParam}`);
 	const data = await response.json();
+	
+	if(data == null || data.length == 0){
+		alert("입력한 검색어에 해당되는 데이터가 없습니다.");
+		return;
+	}
+	
+	
 	const bounds = new kakao.maps.LatLngBounds();
+	
+	
+	
+	// 1. 기존에 저장된 여행 리스트를 제외하고 검색 결과에 따른 다른 마커 정보 띄워주기
+	// 모든 마커를 지도에서 제거
+	markers.forEach((marker) => {
+		marker.setMap(null);
+	});
+	markers = []; // 마커 배열 초기화
+	// 1-1. 단, 기존에 마커 정보는 남겨두자.
+	for(marker of checkMarkers){
+		markers.push(marker);
+		marker.setMap(map);
+	}
+	// 2. tempListItems(addToPlanList 함수에 있음)을 초기화 해줘야 함.
+	tempListItems = [];
+	
+	
+	
 	await data.forEach((item, index) => {
 		// 각 항목의 위치에 마커 생성
 		const position = new kakao.maps.LatLng(item.latitude, item.longitude);
@@ -441,7 +476,6 @@ const performSearch = async () => {
 		});
 	});
 	// 모든 마커가 포함되도록 지도 범위를 조정
-	console.log(bounds)
 	map.setBounds(bounds);
 };
 
