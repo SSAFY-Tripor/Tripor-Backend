@@ -35,13 +35,11 @@
 	<jsp:include page="/common/header.jsp" />
 	<jsp:include page="/common/aside.jsp" />
 
-
-
-	<div class="container row">
-		<div class="col-2 d-none d-xxl-block"></div>
-		<form method="POST" action="${root}/member">
+	<div class="position-relative">
+            <div style="height:100px"></div>
+            <form method="POST" action="${root}/member">
 			<input type="hidden" name="action" value="findpwd"/>
-			<div class="show_logIn shadow-sm rounded border p-5 mb-3"
+			<div class="shadow-sm rounded border p-5 mb-3 position-absolute top-50 start-50 translate-middle-x"
 				id="findPwd_div"
 				style="position: relative; top: 3rem; width: 740px;">
 				<h4 class="mb-4">비밀번호 찾기</h4>
@@ -63,13 +61,11 @@
 					</div>
 					<button class="col-12 btn btn-primary mb-3">
 						비밀번호 찾기</button>
-					<p id="pwd_ans" class="d-flex justify-content-center">${findpwd}</p>
+					<p id="pwd_ans" class="d-flex justify-content-center">비밀번호는 <strong>${findpwd}</strong> 입니다.</p>
 				</div>
 			</div>
 		</form>
-	</div>
-
-
+        </div>
 
 
 	<script src="${root}/assets/js/main.js" type="text/javascript"></script>
