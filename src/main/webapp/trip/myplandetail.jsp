@@ -32,12 +32,9 @@
 	<jsp:include page="/common/header.jsp" />
 	<jsp:include page="/common/aside.jsp" />
 	
-	<div class="position-relative">
-		<div style="height: 100px"></div>
 		<div
 			class="p-5 mb-3"
-			style="position: absolute; left: 400px; top: 10px">
-			
+			style="position: absolute; left: 400px; top: 80px">
 			<!-- <div>${plan.planUserId}</div> -->
 			<span class="text-primary" onclick='window.history.back();' style="cursor: pointer">&lt; 뒤로가기</span>
 			<h3 class="d-flex justify-content-center mb-3"
@@ -68,7 +65,7 @@
 
 		
 		</div>
-	</div>
+
 	
 	
 	

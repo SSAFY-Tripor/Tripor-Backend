@@ -15,7 +15,6 @@ const locationMap = {
 	대전: { lat: 36.350412, lng: 127.384548 },
 	대구: { lat: 35.8714354, lng: 128.601445 },
 	광주: { lat: 35.1595454, lng: 126.8526012 },
-	부산: { lat: 35.1795543, lng: 129.0756416 },
 	울산: { lat: 35.5383773, lng: 129.3113596 },
 	세종특별자치시: { lat: 36.4801328, lng: 127.2891958 },
 	경기도: { lat: 37.28101111, lng: 127.05 },
@@ -114,7 +113,8 @@ const updateMapMarkers = (areaCode, sigunguCode, tour) => {
                                         <div class="desc">
                                             <div class="ellipsis">주소: ${item.addr ? item.addr : "정보 없음"}</div>
                                             <div class="jibun ellipsis">전화번호: ${item.tel ? item.tel : "정보 없음"}</div>
-                                            <div><p onclick="print(event, '${encodeURIComponent(JSON.stringify(item))}');" class="link">상세보기</p></div>
+
+                                            <div><a onclick="showPlaceDetail(event, '${encodeURIComponent(JSON.stringify(item))}');"  href="#">상세보기</a></div>
                                         </div>
                                     </div>
                                 </div>
@@ -154,6 +154,164 @@ const print = (e, item) => {
 	console.log(e)
 	var decodedItem = JSON.parse(decodeURIComponent(item));
 	console.log(decodedItem);
+}
+
+const mergeSort = (arr) => {
+    if (arr.length <= 1) {
+        return arr;
+    }
+
+    const mid = Math.floor(arr.length / 2);
+    const left = arr.slice(0, mid);
+    const right = arr.slice(mid);
+
+    return merge(mergeSort(left), mergeSort(right));
+}
+
+const merge = (left, right) => {
+    let result = [];
+    let leftIndex = 0;
+    let rightIndex = 0;
+
+    while (leftIndex < left.length && rightIndex < right.length) {
+        if (left[leftIndex].distance < right[rightIndex].distance) {
+            result.push(left[leftIndex]);
+            leftIndex++;
+        } else {
+            result.push(right[rightIndex]);
+            rightIndex++;
+        }
+    }
+
+    return result.concat(left.slice(leftIndex)).concat(right.slice(rightIndex));
+}
+
+const updateMarker = (contentId) => {
+	let bounds = new kakao.maps.LatLngBounds();
+	tourData.forEach((item) => {
+		if (contentId == item.contentId) {
+			closeOverlay();
+			let placeDetailDiv = document.querySelector("#placeDetail");
+
+			let placeSaveList = [];
+			tourData.forEach((i, index) => {
+				if (i.title != item.title) {
+					let distance = Math.sqrt(Math.pow(i.latitude - item.latitude, 2) + Math.pow(i.longitude - item.longitude, 2));
+
+					let placeSave = {};
+					placeSave.distance = distance;
+					placeSave.index = index;
+
+					placeSaveList.push(placeSave);
+				}
+			});
+
+			let sortList = mergeSort(placeSaveList);
+
+			placeDetailDiv.innerHTML = `<h4>${item.title}</h4>
+		         <div style="font-weight:500; font-size:17px">${item.overview ? item.overview : ""}</div>
+		         <div style="height: 10px"></div>
+		         <img src="${item.firstImage ? item.firstImage : contextPath + '/img/no_image.jpg'}" width="100%">
+		         <div style="height: 10px"></div>
+		         <div style="font-weight:bold">주소: ${item.addr ? item.addr : "정보 없음"}</div>
+		         <div style="font-weight:bold">전화번호: ${item.tel ? item.tel : "정보 없음"}</div>
+		         <hr>
+		         <div style="font-weight:bold; color:gray; font-size:24px">주변 관광지 추천</div>
+		         <div class="text-primary" style="font-size:20px; cursor: pointer" onclick="updateMarker(${tourData[sortList[0].index].contentId})">${sortList.length == 0 ? "" : tourData[sortList[0].index].title}</div>
+		         <div class="text-primary" style="font-size:20px; cursor: pointer" onclick="updateMarker(${tourData[sortList[1].index].contentId})">${sortList.length <= 1 ? "" : tourData[sortList[1].index].title}</div>
+		         `;
+			placeDetailDiv.style.display = "block";
+
+
+			const position = new kakao.maps.LatLng(item.latitude, item.longitude); // 각 항목의 위경도를 사용하여 위치 객체 생성
+
+			// 커스텀 이미지의 URL 생성
+			const imageUrl = contextPath + "/img/" + item.contentTypeId + ".png"; // 예: item.contentid 값이 "12"이면, 이미지 URL은 "./img/12.png"
+			const imageSize = new kakao.maps.Size(45, 45); // 마커 이미지의 크기 설정
+			// 마커 이미지 생성
+			const markerImage = new kakao.maps.MarkerImage(imageUrl, imageSize);
+			const marker = new kakao.maps.Marker({
+				position: position, // 마커 위치 설정
+				image: markerImage, // 커스텀 마커 이미지 설정
+			});
+
+			// 커스텀 오버레이에 표시될 내용 생성
+			const content = `<div class="wrap">
+                                <div class="info">
+                                    <div class="title">
+                                        ${item.title}
+                                        <div class="close" onclick="currentOverlay.setMap(null);" title="닫기"></div>
+                                    </div>
+                                    <div class="body">
+                                        <div class="img">
+                                            <img src="${item.firstImage ? item.firstImage : contextPath + '/img/no_image.jpg'}" width="80px" height="80px">
+                                        </div>
+                                        <div class="desc">
+                                            <div class="ellipsis">주소: ${item.addr ? item.addr : "정보 없음"}</div>
+                                            <div class="jibun ellipsis">전화번호: ${item.tel ? item.tel : "정보 없음"}</div>
+                                            <div><a onclick="showPlaceDetail(event, '${encodeURIComponent(JSON.stringify(item))}');"  href="#">상세보기</a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`;
+			// 커스텀 오버레이 생성 및 지도에 추가하지 않음 (초기에는 숨김)
+			const overlay = new kakao.maps.CustomOverlay({
+				content: content,
+				map: null,
+				position: position,
+				// xAnchor: 0.3,
+				// yAnchor: 0.91,
+				// zIndex: 3,
+			});
+
+
+			overlay.setMap(map); // 현재 오버레이 표시
+			currentOverlay = overlay; // 참조 업데이트
+			map.setCenter(position);
+
+
+			marker.setMap(map); // 마커를 지도에 표시
+			markers.push(marker); // 생성된 마커를 markers 배열에 추가
+			bounds.extend(position); // LatLngBounds 객체에 현재 마커의 위치를 추가
+
+		}
+	});
+}
+
+const showPlaceDetail = (e, p) => {
+	const place = JSON.parse(decodeURIComponent(p));
+	let placeDetailDiv = document.querySelector("#placeDetail");
+
+
+	let placeSaveList = [];
+	tourData.forEach((item, index) => {
+		if (item.title != place.title) {
+			let distance = Math.sqrt(Math.pow(item.latitude - place.latitude, 2) + Math.pow(item.longitude - place.longitude, 2));
+
+			let placeSave = {};
+			placeSave.distance = distance;
+			placeSave.index = index;
+
+			placeSaveList.push(placeSave);
+		}
+	});
+
+	let sortList = mergeSort(placeSaveList);
+
+	const content = `<h4>${place.title}</h4>
+         <div style="font-weight:500; font-size:17px">${place.overview ? place.overview : ""}</div>
+         <div style="height: 10px"></div>
+         <img src="${place.firstImage ? place.firstImage : contextPath + '/img/no_image.jpg'}" width="100%">
+         <div style="height: 10px"></div>
+         <div style="font-weight:bold">주소: ${place.addr ? place.addr : "정보 없음"}</div>
+         <div style="font-weight:bold">전화번호: ${place.tel ? place.tel : "정보 없음"}</div>
+         <hr>
+         <div style="font-weight:bold; color:gray; font-size:24px">주변 관광지 추천</div>
+         <div class="text-primary" style="font-size:20px; cursor: pointer" onclick="updateMarker(${tourData[sortList[0].index].contentId})">${sortList.length == 0 ? "" : tourData[sortList[0].index].title}</div>
+         <div class="text-primary" style="font-size:20px; cursor: pointer" onclick="updateMarker(${tourData[sortList[1].index].contentId})">${sortList.length <= 1 ? "" : tourData[sortList[1].index].title}</div>
+         `;
+	placeDetailDiv.innerHTML = content;
+	placeDetailDiv.style.display = "block";
 }
 
 const fetchAllTourData = async (areaCode, sigunguCode, tourType = "all") => {

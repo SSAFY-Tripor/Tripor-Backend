@@ -6,7 +6,7 @@
 	<c:set var="member" value="${sessionScope.member}" />
 </c:if>
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" style="width: 100%; height: 100%">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -28,24 +28,23 @@
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" />
 <link rel="stylesheet" href="${root}/assets/css/style.css" />
 </head>
-<body data-context-path="${root}">
+<body data-context-path="${root}" style="width: 100%; height: 100%">
 
 	<jsp:include page="/common/header.jsp" />
 	<jsp:include page="/common/aside.jsp" />
 	
 
-	<form id="planListForm" method="POST" action="${root}/trip">
+	<form id="planListForm" method="POST" action="${root}/trip" style="width: 100%; height: 100%">
 		<input type="hidden" name="action" value="planAdd"/>
 		<input type="hidden" id="planIdList" name="planIdList" value=""/>
-		<div class="container" style="z-index: 1; padding-left: 0">
-			<div class="show_Home" id="home_div" style="position: relative"> 
+
 				<div id="search-map" class="search-map position-relative d-flex flex-row"
-					style="width: 2000px; height: 1000px">
+					style="width: 100%; height: 100%">
 					<div style="width: 380px; height: 100%" class="d-none d-xl-block"></div>
 					<div id="planList"
 						class="plan-list bg-light p-3"
-						style="width: 15%; height: 100%; overflow-y: auto; background-color: rgba(255, 255, 255, 0.7) !important; z-index: 1000; display: block;">
-						
+						style="width: 300px; height: 100%; overflow-y: auto; background-color: rgba(255, 255, 255, 0.7) !important; z-index: 1000; display: block;">
+						<div style="height: 90px"></div>
 						<span class="mb-3 ms-2" id="planNameGroup">
 						     <i class="bi bi-pen-fill me-1"></i>		
 							<input 
@@ -70,8 +69,7 @@
 							class="btn btn-outline-danger mt-auto mb-3">일정 초기화</button>
 					</div>
 				</div>
-			</div>
-		</div>
+	
 	</form>
 
 	<script src="${root}/assets/js/main.js" type="text/javascript"></script>

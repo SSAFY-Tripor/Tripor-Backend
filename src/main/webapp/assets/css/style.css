@@ -13,11 +13,17 @@ a{
     font-weight: 500;
     font-style: normal;
 }
-body {
+html, body{
+	width: 100%;
+	height: 100%;
     font-family: "Gowun Dodum", sans-serif;
     font-weight: 500;
     font-size: 18px;
     font-style: normal;
+}
+#map{
+	width: 100%;
+	height: 100%;
 }
 .btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
     background-color: #0077CC !important;
