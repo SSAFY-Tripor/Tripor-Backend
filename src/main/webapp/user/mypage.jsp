@@ -33,12 +33,9 @@
 	<jsp:include page="/common/header.jsp" />
 	<jsp:include page="/common/aside.jsp" />
 
-
-	<div class="position-relative">
-		<div style="height: 100px"></div>
 		<div
-			class="show_logIn shadow-sm rounded border p-5 mb-3 position-absolute top-50 start-50 translate-middle-x"
-			id="myPage_div" style="position: relative; top: 3rem; width: 630px;">
+			class="show_logIn shadow-sm rounded border p-5 mb-3 position-absolute start-50 translate-middle-x"
+			id="myPage_div" style="position: relative; top: 130px; width: 45%;">
 			<div>
 				<form method="POST" action="${root}/member">
 					<h5 class="mb-5">마이페이지</h5>
@@ -71,7 +68,7 @@
 				</form>
 			</div>
 		</div>
-	</div>
+
 
 	<script src="${root}/assets/js/main.js" type="text/javascript"></script>
 

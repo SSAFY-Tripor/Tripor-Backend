@@ -3,10 +3,10 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <c:set var="root" value="${pageContext.request.contextPath}" />    
     
-<div style="height: 90px"></div>
+
         <div
-            class="d-none d-none d-xl-block shadow-sm position-fixed ps-2 pt-4 pe-2 container bg-white"
-            style="width: 380px; height: 100%; z-index: 9; padding-right: 0"
+            class="d-none d-none d-xl-block shadow-sm position-fixed bg-white"
+            style="width: 380px; height: 100%;  z-index: 9; padding:105px 10px;"
         >
             <div style="cursor: pointer" class="p-3 m-1 rounded menu_button row">
                 <div class="col-12" onclick="location.href = '${root}'">

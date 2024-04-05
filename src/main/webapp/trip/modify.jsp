@@ -35,6 +35,7 @@
 		<div style="height:100px"></div>
 		<form action="${root}/board" method="POST" class="editor__form mb-3 position-absolute top-50 start-50 translate-middle-x"
 			id="editor-form" style="width: 45%">
+			<div style="height: 90px"></div>
 			<h4 class="d-flex justify-content-center"
 				style="overflow: hidden; white-space: nowrap">여행 정보를 공유해요</h4>
 			<div style="height:10px"></div>
@@ -59,7 +60,7 @@
 			<input type="hidden" name="boardno" value="${board.boardNo}"/>
 			<input type="hidden" readonly name="userid" value="글쓴이: ${board.userId}"/>
 			<div class="d-flex justify-content-center">
-				<button type="submit" class="btn btn-outline-primary">수정 완료</button>
+				<button type="submit" class="btn btn-outline-primary me-1">수정 완료</button>
 				<button class="btn btn-outline-primary" onclick='location.href="${root}/board?action=detail&boardno=${board.boardNo}"'>수정 취소</button>
 			</div>
 			

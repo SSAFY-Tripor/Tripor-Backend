@@ -6,7 +6,7 @@
 	<c:set var="member" value="${sessionScope.member}" />
 </c:if>
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" style="width: 100%; height: 100%;">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -28,7 +28,8 @@
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" />
 <link rel="stylesheet" href="${root}/assets/css/style.css" />
 </head>
-<body data-context-path="${root}">
+<body data-context-path="${root}" style="width: 100%; height: 100%;">
+
 	<div class="fixed-top">
 		<div class="navbar navbar-expand-md bg-white navbar-light">
 			<div class="container-fluid justify-content-center">
@@ -38,7 +39,8 @@
 				<div
 					class="dropdowns col-lg-7 col-md-12 d-flex flex-row justify-content-center"
 					id="searchPlace" style="display: block">
-					<span class="m-1 d-none d-xl-block" style="overflow: hidden; white-space: nowrap">관광지를
+					<span class="m-1 d-none d-xl-block"
+						style="overflow: hidden; white-space: nowrap">관광지를
 						선택하세요!&nbsp;&nbsp;</span> <select id="region"
 						class="mr-sm-2 m-1 shadow-sm">
 						<option value="">도 선택</option>
@@ -80,15 +82,13 @@
 
 
 
-	<div class="container" style="z-index: 1; padding-left: 0; width: 100%; height: 100%">
-		<div class="show_Home" id="home_div" style="position: relative">
-
-			<div id="search-map" class="search-map"
-				style="width: 2000px; height: 1000px"></div>
+	<div id="search-map"
+		class="search-map position-relative d-flex flex-row-reverse"
+		style="width: 100%; height: 100%">
+		<div id="placeDetail" class="bg-light p-3 m-5"
+			style="width: 15%; height: 100%; overflow-y: auto; background-color: rgba(255, 255, 255, 0.7) !important; z-index: 1000; display: none;">
 		</div>
 	</div>
-	</div>
-
 
 	<script src="${root}/assets/js/main.js" type="text/javascript"></script>
 	<script src="${root}/assets/js/search.js" type="text/javascript"></script>

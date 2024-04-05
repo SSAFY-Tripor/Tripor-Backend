@@ -32,9 +32,7 @@
 <body data-context-path="${root}">
 	<jsp:include page="/common/header.jsp" />
 	<jsp:include page="/common/aside.jsp" />
-	<div class="position-relative">
-		<div style="height:100px"></div>
-		<div class="mb-3" style="position: absolute; left: 400px; top: 10px">
+		<div class="mb-3 position-absolute start-50 translate-middle-x" style="position: absolute; top: 130px; width: 45%">
 			<span class="mb-3 text-primary" onclick="location.href = '${root}/board?action=list'" style="cursor: pointer">&lt; 뒤로가기</span>
 			
 			<h3 class="mt-3">${board.subject}</h3>
@@ -52,7 +50,6 @@
 				<!-- 삭제하시겠습니까? 필요 시 body에 `data-context-path` 참고! -->
 			</c:if>
 		</div>
-	</div>
 	<script src="${root}/assets/js/main.js" type="text/javascript"></script>
 </body>
 </html>

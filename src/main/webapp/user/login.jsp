@@ -39,15 +39,14 @@
         
         
 
-        <div class="position-relative">
-            <div style="height:100px"></div>
+
             <div
-                class="shadow-sm rounded border p-5 mb-3 position-absolute top-50 start-50 translate-middle-x"
+                class="shadow-sm rounded border p-5 mb-3 position-absolute start-50 translate-middle-x"
                 id="login_div"
                 style="
-                    position: relative;
-                    top: 3rem;
-                    width: 740px;
+                    position: absolute;
+                    top: 130px;
+                    width: 45%;
                 "
             >
                 <h4>로그인</h4>
@@ -109,7 +108,7 @@
                     </div>
                 </form>
             </div>
-        </div>
+
  
 
         <script src="${root}/assets/js/main.js" type="text/javascript"></script>

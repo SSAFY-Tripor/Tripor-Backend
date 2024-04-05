@@ -37,6 +37,7 @@
 		<div class="d-flex flex-row">
 				<div style="width: 540px; height: 100%" class="d-none d-xl-block"></div>
 				<div id="planListDiv" style="width: 100%">
+				<div style="height: 90px"></div>
 					<c:if test="${ empty plans }">
 						<div class="position-absolute top-50 start-50 translate-middle-x">
 							<h4>
