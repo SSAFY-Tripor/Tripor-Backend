@@ -1,6 +1,7 @@
 package com.tripor.trip.model.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -80,8 +81,99 @@ public class TripServiceImpl implements TripService {
 		System.out.println("왔음 mode까지" + list);
 		Gson gson = new Gson();
 		String json = gson.toJson(shortestPathByGreedy(list, 0));
+		//String json = gson.toJson(shortestPathByTSP(list, 0));
 		System.out.println(json);
 		return json;
+	}
+	/*
+	 * private List<TripDto> shortestPathByTSP(List<TripDto> list, int start) { int
+	 * N = list.size(); double[][] Graph = new double[N][N];
+	 * 
+	 * for (int i = 0; i < N; i++) { for (int j = 0; j < N; j++) { if (i == j)
+	 * continue; TripDto A = list.get(i); TripDto B = list.get(j); double weight =
+	 * latDiff(Double.parseDouble(A.getLatitude()),
+	 * Double.parseDouble(B.getLatitude())) +
+	 * lngDiff(Double.parseDouble(A.getLongitude()),
+	 * Double.parseDouble(B.getLongitude())); Graph[i][j] = weight; } } int[] perm =
+	 * new int[N]; double ans = Double.POSITIVE_INFINITY; int[] answer = new int[N];
+	 * for (int i = 0; i < N; i++) { perm[i] = i; } do { int sum = 0; boolean flag =
+	 * true; for (int i = 0; i < N; i++) { double edge = Graph[perm[i]][perm[(i + 1)
+	 * % N]]; sum += edge; } if(ans > sum){ ans = sum; for (int i = 0; i < N; i++) {
+	 * answer[i] = perm[i]; } } } while (np(perm, N));
+	 * 
+	 * System.out.println(ans); for (int i = 0; i < N; i++) {
+	 * System.out.println(answer[i]); } return null; } private boolean np(int[] p,
+	 * int N) { int i = N - 1; while (i > 0 && p[i - 1] > p[i]) { i--; } if (i == 0)
+	 * return false; int j = N - 1; while (p[i - 1] > p[j]) { j--; } swap(p, i - 1,
+	 * j); int k = N - 1; while (i < k) { swap(p, i++, k--); } return true; }
+	 * 
+	 * private void swap(int[] arr, int i, int j) { int tmp = arr[i]; arr[i] =
+	 * arr[j]; arr[j] = tmp; }
+	 */
+
+	private List<TripDto> shortestPathByTSP(List<TripDto> list, int start) {
+		int N = list.size();
+		int END = (1 << N) - 1;
+		double[][] Graph = new double[N][N];
+		double[][] dp = new double[N][1 << N]; // ex) 1 << 5 = 100000(2) = 32 -> 우리의 최대값 : 11111(2) 이므로 1 빼기
+		List<Integer> shortestPath = new ArrayList<>();
+
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < N; j++) {
+				if (i == j)
+					continue;
+				TripDto A = list.get(i);
+				TripDto B = list.get(j);
+				double weight = latDiff(Double.parseDouble(A.getLatitude()), Double.parseDouble(B.getLatitude()))
+						+ lngDiff(Double.parseDouble(A.getLongitude()), Double.parseDouble(B.getLongitude()));
+				Graph[i][j] = weight;
+			}
+		}
+
+		double shortestPathLength = tsp(0, 1, N, dp, Graph, shortestPath);
+		List<TripDto> returnList = new ArrayList<>();
+		System.out.println(shortestPath);
+		for (int i = 0; i < N; i++) {
+			returnList.add(list.get(shortestPath.get(i)));
+		}
+		return returnList;
+	}
+
+	// 동적 계획법으로 최단 경로 구하기
+	static double tsp(int node, int visited, int N, double[][] dp, double[][] graph, List<Integer> shortestPath) {
+		if (visited == (1 << N) - 1) { // 모든 노드를 방문한 경우
+			shortestPath = new ArrayList<>();
+			shortestPath.add(node); // 출발 노드 추가
+			shortestPath.add(0); // 출발 노드로 돌아가는 노드 추가
+			return graph[node][0]; // 출발 노드로 돌아가는 비용 반환
+		}
+
+		if (dp[node][visited] != 0) { // 이미 계산한 값이 있는 경우
+			return dp[node][visited];
+		}
+
+		double minCost = Double.POSITIVE_INFINITY;
+		int nextNode = -1;
+
+		for (int i = 0; i < N; i++) {
+			if ((visited & (1 << i)) == 0 && graph[node][i] != 0) {
+				double cost = graph[node][i] + tsp(i, visited | (1 << i), N, dp, graph, shortestPath);
+				if (cost < minCost) {
+					minCost = cost;
+					nextNode = i;
+				}
+			}
+		}
+
+		if (nextNode != -1) {
+            dp[node][visited] = minCost;
+            shortestPath = new ArrayList<>();
+            shortestPath.add(node); // 현재 노드 추가
+            shortestPath.addAll(shortestPath); // 이전 경로 추가
+            return minCost;
+        } else {
+            return dp[node][visited] = Double.POSITIVE_INFINITY;
+        }
 	}
 
 	private List<TripDto> shortestPathByGreedy(List<TripDto> list, int start) {
@@ -109,15 +201,15 @@ public class TripServiceImpl implements TripService {
 		List<TripDto> returnList = new ArrayList<>();
 		returnList.add(list.get(start));
 		visit[cur] = true;
-		System.out.println(returnList.size() + " " +list.size());
+		System.out.println(returnList.size() + " " + list.size());
 		while (returnList.size() < list.size()) {
-			System.out.println(returnList.size() + " " +list.size());
+			System.out.println(returnList.size() + " " + list.size());
 			double min = Double.MAX_VALUE;
 			int minIdx = 0;
 			for (Node next : tripGraph[cur]) {
 				if (visit[next.next])
 					continue;
-				if(min > next.weight) {
+				if (min > next.weight) {
 					min = next.weight;
 					minIdx = next.next;
 				}
