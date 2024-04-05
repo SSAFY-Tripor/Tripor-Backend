@@ -83,10 +83,11 @@
 
 
 	<div id="search-map"
-		class="search-map position-relative d-flex flex-row-reverse"
+		class="search-map position-relative d-flex flex-row-reverse justify-content-start"
 		style="width: 100%; height: 100%">
-		<div id="placeDetail" class="bg-light p-3 m-5"
-			style="width: 15%; height: 100%; overflow-y: auto; background-color: rgba(255, 255, 255, 0.7) !important; z-index: 1000; display: none;">
+		<div id="placeDetail" class="bg-light p-3"
+			style="width: 19%; height: 83%; overflow-y: auto; background-color: rgba(255, 255, 255, 0.8) !important; z-index: 1000; display: none; margin-top: 130px; margin-right: 30px; border-radius: 30px;">
+			
 		</div>
 	</div>
 
