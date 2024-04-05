@@ -150,6 +150,36 @@ const updateMapMarkers = (areaCode, sigunguCode, tour) => {
 	}
 }
 
+const mergeSort = (arr) => {
+    if (arr.length <= 1) {
+        return arr;
+    }
+
+    const mid = Math.floor(arr.length / 2);
+    const left = arr.slice(0, mid);
+    const right = arr.slice(mid);
+
+    return merge(mergeSort(left), mergeSort(right));
+}
+
+const merge = (left, right) => {
+    let result = [];
+    let leftIndex = 0;
+    let rightIndex = 0;
+
+    while (leftIndex < left.length && rightIndex < right.length) {
+        if (left[leftIndex].distance < right[rightIndex].distance) {
+            result.push(left[leftIndex]);
+            leftIndex++;
+        } else {
+            result.push(right[rightIndex]);
+            rightIndex++;
+        }
+    }
+
+    return result.concat(left.slice(leftIndex)).concat(right.slice(rightIndex));
+}
+
 const updateMarker = (contentId) => {
 	let bounds = new kakao.maps.LatLngBounds();
 	tourData.forEach((item) => {
@@ -170,11 +200,7 @@ const updateMarker = (contentId) => {
 				}
 			});
 
-			let sortList = placeSaveList.sort((a, b) => {
-				if (a.distance > b.distance) return 1;
-				if (a.distance < b.distance) return -1;
-				return 0;
-			});
+			let sortList = mergeSort(placeSaveList);
 
 			placeDetailDiv.innerHTML = `<h4>${item.title}</h4>
 		         <div style="font-weight:500; font-size:17px">${item.overview ? item.overview : ""}</div>
@@ -189,9 +215,6 @@ const updateMarker = (contentId) => {
 		         <div class="text-primary" style="font-size:20px; cursor: pointer" onclick="updateMarker(${tourData[sortList[1].index].contentId})">${sortList.length <= 1 ? "" : tourData[sortList[1].index].title}</div>
 		         `;
 			placeDetailDiv.style.display = "block";
-
-
-
 
 
 			const position = new kakao.maps.LatLng(item.latitude, item.longitude); // 각 항목의 위경도를 사용하여 위치 객체 생성
@@ -267,11 +290,7 @@ const showPlaceDetail = (e, p) => {
 		}
 	});
 
-	let sortList = placeSaveList.sort((a, b) => {
-		if (a.distance > b.distance) return 1;
-		if (a.distance < b.distance) return -1;
-		return 0;
-	});
+	let sortList = mergeSort(placeSaveList);
 
 	const content = `<h4>${place.title}</h4>
          <div style="font-weight:500; font-size:17px">${place.overview ? place.overview : ""}</div>
