@@ -33,10 +33,8 @@
 	<jsp:include page="/common/header.jsp" />
 	<jsp:include page="/common/aside.jsp" />
 
-	<div class="position-relative">
-		<div style="height: 100px"></div>
-		<div class="mb-3 position-absolute top-50 start-50 translate-middle-x"
-			id="board_div" style="position: relative; top: 1.5rem; width: 47%">
+		<div class="mb-3 position-absolute start-50 translate-middle-x"
+			id="board_div" style="position: relative; top: 160px; width: 50%">
 			<h4 class="d-flex justify-content-center"
 				style="overflow: hidden; white-space: nowrap">여행 정보를 공유해요</h4>
 
@@ -102,7 +100,6 @@
 				<!--  페이지 추가  -->
 			</div>
 		</div>
-	</div>
     <form id="form-param" method="get" action="">
       <input type="hidden" id="p-action" name="action" value="">
       <input type="hidden" id="p-pgno" name="pgno" value="">

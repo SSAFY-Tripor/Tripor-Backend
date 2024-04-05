@@ -33,11 +33,14 @@
 	<jsp:include page="/common/header.jsp" />
 	<jsp:include page="/common/aside.jsp" />
 	
-		<div class="position-relative">
-		<div class="d-flex flex-row">
-				<div style="width: 540px; height: 100%" class="d-none d-xl-block"></div>
-						<div class="position-absolute top-50 start-50 translate-middle-x">
-							<div style="height: 70px; width: 100%"></div>
+	<div
+                class="position-absolute start-50 translate-middle-x"
+                style="
+                    position: absolute;
+                    top: 40%;
+                    width: 740px;
+                "
+            >
 							<h4>
 								회원가입이 완료되었습니다.							
 							</h4>
@@ -47,11 +50,9 @@
 							</div>
 							
 
-					
-			</div>
+		
 		</div>
 				
-	</div>
 
 	<script src="${root}/assets/js/main.js" type="text/javascript"></script>
 

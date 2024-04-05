@@ -31,10 +31,12 @@
 <body>
 	<jsp:include page="/common/header.jsp" />
 	<jsp:include page="/common/aside.jsp" />
-	<div class="position-relative">
-		<div style="height:100px"></div>
-		<form action="${root}/board" method="POST" class="editor__form mb-3 position-absolute top-50 start-50 translate-middle-x"
-			id="editor-form" style="width: 45%">
+		<form action="${root}/board" method="POST" class="editor__form mb-3 position-absolute start-50 translate-middle-x"
+			id="editor-form" style="
+                    position: absolute;
+                    top: 130px;
+                    width: 820px;
+                ">
 			<h4 class="d-flex justify-content-center"
 				style="overflow: hidden; white-space: nowrap">여행 정보를 공유해요</h4>
 			<div style="height:10px"></div>
@@ -57,6 +59,5 @@
 					id="editor-submit-btn">작성 완료</button>
 			</div>
 		</form>
-	</div>
 </body>
 </html>
