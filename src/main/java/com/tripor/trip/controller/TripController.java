@@ -105,7 +105,13 @@ public class TripController extends HttpServlet {
 				forward(path, request, response);
 			}else if("mappingPlan".equals(action)) {
 				int planId = Integer.parseInt(request.getParameter("planid"));
-				String json = tripService.getTripList(planId);
+				String mode = request.getParameter("mode");
+				String json = null;
+				if("short".equals(mode)) {
+					json = tripService.getTripList(planId, mode);
+				}else {
+					json = tripService.getTripList(planId);
+				}
 				returnJson(json, response);
 			}else if("getTrip".equals(action)) {
 				int contentId = Integer.parseInt(request.getParameter("contentid"));

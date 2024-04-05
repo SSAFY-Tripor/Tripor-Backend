@@ -50,6 +50,8 @@
 				<div>
 					<div id="plan-map" style="width: 800px; height: 600px"></div>
 					
+					<div id="plan-distance"></div>
+					<div id="plan-shortest-path"><button type="button" class="btn btn-outline-primary" onclick="planMapLoading(1);">최적 경로 찾기</button></div>
 					<div id="plan-div-id" style="display:none">${plan.planId}</div>
 				</div>
 				<div style="width: 20px"></div>

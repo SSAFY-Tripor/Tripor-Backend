@@ -6,7 +6,7 @@
 	<c:set var="member" value="${sessionScope.member}" />
 </c:if>
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" style="height:100%">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -28,7 +28,9 @@
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" />
 <link rel="stylesheet" href="${root}/assets/css/style.css" />
 </head>
-<body data-context-path="${root}">
+<body data-context-path="${root}" style="height:100%">
+
+
 	<div class="fixed-top">
 		<div class="navbar navbar-expand-md bg-white navbar-light">
 			<div class="container-fluid justify-content-center">
@@ -76,6 +78,8 @@
 		</div>
 		<div id="hr"></div>
 	</div>
+	
+	
 	<jsp:include page="/common/aside.jsp" />
 
 
@@ -87,8 +91,6 @@
 				style="width: 2000px; height: 1000px"></div>
 		</div>
 	</div>
-	</div>
-
 
 	<script src="${root}/assets/js/main.js" type="text/javascript"></script>
 	<script src="${root}/assets/js/search.js" type="text/javascript"></script>

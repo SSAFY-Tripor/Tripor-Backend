@@ -114,7 +114,7 @@ const updateMapMarkers = (areaCode, sigunguCode, tour) => {
                                         <div class="desc">
                                             <div class="ellipsis">주소: ${item.addr ? item.addr : "정보 없음"}</div>
                                             <div class="jibun ellipsis">전화번호: ${item.tel ? item.tel : "정보 없음"}</div>
-                                            <div><a href="#" target="_blank" class="link">상세보기</a></div>
+                                            <div><p onclick="print(event, '${encodeURIComponent(JSON.stringify(item))}');" class="link">상세보기</p></div>
                                         </div>
                                     </div>
                                 </div>
@@ -149,6 +149,11 @@ const updateMapMarkers = (areaCode, sigunguCode, tour) => {
 		alert("해당 관광 정보 지역이 없습니다.");
 		fetchAllTourData(areaCode, sigunguCode);
 	}
+}
+const print = (e, item) => {
+	console.log(e)
+	var decodedItem = JSON.parse(decodeURIComponent(item));
+	console.log(decodedItem);
 }
 
 const fetchAllTourData = async (areaCode, sigunguCode, tourType = "all") => {
@@ -286,7 +291,7 @@ const removeFromPlanList = (listItem, title, index) => {
 	// planItems 배열에서 해당 아이템 정보 제거
 	planItems = planItems.filter((planItem) => planItem.title !== title);
 	checkMarkers = checkMarkers.filter((_, idx) => idx !== index);
-	
+
 	// 모든 선분 제거
 	for (var i = 0; i < polylines.length; i++) {
 		polylines[i].setMap(null);
@@ -317,9 +322,9 @@ const removeAllPlanList = (plans) => {
 	polylines = []; // 배열 초기화
 	planItems = [];
 	planIdItems = [];
-	
-	
-	
+
+
+
 	checkMarkers = [];
 }
 
@@ -332,9 +337,9 @@ const addToPlanList = async (index) => {
 		alert("이미 추가된 항목입니다.");
 		return; // 이미 목록에 존재하는 항목이면 함수 실행을 종료
 	}
-	
+
 	checkMarkers.push(markers[index]);
-	
+
 	// 목록 항목 생성
 	const planList = document.querySelector("#planItems");
 	const listItem = document.createElement("li");
@@ -391,17 +396,17 @@ const performSearch = async () => {
 	// API 호출
 	const response = await fetch(`${url}${planParam}`);
 	const data = await response.json();
-	
-	if(data == null || data.length == 0){
+
+	if (data == null || data.length == 0) {
 		alert("입력한 검색어에 해당되는 데이터가 없습니다.");
 		return;
 	}
-	
-	
+
+
 	const bounds = new kakao.maps.LatLngBounds();
-	
-	
-	
+
+
+
 	// 1. 기존에 저장된 여행 리스트를 제외하고 검색 결과에 따른 다른 마커 정보 띄워주기
 	// 모든 마커를 지도에서 제거
 	markers.forEach((marker) => {
@@ -409,15 +414,15 @@ const performSearch = async () => {
 	});
 	markers = []; // 마커 배열 초기화
 	// 1-1. 단, 기존에 마커 정보는 남겨두자.
-	for(marker of checkMarkers){
+	for (marker of checkMarkers) {
 		markers.push(marker);
 		marker.setMap(map);
 	}
 	// 2. tempListItems(addToPlanList 함수에 있음)을 초기화 해줘야 함.
 	tempListItems = [];
-	
-	
-	
+
+
+
 	await data.forEach((item, index) => {
 		// 각 항목의 위치에 마커 생성
 		const position = new kakao.maps.LatLng(item.latitude, item.longitude);
@@ -509,9 +514,9 @@ const planBtnClickEventListener = () => {
 
 	// planItems 배열을 로컬 스토리지에 저장
 	//localStorage.setItem(planId, JSON.stringify(planItems));
-	
+
 	const planText = document.getElementById("planItems").innerText;
-	if(planText == "" || planText == null){
+	if (planText == "" || planText == null) {
 		alert("여행을 추가하고 등록해주세요.");
 		return;
 	}
@@ -556,11 +561,58 @@ const getContents = async () => {
 	return data;
 }
 let planOverlay = [];
+let polyline = null; // kakao PoliLine 들어갈 위치
+let distanceOverlay = null;
+let planCount = 0;
 
-const planMapLoading = async () => {
+const getTimeFromDistance = (distance) => {
+	// 도보의 시속은 평균 4km/h 이고 도보의 분속은 67m/min입니다
+	const walkkTime = distance / 67 | 0;
+	let walkHour = '', walkMin = '';
+
+	// 계산한 도보 시간이 60분 보다 크면 시간으로 표시합니다
+	if (walkkTime > 60) {
+		walkHour = '<span class="number">' + Math.floor(walkkTime / 60) + '</span>시간 '
+	}
+	walkMin = '<span class="number">' + walkkTime % 60 + '</span>분'
+
+	// 자전거의 평균 시속은 16km/h 이고 이것을 기준으로 자전거의 분속은 267m/min입니다
+	const bycicleTime = distance / 227 | 0;
+	let bycicleHour = '', bycicleMin = '';
+
+	// 계산한 자전거 시간이 60분 보다 크면 시간으로 표출합니다
+	if (bycicleTime > 60) {
+		bycicleHour = '<span class="number">' + Math.floor(bycicleTime / 60) + '</span>시간 '
+	}
+	bycicleMin = '<span class="number">' + bycicleTime % 60 + '</span>분'
+
+	// 거리와 도보 시간, 자전거 시간을 가지고 HTML Content를 만들어 리턴합니다
+	let content = '<ul class="dotOverlay distanceInfo">';
+	content += '    <li>';
+	content += '        <span class="label">총 거리</span><span class="number">' + distance + '</span>m';
+	content += '    </li>';
+	content += '    <li>';
+	content += '        <span class="label">도보</span>' + walkHour + walkMin;
+	content += '    </li>';
+	content += '    <li>';
+	content += '        <span class="label">자전거</span>' + bycicleHour + bycicleMin;
+	content += '    </li>';
+	content += '</ul>'
+	return content;
+}
+
+const planMapLoading = async (mode = null) => {
 	// 모든 마커가 포함되도록 지도의 중심과 확대 레벨 조정
 	const bounds = new kakao.maps.LatLngBounds();
-	const contents = await getContents();
+
+	let contents;
+	console.log(mode);
+	if (mode == null) {
+		contents = await getContents();
+	}
+	else {
+		contents = await shortestLoading();
+	}
 	console.log(contents);
 	for (const content of contents) {
 		console.log(content)
@@ -610,16 +662,16 @@ const planMapLoading = async () => {
 			position: marker.getPosition(),
 		});
 		overlay.setMap(null); // 초기에는 숨김
-		
-		
+
+
 		// 마커 클릭 시 커스텀 오버레이 표시
 		kakao.maps.event.addListener(marker, "click", () => {
 			closeOverlay();
 			overlay.setMap(map); // 현재 오버레이 표시
 			currentOverlay = overlay; // 참조 업데이트
-			map.setCenter(position);
+			map.setCenter(markerPosition);
 		});
-		
+
 		planOverlay.push(overlay);
 		// 마커를 지도에 추가
 		marker.setMap(map);
@@ -628,31 +680,54 @@ const planMapLoading = async () => {
 	};
 	// 선분 추가
 	if (contents.length > 1) {
-		let lastItem = contents[0]; // 마지막에서 두 번째 아이템
-		for (let i=1;i<contents.length;i++) {
-			let polyline = new kakao.maps.Polyline({
-				path: [
-					new kakao.maps.LatLng(lastItem.latitude, lastItem.longitude),
-					new kakao.maps.LatLng(contents[i].latitude, contents[i].longitude),
-				],
-				strokeWeight: 3,
-				strokeColor: "#db4040",
-				strokeOpacity: 0.8,
-				strokeStyle: "solid",
-			});
-			polyline.setMap(map);
-			lastItem = contents[i];
+		/*		polylines.forEach((polyline) => {
+					polyline.setMap(null); // 각 선분을 Map에서 제거
+				});
+				polylines = []; // 배열 초기화*/
+		planCount = contents.length;
+		if(polyline != null)
+			polyline.setMap(null); // 각 선분을 Map에서 제거
+		polyline = new kakao.maps.Polyline({
+			strokeWeight: 3,
+			strokeColor: "#db4040",
+			strokeOpacity: 0.8,
+			strokeStyle: "solid",
+		});
+		let polyPath = [];
+		for (let i = 0; i < contents.length; i++) {
+			polyPath.push(new kakao.maps.LatLng(contents[i].latitude, contents[i].longitude));
+		}
+		polyline.setPath(polyPath);
+		polyline.setMap(map);
+		//showDistance(distanceContent, polyPath[polyPath.length - 1]);
+		let planDistance = document.querySelector("#plan-distance");
+		planDistance.innerHTML = getTimeFromDistance(polyline.getLength().toFixed(2));
+	} else {
+		planCount = 1;
+		const planShortest = document.querySelector("#plan-shortest-path");
+		if (planShortest != null) {
+			planShortest.addEventListener("click", function() {
+				alert("경로는 여러 개인 경우에만 재설정 가능합니다.");
+				return;
+			})
 		}
 	}
-	// 선분 추가
-	
 	map.setBounds(bounds);
 }
 
+const shortestLoading = async () => {
+	const planId = document.querySelector("#plan-div-id").innerText;
+	const planIdParam = `/trip?action=mappingPlan&planid=${planId}&mode=short`;
+	const response = await fetch(`${url}${planIdParam}`);
+	const data = await response.json();
+	return data;
+}
+
+
 const openOverlay = (index) => {
-	if(currentOverlay == planOverlay[index]){
+	if (currentOverlay == planOverlay[index]) {
 		closeOverlay();
-	}else{
+	} else {
 		closeOverlay();
 		planOverlay[index].setMap(map);
 		currentOverlay = planOverlay[index];

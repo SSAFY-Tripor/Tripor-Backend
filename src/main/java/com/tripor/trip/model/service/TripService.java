@@ -18,6 +18,10 @@ public interface TripService {
 	String getTripList(TripSearchDto param) throws Exception;
 
 	String getTripList(String keyword) throws Exception;
+	
+	String getTripList(int planId) throws Exception;
+
+	String getTripList(int planId, String mode) throws Exception;
 
 	void registerTripPlan(String tripJson, String userId, String planName) throws Exception;
 
@@ -25,7 +29,6 @@ public interface TripService {
 
 	TripPlanDto getTripPlanDetail(int planId) throws Exception;
 
-	String getTripList(int planId) throws Exception;
 	
 	void removeTripPlan(int planId) throws Exception;
 }
