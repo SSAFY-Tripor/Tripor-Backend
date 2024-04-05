@@ -109,7 +109,7 @@ const updateMapMarkers = (areaCode, sigunguCode, tour) => {
                                     </div>
                                     <div class="body">
                                         <div class="img">
-                                            <img src="${item.firstImage ? item.firstImage : contextPath}/img/no_image.jpg" width="80px" height="80px">
+                                            <img src="${item.firstImage ? item.firstImage : contextPath + '/img/no_image.jpg'}" width="80px" height="80px">
                                         </div>
                                         <div class="desc">
                                             <div class="ellipsis">주소: ${item.addr ? item.addr : "정보 없음"}</div>
@@ -444,7 +444,7 @@ const performSearch = async () => {
                                                 <img src="${item.firstImage
 				? item.firstImage
 				: contextPath + "/img/no_image.jpg"
-			}" width="80px" height="80px">
+			}" width="80px" height="80px" onerror="this.src='${contextPath}/img/no_image.jpg'; this.setAttribute('alt', '');">
                                             </div>
                                             <div class="desc">
                                                 <div class="ellipsis">주소: ${item.addr
