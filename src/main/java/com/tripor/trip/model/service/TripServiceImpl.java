@@ -74,50 +74,105 @@ public class TripServiceImpl implements TripService {
 		String json = gson.toJson(list);
 		return json;
 	}
-
 	@Override
 	public String getTripList(int planId, String mode) throws Exception {
 		List<TripDto> list = tripDao.searchPlanByPlanId(planId).getTripList();
-		System.out.println("왔음 mode까지" + list);
 		Gson gson = new Gson();
+
+
+//		long beforeTime = System.currentTimeMillis(); // 코드 실행 전에 시간 받아오기
+
+		// 실험할 코드 추가
 //		String json = gson.toJson(shortestPathByGreedy(list, 0));
 		String json = gson.toJson(shortestPathByTSP(list, 0));
-		System.out.println(json);
+//
+//		long afterTime = System.currentTimeMillis(); // 코드 실행 후에 시간 받아오기
+//		long secDiffTime = (afterTime - beforeTime); // 두 시간에 차 계산
+//		System.out.println("시간차이(ms) : " + secDiffTime);
+
 		return json;
 	}
-	/*
-	 * private List<TripDto> shortestPathByTSP(List<TripDto> list, int start) { int
-	 * N = list.size(); double[][] Graph = new double[N][N];
-	 * 
-	 * for (int i = 0; i < N; i++) { for (int j = 0; j < N; j++) { if (i == j)
-	 * continue; TripDto A = list.get(i); TripDto B = list.get(j); double weight =
-	 * latDiff(Double.parseDouble(A.getLatitude()),
-	 * Double.parseDouble(B.getLatitude())) +
-	 * lngDiff(Double.parseDouble(A.getLongitude()),
-	 * Double.parseDouble(B.getLongitude())); Graph[i][j] = weight; } } int[] perm =
-	 * new int[N]; double ans = Double.POSITIVE_INFINITY; int[] answer = new int[N];
-	 * for (int i = 0; i < N; i++) { perm[i] = i; } do { int sum = 0; boolean flag =
-	 * true; for (int i = 0; i < N; i++) { double edge = Graph[perm[i]][perm[(i + 1)
-	 * % N]]; sum += edge; } if(ans > sum){ ans = sum; for (int i = 0; i < N; i++) {
-	 * answer[i] = perm[i]; } } } while (np(perm, N));
-	 * 
-	 * System.out.println(ans); for (int i = 0; i < N; i++) {
-	 * System.out.println(answer[i]); } return null; } private boolean np(int[] p,
-	 * int N) { int i = N - 1; while (i > 0 && p[i - 1] > p[i]) { i--; } if (i == 0)
-	 * return false; int j = N - 1; while (p[i - 1] > p[j]) { j--; } swap(p, i - 1,
-	 * j); int k = N - 1; while (i < k) { swap(p, i++, k--); } return true; }
-	 * 
-	 * private void swap(int[] arr, int i, int j) { int tmp = arr[i]; arr[i] =
-	 * arr[j]; arr[j] = tmp; }
-	 */
-
 	private List<TripDto> shortestPathByTSP(List<TripDto> list, int start) {
-		return tspImplPermutaion(list, start);
+//		return tspImplPermutaion(list, start);
+		return tspImplDP(list, start);
 	}
 
-	private List<TripDto> tspImplPermutaion(List<TripDto> list, int start) {	
+	private List<TripDto> tspImplDP(List<TripDto> list, int start) {
 		int N = list.size();
-		if(N > 10) {
+		if (N > 18) {
+			// 많은 범위가 들어온다면, 수행하지 않음. 안전 장치!
+			return list;
+		}
+		double[][] dp, Graph;
+		int[][] path;
+		Graph = new double[N][N];
+		dp = new double[N][(1 << N)];
+		path = new int[N][(1 << N)];
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < N; j++) {
+				if (i == j)
+					continue;
+				TripDto A = list.get(i);
+				TripDto B = list.get(j);
+				double weight = latDiff(Double.parseDouble(A.getLatitude()), Double.parseDouble(B.getLatitude()))
+						+ lngDiff(Double.parseDouble(A.getLongitude()), Double.parseDouble(B.getLongitude()));
+				Graph[i][j] = weight;
+			}
+		}
+
+		for (int i = 0; i < N; i++)
+			Arrays.fill(dp[i], -1);
+		dfs(start, (1 << start), N, Graph, dp, path, start);
+
+		// 외판원 순회 끝
+		// path를 활용하여, 최적 경로 반환
+		List<TripDto> returnList = new ArrayList<>();
+		int flag = (1 << start);
+		returnList.add(list.get(start));
+		int last = 0;
+		while (flag != (1 << N) - 1) {
+			int next = path[last][flag];
+			returnList.add(list.get(next));
+			flag = (flag | (1 << next));
+			last = next;
+		}
+		return returnList;
+	}
+
+	private double dfs(int cur, int visitFlag, int N, double[][] Graph, double[][] dp, int[][] path, int start) {
+		// 모든 도시를 지난 경우
+		if (visitFlag == (1 << N) - 1) {
+			dp[cur][visitFlag] = Graph[cur][start];
+			path[cur][visitFlag] = -3;
+			return Graph[cur][start]; // 시작 경로로 반환(외판원 돌아가는 부분이라 지금은 필요 없지만, 후에 기차역 또는 공항, 호텔과 연동 가능할 듯
+		}
+
+		if (dp[cur][visitFlag] != -1)
+			return dp[cur][visitFlag];
+		dp[cur][visitFlag] = Double.POSITIVE_INFINITY;
+
+		for (int i = 0; i < N; i++) {
+			// now -> 아직 방문하지 않는 i번 도시 가는 경로가 있는 경우
+			if ((visitFlag & (1 << i)) == 0 && Graph[cur][i] != 0) {
+				// d[i][j] = 현재 있는 도시가 i이고 이미 방문한 도시들의 집합이 j일때,
+				// 방문하지 않은 나머지 도시들을 모두 방문한 뒤 출발 도시로 돌아올 때 드는 최소 비용.
+				// 즉, 방문해야하는 도시(여기에 시작지점으로 돌아오는 것 포함) 들까지 가는 최소 비용
+				double pre = dp[cur][visitFlag];
+				dp[cur][visitFlag] = Math.min(dfs(i, visitFlag | (1 << i), N, Graph, dp, path, start) + Graph[cur][i],
+						dp[cur][visitFlag]); // 최소비용
+				if (pre > dp[cur][visitFlag]) {
+					path[cur][visitFlag] = i;
+				}
+				// 갱신
+				// dfs(다음 도시, 다음도시 방문했다고 가정) + 여기서 다음 도시까지의 거리 와 최소거리 비교
+			}
+		}
+		return dp[cur][visitFlag];
+	}
+
+	private List<TripDto> tspImplPermutaion(List<TripDto> list, int start) {
+		int N = list.size();
+		if (N > 12) {
 			// 많은 범위가 들어온다면, 수행하지 않음. 안전 장치!
 			return list;
 		}
@@ -143,7 +198,6 @@ public class TripServiceImpl implements TripService {
 				Graph[i][j] = weight;
 			}
 		}
-		System.out.println(Arrays.toString(perm));
 		do {
 			double sum = Graph[start][perm[0]];
 			for (int i = 0; i < perm.length - 1; i++) {
@@ -277,7 +331,6 @@ public class TripServiceImpl implements TripService {
 		List<TripDto> returnList = new ArrayList<>();
 		returnList.add(list.get(start));
 		visit[cur] = true;
-		System.out.println(returnList.size() + " " + list.size());
 		while (returnList.size() < list.size()) {
 			System.out.println(returnList.size() + " " + list.size());
 			double min = Double.MAX_VALUE;
