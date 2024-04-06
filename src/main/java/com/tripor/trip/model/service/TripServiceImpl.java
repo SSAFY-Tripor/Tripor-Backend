@@ -80,8 +80,8 @@ public class TripServiceImpl implements TripService {
 		List<TripDto> list = tripDao.searchPlanByPlanId(planId).getTripList();
 		System.out.println("왔음 mode까지" + list);
 		Gson gson = new Gson();
-		String json = gson.toJson(shortestPathByGreedy(list, 0));
-		//String json = gson.toJson(shortestPathByTSP(list, 0));
+//		String json = gson.toJson(shortestPathByGreedy(list, 0));
+		String json = gson.toJson(shortestPathByTSP(list, 0));
 		System.out.println(json);
 		return json;
 	}
@@ -112,11 +112,25 @@ public class TripServiceImpl implements TripService {
 	 */
 
 	private List<TripDto> shortestPathByTSP(List<TripDto> list, int start) {
+		return tspImplPermutaion(list, start);
+	}
+
+	private List<TripDto> tspImplPermutaion(List<TripDto> list, int start) {	
 		int N = list.size();
-		int END = (1 << N) - 1;
+		if(N > 10) {
+			// 많은 범위가 들어온다면, 수행하지 않음. 안전 장치!
+			return list;
+		}
+		int[] perm = new int[N - 1];
 		double[][] Graph = new double[N][N];
-		double[][] dp = new double[N][1 << N]; // ex) 1 << 5 = 100000(2) = 32 -> 우리의 최대값 : 11111(2) 이므로 1 빼기
-		List<Integer> shortestPath = new ArrayList<>();
+
+		for (int i = 0, idx = 0; i < N; i++) {
+			if (i == start)
+				continue;
+			perm[idx++] = i;
+		}
+		double answer = Double.POSITIVE_INFINITY;
+		List<TripDto> maxList = null;
 
 		for (int i = 0; i < N; i++) {
 			for (int j = 0; j < N; j++) {
@@ -129,15 +143,77 @@ public class TripServiceImpl implements TripService {
 				Graph[i][j] = weight;
 			}
 		}
-
-		double shortestPathLength = tsp(0, 1, N, dp, Graph, shortestPath);
-		List<TripDto> returnList = new ArrayList<>();
-		System.out.println(shortestPath);
-		for (int i = 0; i < N; i++) {
-			returnList.add(list.get(shortestPath.get(i)));
-		}
-		return returnList;
+		System.out.println(Arrays.toString(perm));
+		do {
+			double sum = Graph[start][perm[0]];
+			for (int i = 0; i < perm.length - 1; i++) {
+				double edge = Graph[perm[i]][perm[i + 1]];
+				sum += edge;
+			}
+			if (answer > sum) {
+				answer = sum;
+				maxList = new ArrayList<>();
+				maxList.add(list.get(start));
+				for (int i = 0; i < N - 1; i++) {
+					maxList.add(list.get(perm[i]));
+				}
+			}
+		} while (np(perm, perm.length));
+		return maxList;
 	}
+
+	private boolean np(int[] p, int N) {
+		int i = N - 1;
+		while (i > 0 && p[i - 1] > p[i]) {
+			i--;
+		}
+		if (i == 0)
+			return false;
+		int j = N - 1;
+		while (p[i - 1] > p[j]) {
+			j--;
+		}
+		swap(p, i - 1, j);
+		int k = N - 1;
+		while (i < k) {
+			swap(p, i++, k--);
+		}
+		return true;
+	}
+
+	private void swap(int[] arr, int i, int j) {
+		int tmp = arr[i];
+		arr[i] = arr[j];
+		arr[j] = tmp;
+	}
+
+//	private List<TripDto> shortestPathByTSP(List<TripDto> list, int start) {
+//		int N = list.size();
+//		int END = (1 << N) - 1;
+//		double[][] Graph = new double[N][N];
+//		double[][] dp = new double[N][1 << N]; // ex) 1 << 5 = 100000(2) = 32 -> 우리의 최대값 : 11111(2) 이므로 1 빼기
+//		List<Integer> shortestPath = new ArrayList<>();
+//
+//		for (int i = 0; i < N; i++) {
+//			for (int j = 0; j < N; j++) {
+//				if (i == j)
+//					continue;
+//				TripDto A = list.get(i);
+//				TripDto B = list.get(j);
+//				double weight = latDiff(Double.parseDouble(A.getLatitude()), Double.parseDouble(B.getLatitude()))
+//						+ lngDiff(Double.parseDouble(A.getLongitude()), Double.parseDouble(B.getLongitude()));
+//				Graph[i][j] = weight;
+//			}
+//		}
+//
+//		double shortestPathLength = tsp(0, 1, N, dp, Graph, shortestPath);
+//		List<TripDto> returnList = new ArrayList<>();
+//		System.out.println(shortestPath);
+//		for (int i = 0; i < N; i++) {
+//			returnList.add(list.get(shortestPath.get(i)));
+//		}
+//		return returnList;
+//	}
 
 	// 동적 계획법으로 최단 경로 구하기
 	static double tsp(int node, int visited, int N, double[][] dp, double[][] graph, List<Integer> shortestPath) {
@@ -166,14 +242,14 @@ public class TripServiceImpl implements TripService {
 		}
 
 		if (nextNode != -1) {
-            dp[node][visited] = minCost;
-            shortestPath = new ArrayList<>();
-            shortestPath.add(node); // 현재 노드 추가
-            shortestPath.addAll(shortestPath); // 이전 경로 추가
-            return minCost;
-        } else {
-            return dp[node][visited] = Double.POSITIVE_INFINITY;
-        }
+			dp[node][visited] = minCost;
+			shortestPath = new ArrayList<>();
+			shortestPath.add(node); // 현재 노드 추가
+			shortestPath.addAll(shortestPath); // 이전 경로 추가
+			return minCost;
+		} else {
+			return dp[node][visited] = Double.POSITIVE_INFINITY;
+		}
 	}
 
 	private List<TripDto> shortestPathByGreedy(List<TripDto> list, int start) {
