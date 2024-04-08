@@ -157,33 +157,33 @@ const print = (e, item) => {
 }
 
 const mergeSort = (arr) => {
-    if (arr.length <= 1) {
-        return arr;
-    }
+	if (arr.length <= 1) {
+		return arr;
+	}
 
-    const mid = Math.floor(arr.length / 2);
-    const left = arr.slice(0, mid);
-    const right = arr.slice(mid);
+	const mid = Math.floor(arr.length / 2);
+	const left = arr.slice(0, mid);
+	const right = arr.slice(mid);
 
-    return merge(mergeSort(left), mergeSort(right));
+	return merge(mergeSort(left), mergeSort(right));
 }
 
 const merge = (left, right) => {
-    let result = [];
-    let leftIndex = 0;
-    let rightIndex = 0;
+	let result = [];
+	let leftIndex = 0;
+	let rightIndex = 0;
 
-    while (leftIndex < left.length && rightIndex < right.length) {
-        if (left[leftIndex].distance < right[rightIndex].distance) {
-            result.push(left[leftIndex]);
-            leftIndex++;
-        } else {
-            result.push(right[rightIndex]);
-            rightIndex++;
-        }
-    }
+	while (leftIndex < left.length && rightIndex < right.length) {
+		if (left[leftIndex].distance < right[rightIndex].distance) {
+			result.push(left[leftIndex]);
+			leftIndex++;
+		} else {
+			result.push(right[rightIndex]);
+			rightIndex++;
+		}
+	}
 
-    return result.concat(left.slice(leftIndex)).concat(right.slice(rightIndex));
+	return result.concat(left.slice(leftIndex)).concat(right.slice(rightIndex));
 }
 
 const updateMarker = (contentId) => {
@@ -205,22 +205,8 @@ const updateMarker = (contentId) => {
 					placeSaveList.push(placeSave);
 				}
 			});
-
-			let sortList = mergeSort(placeSaveList);
-
-			placeDetailDiv.innerHTML = `<h4>${item.title}</h4>
-		         <div style="font-weight:500; font-size:17px">${item.overview ? item.overview : ""}</div>
-		         <div style="height: 10px"></div>
-		         <img src="${item.firstImage ? item.firstImage : contextPath + '/img/no_image.jpg'}" width="100%">
-		         <div style="height: 10px"></div>
-		         <div style="font-weight:bold">주소: ${item.addr ? item.addr : "정보 없음"}</div>
-		         <div style="font-weight:bold">전화번호: ${item.tel ? item.tel : "정보 없음"}</div>
-		         <hr>
-		         <div style="font-weight:bold; color:gray; font-size:24px">주변 관광지 추천</div>
-		         <div class="text-primary" style="font-size:20px; cursor: pointer" onclick="updateMarker(${tourData[sortList[0].index].contentId})">${sortList.length == 0 ? "" : tourData[sortList[0].index].title}</div>
-		         <div class="text-primary" style="font-size:20px; cursor: pointer" onclick="updateMarker(${tourData[sortList[1].index].contentId})">${sortList.length <= 1 ? "" : tourData[sortList[1].index].title}</div>
-		         `;
-			placeDetailDiv.style.display = "block";
+			
+			showPlaceHTML(placeDetailDiv, item, placeSaveList);
 
 
 			const position = new kakao.maps.LatLng(item.latitude, item.longitude); // 각 항목의 위경도를 사용하여 위치 객체 생성
@@ -277,6 +263,32 @@ const updateMarker = (contentId) => {
 		}
 	});
 }
+const showPlaceHTML = (div, place, placeList) => {
+	let sortList = mergeSort(placeList);
+	/*
+	let sortList = placeList.sort((a, b) => {
+		if (a.distance > b.distance) return 1;
+		if (a.distance < b.distance) return -1;
+		return 0;
+	});
+	*/
+
+	let content = `<h4>${place.title}</h4>
+         <div style="font-weight:500; font-size:17px">${place.overview ? place.overview : ""}</div>
+         <div style="height: 10px"></div>
+         <img src="${place.firstImage ? place.firstImage : contextPath + '/img/no_image.jpg'}" width="100%">
+         <div style="height: 10px"></div>
+         <div style="font-weight:bold">주소: ${place.addr ? place.addr : "정보 없음"}</div>
+         <div style="font-weight:bold">전화번호: ${place.tel ? place.tel : "정보 없음"}</div>
+         <hr>
+         <div style="font-weight:bold; color:gray; font-size:24px">주변 관광지 추천</div>
+         `;
+	for (let i = 0; i < 3; i++) {
+		content += `<div class="text-primary" style="font-size:20px; cursor: pointer" onclick="updateMarker(${tourData[sortList[i].index].contentId})">${sortList.length == 0 ? "" : tourData[sortList[i].index].title}</div>`;
+	}
+	div.innerHTML = content;
+	div.style.display = "block";
+}
 
 const showPlaceDetail = (e, p) => {
 	const place = JSON.parse(decodeURIComponent(p));
@@ -296,22 +308,7 @@ const showPlaceDetail = (e, p) => {
 		}
 	});
 
-	let sortList = mergeSort(placeSaveList);
-
-	const content = `<h4>${place.title}</h4>
-         <div style="font-weight:500; font-size:17px">${place.overview ? place.overview : ""}</div>
-         <div style="height: 10px"></div>
-         <img src="${place.firstImage ? place.firstImage : contextPath + '/img/no_image.jpg'}" width="100%">
-         <div style="height: 10px"></div>
-         <div style="font-weight:bold">주소: ${place.addr ? place.addr : "정보 없음"}</div>
-         <div style="font-weight:bold">전화번호: ${place.tel ? place.tel : "정보 없음"}</div>
-         <hr>
-         <div style="font-weight:bold; color:gray; font-size:24px">주변 관광지 추천</div>
-         <div class="text-primary" style="font-size:20px; cursor: pointer" onclick="updateMarker(${tourData[sortList[0].index].contentId})">${sortList.length == 0 ? "" : tourData[sortList[0].index].title}</div>
-         <div class="text-primary" style="font-size:20px; cursor: pointer" onclick="updateMarker(${tourData[sortList[1].index].contentId})">${sortList.length <= 1 ? "" : tourData[sortList[1].index].title}</div>
-         `;
-	placeDetailDiv.innerHTML = content;
-	placeDetailDiv.style.display = "block";
+	showPlaceHTML(placeDetailDiv, place, placeSaveList);
 }
 
 const fetchAllTourData = async (areaCode, sigunguCode, tourType = "all") => {
@@ -843,7 +840,7 @@ const planMapLoading = async (mode = null) => {
 				});
 				polylines = []; // 배열 초기화*/
 		planCount = contents.length;
-		if(polyline != null)
+		if (polyline != null)
 			polyline.setMap(null); // 각 선분을 Map에서 제거
 		polyline = new kakao.maps.Polyline({
 			strokeWeight: 3,
