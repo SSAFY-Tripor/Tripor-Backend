@@ -187,8 +187,8 @@ const merge = (left, right) => {
 }
 
 const updateMarker = (contentId) => {
-	let bounds = new kakao.maps.LatLngBounds();
-	tourData.forEach((item) => {
+	//let bounds = new kakao.maps.LatLngBounds();
+	tourData.forEach((item, idx) => {
 		if (contentId == item.contentId) {
 			closeOverlay();
 			let placeDetailDiv = document.querySelector("#placeDetail");
@@ -205,21 +205,12 @@ const updateMarker = (contentId) => {
 					placeSaveList.push(placeSave);
 				}
 			});
-			
-			showPlaceHTML(placeDetailDiv, item, placeSaveList);
 
+			showPlaceHTML(placeDetailDiv, item, placeSaveList);
+			
 
 			const position = new kakao.maps.LatLng(item.latitude, item.longitude); // 각 항목의 위경도를 사용하여 위치 객체 생성
 
-			// 커스텀 이미지의 URL 생성
-			const imageUrl = contextPath + "/img/" + item.contentTypeId + ".png"; // 예: item.contentid 값이 "12"이면, 이미지 URL은 "./img/12.png"
-			const imageSize = new kakao.maps.Size(45, 45); // 마커 이미지의 크기 설정
-			// 마커 이미지 생성
-			const markerImage = new kakao.maps.MarkerImage(imageUrl, imageSize);
-			const marker = new kakao.maps.Marker({
-				position: position, // 마커 위치 설정
-				image: markerImage, // 커스텀 마커 이미지 설정
-			});
 
 			// 커스텀 오버레이에 표시될 내용 생성
 			const content = `<div class="wrap">
@@ -252,21 +243,16 @@ const updateMarker = (contentId) => {
 
 
 			overlay.setMap(map); // 현재 오버레이 표시
-			currentOverlay = overlay; // 참조 업데이트
-			map.setCenter(position);
+			currentOverlay = overlay;
 
-
-			marker.setMap(map); // 마커를 지도에 표시
-			markers.push(marker); // 생성된 마커를 markers 배열에 추가
-			bounds.extend(position); // LatLngBounds 객체에 현재 마커의 위치를 추가
 
 		}
 	});
 }
 const showPlaceHTML = (div, place, placeList) => {
 	let sortList = mergeSort(placeList);
-	/*
-	let sortList = placeList.sort((a, b) => {
+	
+/*	let sortList = placeList.sort((a, b) => {
 		if (a.distance > b.distance) return 1;
 		if (a.distance < b.distance) return -1;
 		return 0;
@@ -307,7 +293,6 @@ const showPlaceDetail = (e, p) => {
 			placeSaveList.push(placeSave);
 		}
 	});
-
 	showPlaceHTML(placeDetailDiv, place, placeSaveList);
 }
 
