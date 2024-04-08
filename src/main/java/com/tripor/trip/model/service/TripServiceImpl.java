@@ -85,7 +85,6 @@ public class TripServiceImpl implements TripService {
 		// 실험할 코드 추가
 //		String json = gson.toJson(shortestPathByGreedy(list, 0));
 		String json = gson.toJson(shortestPathByTSP(list, 0));
-//
 //		long afterTime = System.currentTimeMillis(); // 코드 실행 후에 시간 받아오기
 //		long secDiffTime = (afterTime - beforeTime); // 두 시간에 차 계산
 //		System.out.println("시간차이(ms) : " + secDiffTime);
@@ -241,73 +240,7 @@ public class TripServiceImpl implements TripService {
 		arr[j] = tmp;
 	}
 
-//	private List<TripDto> shortestPathByTSP(List<TripDto> list, int start) {
-//		int N = list.size();
-//		int END = (1 << N) - 1;
-//		double[][] Graph = new double[N][N];
-//		double[][] dp = new double[N][1 << N]; // ex) 1 << 5 = 100000(2) = 32 -> 우리의 최대값 : 11111(2) 이므로 1 빼기
-//		List<Integer> shortestPath = new ArrayList<>();
-//
-//		for (int i = 0; i < N; i++) {
-//			for (int j = 0; j < N; j++) {
-//				if (i == j)
-//					continue;
-//				TripDto A = list.get(i);
-//				TripDto B = list.get(j);
-//				double weight = latDiff(Double.parseDouble(A.getLatitude()), Double.parseDouble(B.getLatitude()))
-//						+ lngDiff(Double.parseDouble(A.getLongitude()), Double.parseDouble(B.getLongitude()));
-//				Graph[i][j] = weight;
-//			}
-//		}
-//
-//		double shortestPathLength = tsp(0, 1, N, dp, Graph, shortestPath);
-//		List<TripDto> returnList = new ArrayList<>();
-//		System.out.println(shortestPath);
-//		for (int i = 0; i < N; i++) {
-//			returnList.add(list.get(shortestPath.get(i)));
-//		}
-//		return returnList;
-//	}
-
-	// 동적 계획법으로 최단 경로 구하기
-	static double tsp(int node, int visited, int N, double[][] dp, double[][] graph, List<Integer> shortestPath) {
-		if (visited == (1 << N) - 1) { // 모든 노드를 방문한 경우
-			shortestPath = new ArrayList<>();
-			shortestPath.add(node); // 출발 노드 추가
-			shortestPath.add(0); // 출발 노드로 돌아가는 노드 추가
-			return graph[node][0]; // 출발 노드로 돌아가는 비용 반환
-		}
-
-		if (dp[node][visited] != 0) { // 이미 계산한 값이 있는 경우
-			return dp[node][visited];
-		}
-
-		double minCost = Double.POSITIVE_INFINITY;
-		int nextNode = -1;
-
-		for (int i = 0; i < N; i++) {
-			if ((visited & (1 << i)) == 0 && graph[node][i] != 0) {
-				double cost = graph[node][i] + tsp(i, visited | (1 << i), N, dp, graph, shortestPath);
-				if (cost < minCost) {
-					minCost = cost;
-					nextNode = i;
-				}
-			}
-		}
-
-		if (nextNode != -1) {
-			dp[node][visited] = minCost;
-			shortestPath = new ArrayList<>();
-			shortestPath.add(node); // 현재 노드 추가
-			shortestPath.addAll(shortestPath); // 이전 경로 추가
-			return minCost;
-		} else {
-			return dp[node][visited] = Double.POSITIVE_INFINITY;
-		}
-	}
-
 	private List<TripDto> shortestPathByGreedy(List<TripDto> list, int start) {
-//		double[][] Graph = new double[list.size()][list.size()];
 		ArrayList<Node>[] tripGraph = new ArrayList[list.size()];
 		int N = tripGraph.length;
 		for (int i = 0; i < tripGraph.length; i++) {
@@ -357,17 +290,6 @@ public class TripServiceImpl implements TripService {
 	private double lngDiff(double lngA, double lngB) {
 		return Math.abs(lngA - lngB);
 	}
-
-	/*
-	 * private int findSet(int x, int[] parents) { if (parents[x] == x) return x;
-	 * return parents[x] = findSet(parents[x], parents); }
-	 * 
-	 * private boolean unionSet(int p, int x, int[] parents) { if (p == x) return
-	 * false; parents[x] = p; return true; }
-	 * 
-	 * private void makeSet(int[] p) { for (int i = 0; i < p.length; i++) { p[i] =
-	 * i; } }
-	 */
 
 	@Override
 	public String getAllSido() throws Exception {
