@@ -45,14 +45,14 @@
 			
 			<div class="d-flex flex-row">
 				<div>
-					<div id="plan-map" style="width: 800px; height: 600px"></div>
+					<div id="plan-map" style="width: 800px; height: 630px"></div>
 					
 					<div id="plan-distance"></div>
 					<div id="plan-shortest-path"><button type="button" class="btn btn-outline-primary" onclick="planMapLoading(1);">최적 경로 찾기</button></div>
 					<div id="plan-div-id" style="display:none">${plan.planId}</div>
 				</div>
 				<div style="width: 20px"></div>
-				<div>
+				<div class="p-3" style="width: auto; height: 630px; border: solid 1px gray; border-radius: 10px; overflow-y: auto">
 					<c:forEach var="trip" varStatus="status" items="${plan.tripList}">
 							<h5 style="cursor: pointer" onclick="openOverlay(${status.index})">${status.count}) ${trip.title}</h5>
 							<div><i class="bi bi-geo-alt"></i>&nbsp;${trip.addr}</div>
