@@ -309,7 +309,8 @@ public class TripServiceImpl implements TripService {
 
 	@Override
 	public void registerTripPlan(String tripJson, String userId, String planName) throws Exception {
-		tripDao.insertTripPlan(tripJson, userId, planName);
+		List<String> tripList = Arrays.asList(new Gson().fromJson(tripJson, String[].class));
+		tripDao.insertTripPlan(tripList, userId, planName);
 	}
 
 	@Override

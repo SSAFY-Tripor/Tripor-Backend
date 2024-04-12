@@ -35,11 +35,10 @@ public class TripDaoImpl implements TripDao {
 		try {
 			con = dbUtil.getConnection();
 			StringBuilder sb = new StringBuilder();
-			sb.append("select ai.content_id, ai.content_type_id, ai.title, ai.addr1, ai.first_image,\n");
-			sb.append("ai.sido_code, ai.gugun_code, ai.latitude, ai.longitude, ai.tel, ad.overview\n");
-			sb.append("from attraction_info ai left join attraction_description ad\n");
-			sb.append("on ai.content_id = ad.content_id\n");
-			sb.append("where ai.title like concat('%', ?, '%')");
+			sb.append("select content_id, content_type_id, title, addr, first_image,\n");
+			sb.append("sido_code, gugun_code, latitude, longitude, tel, description \n");
+			sb.append("from attraction_info \n");
+			sb.append("where title like concat('%', ?, '%')");
 
 			ps = con.prepareStatement(sb.toString());
 			ps.setString(1, keyword);
@@ -78,16 +77,15 @@ public class TripDaoImpl implements TripDao {
 		try {
 			con = dbUtil.getConnection();
 			StringBuilder sb = new StringBuilder();
-			sb.append("select ai.content_id, ai.content_type_id, ai.title, ai.addr1, ai.first_image,\n");
-			sb.append("ai.sido_code, ai.gugun_code, ai.latitude, ai.longitude, ai.tel, ad.overview\n");
-			sb.append("from attraction_info ai left join attraction_description ad\n");
+			sb.append("select content_id, content_type_id, title, addr, first_image,\n");
+			sb.append("sido_code, gugun_code, latitude, longitude, tel, description \n");
+			sb.append("from attraction_info \n");
 			boolean typeFlag = false;
 			if (param.getType() == null) {
-				sb.append("on ai.content_id = ad.content_id where ai.sido_code=? and ai.gugun_code=?;");
+				sb.append("where sido_code=? and gugun_code=?;");
 			} else {
 				typeFlag = true;
-				sb.append(
-						"on ai.content_id = ad.content_id where ai.sido_code=? and ai.gugun_code=? and content_type_id=?;");
+				sb.append("where sido_code=? and gugun_code=? and content_type_id=?;");
 			}
 
 			ps = con.prepareStatement(sb.toString());
@@ -174,21 +172,61 @@ public class TripDaoImpl implements TripDao {
 	}
 
 	@Override
-	public int insertTripPlan(String tripJson, String userId, String planName) throws Exception {
+	public int insertTripPlan(List<String> tripList, String userId, String planName) throws Exception {
 		Connection con = null;
 		PreparedStatement ps = null;
+		String sql = "";
 		try {
 			con = dbUtil.getConnection();
-			String sql = "insert into trip_plan (plan_name, trip_list, plan_user_id) values (?, ?, ?)";
+			sql = "insert into trip_plan (plan_name, plan_member_id) values (?, ?)";
 			ps = con.prepareStatement(sql);
 			ps.setString(1, planName);
-			ps.setString(2, tripJson);
-			ps.setString(3, userId);
-			return ps.executeUpdate();
+			ps.setString(2, userId);
+			ps.executeUpdate();
+
+			// 생성된 AUTO_INCREMENT 값을 얻기
+			ResultSet generatedKeys = ps.getGeneratedKeys();
+			if (generatedKeys.next()) {
+				int planId = generatedKeys.getInt(1); // 생성된 AUTO_INCREMENT 값
+				for (String contentId : tripList) {
+					sql = "insert into plan_content_relation (plan_id, content_id) values (?, ?)";
+					ps = con.prepareStatement(sql);
+					ps.setInt(1, planId);
+					ps.setInt(2, Integer.parseInt(contentId));
+					ps.executeUpdate();
+				}
+			} else {
+				throw new SQLException("Failed to get the generated plan_id value.");
+			}
+			return 1;
 		} catch (SQLException e) {
 			throw e;
 		} finally {
 			dbUtil.close(ps, con);
+		}
+	}
+
+	@Override
+	public List<TripDto> searchByPlanId(int planId) throws Exception {
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		List<TripDto> list = new ArrayList<TripDto>();
+		try {
+			con = dbUtil.getConnection();
+			String sql = "select * from plan_content_relation where plan_id=?";
+			ps = con.prepareStatement(sql);
+			ps.setInt(1, planId);
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				int contentId = rs.getInt(1);
+				list.add(searchByContentId(contentId));
+			}
+			return list;
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			dbUtil.close(rs, ps, con);
 		}
 	}
 
@@ -200,7 +238,7 @@ public class TripDaoImpl implements TripDao {
 		List<TripPlanDto> list = new ArrayList<TripPlanDto>();
 		try {
 			con = dbUtil.getConnection();
-			String sql = "select * from trip_plan where plan_user_id=?";
+			String sql = "select * from trip_plan where member_id=?";
 			ps = con.prepareStatement(sql);
 			ps.setString(1, userId);
 			rs = ps.executeQuery();
@@ -208,9 +246,9 @@ public class TripDaoImpl implements TripDao {
 				TripPlanDto tripPlanDto = new TripPlanDto();
 				tripPlanDto.setPlanId(rs.getInt(1));
 				tripPlanDto.setPlanName(rs.getString(2));
-				tripPlanDto.setTripList(planJsonToTripList(rs.getString(3)));
-				tripPlanDto.setPlanUserId(rs.getString(4));
-				tripPlanDto.setPlanRegisterDate(rs.getString(5));
+				tripPlanDto.setPlanUserId(rs.getString(3));
+				tripPlanDto.setPlanRegisterDate(rs.getString(4));
+				tripPlanDto.setTripList(searchByPlanId(tripPlanDto.getPlanId()));
 				list.add(tripPlanDto);
 			}
 			return list;
@@ -229,11 +267,10 @@ public class TripDaoImpl implements TripDao {
 		try {
 			con = dbUtil.getConnection();
 			StringBuilder sb = new StringBuilder();
-			sb.append("select ai.content_id, ai.content_type_id, ai.title, ai.addr1, ai.first_image,\n");
-			sb.append("ai.sido_code, ai.gugun_code, ai.latitude, ai.longitude, ai.tel, ad.overview\n");
-			sb.append("from attraction_info ai left join attraction_description ad\n");
-			sb.append("on ai.content_id = ad.content_id\n");
-			sb.append("where ai.content_id=?");
+			sb.append("select content_id, content_type_id, title, addr, first_image,\n");
+			sb.append("sido_code, gugun_code, latitude, longitude, tel, description\n");
+			sb.append("from attraction_info\n");
+			sb.append("where content_id=?");
 			ps = con.prepareStatement(sb.toString());
 			ps.setInt(1, contentId);
 			rs = ps.executeQuery();
@@ -274,9 +311,9 @@ public class TripDaoImpl implements TripDao {
 			if (rs.next()) {
 				tripPlanDto.setPlanId(rs.getInt(1));
 				tripPlanDto.setPlanName(rs.getString(2));
-				tripPlanDto.setTripList(planJsonToTripList(rs.getString(3)));
-				tripPlanDto.setPlanUserId(rs.getString(4));
-				tripPlanDto.setPlanRegisterDate(rs.getString(5));
+				tripPlanDto.setPlanUserId(rs.getString(3));
+				tripPlanDto.setPlanRegisterDate(rs.getString(4));
+				tripPlanDto.setTripList(searchByPlanId(planId));
 			}
 			return tripPlanDto;
 		} catch (SQLException e) {
@@ -292,6 +329,13 @@ public class TripDaoImpl implements TripDao {
 		PreparedStatement ps = null;
 		try {
 			con = dbUtil.getConnection();
+
+			// 외래키 제약 조건을 통해 삭제도 가능하지만, 일단 임시로 삭제 방식 추가
+			String deleteRelationSql = "delete from plan_content_relation where plan_id=?";
+			ps = con.prepareStatement(deleteRelationSql);
+			ps.setInt(1, planId);
+			ps.executeUpdate();
+
 			String sql = "delete from trip_plan where plan_id=?";
 			ps = con.prepareStatement(sql);
 			ps.setInt(1, planId);

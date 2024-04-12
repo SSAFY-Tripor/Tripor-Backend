@@ -31,7 +31,7 @@ public class Main {
 	private static DBUtil dbUtil = DBUtil.getInstance();
 
 	public static void main(String[] args) throws IOException {
-//		sidoAdd();
+		sidoAdd();
 		StringBuilder urlBuilder = new StringBuilder(
 				"https://apis.data.go.kr/B551011/KorService1/areaBasedList1"); /* URL */
 		urlBuilder.append("?" + URLEncoder.encode("serviceKey", "UTF-8")

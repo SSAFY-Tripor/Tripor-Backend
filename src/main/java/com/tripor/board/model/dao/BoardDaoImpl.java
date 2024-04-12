@@ -32,15 +32,15 @@ public class BoardDaoImpl implements BoardDao {
 			con = dbUtil.getConnection();
 			StringBuilder sql = new StringBuilder();
 			sql.append("select * \n");
-			sql.append("from board \n");
-			sql.append("where board_no = ?");
+			sql.append("from article \n");
+			sql.append("where article_id = ?");
 			ps = con.prepareStatement(sql.toString());
 			ps.setInt(1, boardNo);
 			rs = ps.executeQuery();
 			if (rs.next()) {
 				boardDto = new BoardDto();
-				boardDto.setBoardNo(rs.getInt("board_no"));
-				boardDto.setUserId(rs.getString("user_id"));
+				boardDto.setBoardNo(rs.getInt("article_id"));
+				boardDto.setUserId(rs.getString("member_id"));
 				boardDto.setSubject(rs.getString("subject"));
 				boardDto.setContent(rs.getString("content"));
 				boardDto.setHit(rs.getInt("hit"));
@@ -61,16 +61,16 @@ public class BoardDaoImpl implements BoardDao {
 		try {
 			con = dbUtil.getConnection();
 			StringBuilder sql = new StringBuilder();
-			sql.append("select board_no, user_id, subject, content, hit, register_date \n");
-			sql.append("from board \n");
+			sql.append("select article_id, member_id, subject, content, hit, register_date \n");
+			sql.append("from article \n");
 			sql.append("where subject like ?;");
 			ps = con.prepareStatement(sql.toString());
 			ps.setString(1, "%" + subject + "%");
 			rs = ps.executeQuery();
 			while (rs.next()) {
 				BoardDto boardDto = new BoardDto();
-				boardDto.setBoardNo(rs.getInt("board_no"));
-				boardDto.setUserId(rs.getString("user_id"));
+				boardDto.setBoardNo(rs.getInt("article_id"));
+				boardDto.setUserId(rs.getString("member_id"));
 				boardDto.setSubject(rs.getString("subject"));
 				boardDto.setContent(rs.getString("content"));
 				boardDto.setHit(rs.getInt("hit"));
@@ -92,16 +92,16 @@ public class BoardDaoImpl implements BoardDao {
 		try {
 			con = dbUtil.getConnection();
 			StringBuilder sql = new StringBuilder();
-			sql.append("select board_no, user_id, subject, content, hit, register_date \n");
-			sql.append("from board \n");
-			sql.append("where user_id=?;");
+			sql.append("select article_id, member_id, subject, content, hit, register_date \n");
+			sql.append("from article \n");
+			sql.append("where member_id=?;");
 			ps = con.prepareStatement(sql.toString());
 			ps.setString(1, userId);
 			rs = ps.executeQuery();
 			while (rs.next()) {
 				BoardDto boardDto = new BoardDto();
-				boardDto.setBoardNo(rs.getInt("board_no"));
-				boardDto.setUserId(rs.getString("user_id"));
+				boardDto.setBoardNo(rs.getInt("article_id"));
+				boardDto.setUserId(rs.getString("member_id"));
 				boardDto.setSubject(rs.getString("subject"));
 				boardDto.setContent(rs.getString("content"));
 				boardDto.setHit(rs.getInt("hit"));
@@ -126,8 +126,8 @@ public class BoardDaoImpl implements BoardDao {
 		try {
 			con = dbUtil.getConnection();
 			StringBuilder sql = new StringBuilder();
-			sql.append("select board_no, user_id, subject, content, hit, register_date \n");
-			sql.append("from board \n");
+			sql.append("select article_id, member_id, subject, content, hit, register_date \n");
+			sql.append("from article \n");
 			if (!key.isEmpty() && !word.isEmpty()) {
 				// 제목은 LIKE, 그외는 == 연산
 				if ("subject".equals(key)) {
@@ -136,7 +136,7 @@ public class BoardDaoImpl implements BoardDao {
 					sql.append("where ").append(key).append("=?\n");
 				}
 			}
-			sql.append("order by board_no desc \n");
+			sql.append("order by article_id desc \n");
 			sql.append("limit ?, ?");
 			ps = con.prepareStatement(sql.toString());
 			int idx = 0;
@@ -148,8 +148,8 @@ public class BoardDaoImpl implements BoardDao {
 			rs = ps.executeQuery();
 			while (rs.next()) {
 				BoardDto boardDto = new BoardDto();
-				boardDto.setBoardNo(rs.getInt("board_no"));
-				boardDto.setUserId(rs.getString("user_id"));
+				boardDto.setBoardNo(rs.getInt("article_id"));
+				boardDto.setUserId(rs.getString("member_id"));
 				boardDto.setSubject(rs.getString("subject"));
 				boardDto.setContent(rs.getString("content"));
 				boardDto.setHit(rs.getInt("hit"));
@@ -161,8 +161,6 @@ public class BoardDaoImpl implements BoardDao {
 		}
 		return list;
 	}
-	
-	
 
 	@Override
 	public int searchCount(Map<String, Object> map) throws SQLException {
@@ -175,7 +173,7 @@ public class BoardDaoImpl implements BoardDao {
 		try {
 			con = dbUtil.getConnection();
 			StringBuilder sql = new StringBuilder();
-			sql.append("select count(board_no) from board \n");
+			sql.append("select count(article_id) from article \n");
 			if (!key.isEmpty() && !word.isEmpty()) {
 				// 제목은 LIKE, 그외는 == 연산
 				if ("subject".equals(key)) {
@@ -205,7 +203,7 @@ public class BoardDaoImpl implements BoardDao {
 		try {
 			con = dbUtil.getConnection();
 			StringBuilder sb = new StringBuilder();
-			sb.append("update board set subject=?, content=? where board_no=?");
+			sb.append("update article set subject=?, content=? where article_id=?");
 
 			ps = con.prepareStatement(sb.toString());
 			ps.setString(1, boardDto.getSubject());
@@ -225,7 +223,7 @@ public class BoardDaoImpl implements BoardDao {
 		try {
 			con = dbUtil.getConnection();
 			StringBuilder sb = new StringBuilder();
-			sb.append("update board set hit=hit+1 where board_no=?");
+			sb.append("update article set hit=hit+1 where article_id=?");
 
 			ps = con.prepareStatement(sb.toString());
 			ps.setInt(1, boardNo);
@@ -242,7 +240,7 @@ public class BoardDaoImpl implements BoardDao {
 		try {
 			con = dbUtil.getConnection();
 			StringBuilder sb = new StringBuilder();
-			sb.append("delete from board where board_no = ?");
+			sb.append("delete from article where article_id = ?");
 			ps = con.prepareStatement(sb.toString());
 			ps.setInt(1, boardNo);
 			return ps.executeUpdate();
@@ -258,7 +256,7 @@ public class BoardDaoImpl implements BoardDao {
 		try {
 			con = dbUtil.getConnection();
 			StringBuilder sql = new StringBuilder();
-			sql.append("insert into board (user_id, subject, content) \n");
+			sql.append("insert into article (member_id, subject, content) \n");
 			sql.append("values (?, ?, ?)");
 			ps = con.prepareStatement(sql.toString());
 			ps.setString(1, boardDto.getUserId());

@@ -13,7 +13,8 @@ public interface TripDao {
 	List<GugunDto> searchGugunBySido(int sidoCode) throws Exception;
 	List<TripDto> searchAll(TripSearchDto param) throws Exception;
 	List<TripDto> searchAll(String keyword) throws Exception;
-	int insertTripPlan(String tripJson, String userId, String planName) throws Exception;
+	List<TripDto> searchByPlanId(int planId) throws Exception;
+	int insertTripPlan(List<String> tripList, String userId, String planName) throws Exception;
 	List<TripPlanDto> searchPlansByUserId(String userId) throws Exception;
 	TripDto searchByContentId(int contentId) throws Exception;
 	TripPlanDto searchPlanByPlanId(int planId) throws Exception;

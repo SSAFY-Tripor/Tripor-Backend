@@ -83,6 +83,7 @@ const updateMapMarkers = (areaCode, sigunguCode, tour) => {
 	let bounds = new kakao.maps.LatLngBounds(); // 모든 마커를 포함할 수 있는 LatLngBounds 객체 생성
 	let flag = false;
 
+	
 	// tourData는 API 호출 결과로 얻은 데이터 배열
 	tourData.forEach((item) => {
 		if (tour == "all" || tour == item.contentTypeId) {
@@ -188,6 +189,7 @@ const merge = (left, right) => {
 
 const updateMarker = (contentId) => {
 	//let bounds = new kakao.maps.LatLngBounds();
+	console.log(tourData);
 	tourData.forEach((item, idx) => {
 		if (contentId == item.contentId) {
 			closeOverlay();
@@ -306,6 +308,7 @@ const fetchAllTourData = async (areaCode, sigunguCode, tourType = "all") => {
 	// await를 사용하여 fetch 요청의 완료를 기다림
 	const response = await fetch(`${url}${tourListParam}`);
 	const data = await response.json(); // 응답을 JSON으로 변환
+	console.log(data);
 	await data.forEach((item) => {
 		tourData.push(item);
 	});

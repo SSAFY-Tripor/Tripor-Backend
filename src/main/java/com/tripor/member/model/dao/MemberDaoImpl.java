@@ -31,16 +31,16 @@ public class MemberDaoImpl implements MemberDao {
 		MemberDto memberDto = null;
 		try {
 			con = dbUtil.getConnection();
-			String sql = "select * from members where user_id = ? and user_pw = ?;";
+			String sql = "select * from member where member_id = ? and member_pw = ?;";
 			ps = con.prepareStatement(sql);
 			ps.setString(1, userId);
 			ps.setString(2, userPw);
 			rs = ps.executeQuery();
 			if (rs.next()) {
 				memberDto = new MemberDto();
-				memberDto.setUserId(rs.getString("user_id"));
-				memberDto.setUserPw(rs.getString("user_pw"));
-				memberDto.setUserName(rs.getString("user_name"));
+				memberDto.setUserId(rs.getString("member_id"));
+				memberDto.setUserPw(rs.getString("member_pw"));
+				memberDto.setUserName(rs.getString("member_name"));
 				memberDto.setEmailId(rs.getString("email_id"));
 				memberDto.setEmailDomain(rs.getString("email_domain"));
 				memberDto.setSido(rs.getInt("sido"));
@@ -61,15 +61,15 @@ public class MemberDaoImpl implements MemberDao {
 		MemberDto memberDto = null;
 		try {
 			con = dbUtil.getConnection();
-			String sql = "select * from members where user_id = ?;";
+			String sql = "select * from member where member_id = ?;";
 			ps = con.prepareStatement(sql);
 			ps.setString(1, userId);
 			rs = ps.executeQuery();
 			if (rs.next()) {
 				memberDto = new MemberDto();
-				memberDto.setUserId(rs.getString("user_id"));
-				memberDto.setUserPw(rs.getString("user_pw"));
-				memberDto.setUserName(rs.getString("user_name"));
+				memberDto.setUserId(rs.getString("member_id"));
+				memberDto.setUserPw(rs.getString("member_pw"));
+				memberDto.setUserName(rs.getString("member_name"));
 				memberDto.setEmailId(rs.getString("email_id"));
 				memberDto.setEmailDomain(rs.getString("email_domain"));
 				memberDto.setSido(rs.getInt("sido"));
@@ -88,7 +88,7 @@ public class MemberDaoImpl implements MemberDao {
 		PreparedStatement ps = null;
 		try {
 			con = dbUtil.getConnection();
-			String sql = "delete from members where user_id=?";
+			String sql = "delete from member where member_id=?";
 			ps = con.prepareStatement(sql);
 			ps.setString(1, userId);
 			return ps.executeUpdate();
@@ -103,7 +103,7 @@ public class MemberDaoImpl implements MemberDao {
 		PreparedStatement ps = null;
 		try {
 			con = dbUtil.getConnection();
-			String sql = "insert into members (user_id, user_pw, user_name, email_id, email_domain, sido, gugun) "
+			String sql = "insert into members (member_id, member_pw, member_name, email_id, email_domain, sido, gugun) "
 					+ "values (?, ?, ?, ?, ?, ?, ?);";
 			ps = con.prepareStatement(sql);
 			ps.setString(1, memberDto.getUserId());
@@ -125,7 +125,7 @@ public class MemberDaoImpl implements MemberDao {
 		PreparedStatement ps = null;
 		try {
 			con = dbUtil.getConnection();
-			String sql = "update members set user_name=?, email_id=?, email_domain=?, user_pw=? where user_id=?;";
+			String sql = "update member set member_name=?, email_id=?, email_domain=?, member_pw=? where member_id=?;";
 			ps = con.prepareStatement(sql);
 			ps.setString(1, memberDto.getUserName());
 			ps.setString(2, memberDto.getEmailId());
