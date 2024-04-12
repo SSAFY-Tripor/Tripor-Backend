@@ -285,9 +285,6 @@ public class TripDaoImpl implements TripDao {
 			dbUtil.close(rs, ps, con);
 		}
 	}
-	
-	
-	
 
 	@Override
 	public int deleteTripPlan(int planId) throws Exception {
