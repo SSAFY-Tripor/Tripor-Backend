@@ -15,6 +15,37 @@ CREATE SCHEMA IF NOT EXISTS `tripor` DEFAULT CHARACTER SET utf8mb4 ;
 USE `tripor` ;
 
 -- -----------------------------------------------------
+-- Table `tripor`.`sido`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `tripor`.`sido` ;
+
+CREATE TABLE IF NOT EXISTS `tripor`.`sido` (
+  `sido_code` INT NOT NULL,
+  `sido_name` VARCHAR(30) NULL,
+  PRIMARY KEY (`sido_code`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `tripor`.`gugun`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `tripor`.`gugun` ;
+
+CREATE TABLE IF NOT EXISTS `tripor`.`gugun` (
+  `gugun_code` INT NOT NULL,
+  `gugun_name` VARCHAR(30) NULL,
+  `sido_code` INT NOT NULL,
+  PRIMARY KEY (`gugun_code`, `sido_code`),
+  INDEX `gugun_info_to_sido_sido_code_fk_idx` (`sido_code` ASC) VISIBLE,
+  CONSTRAINT `gugun_info_to_sido_sido_code_fk`
+    FOREIGN KEY (`sido_code`)
+    REFERENCES `tripor`.`sido` (`sido_code`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `tripor`.`member`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `tripor`.`member` ;
@@ -28,7 +59,19 @@ CREATE TABLE IF NOT EXISTS `tripor`.`member` (
   `sido` INT NULL,
   `gugun` INT NULL,
   `join_date` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`member_id`))
+  PRIMARY KEY (`member_id`),
+  INDEX `member_to_sido_sido_code_fk_idx` (`sido` ASC) VISIBLE,
+  INDEX `member_to_gugun_gugun_code_fk_idx` (`gugun` ASC) VISIBLE,
+  CONSTRAINT `member_to_sido_sido_code_fk`
+    FOREIGN KEY (`sido`)
+    REFERENCES `tripor`.`sido` (`sido_code`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `member_to_gugun_gugun_code_fk`
+    FOREIGN KEY (`gugun`)
+    REFERENCES `tripor`.`gugun` (`gugun_code`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
@@ -95,7 +138,19 @@ CREATE TABLE IF NOT EXISTS `tripor`.`attraction_info` (
   `cat2` VARCHAR(5) NULL,
   `cat3` VARCHAR(9) NULL,
   `description` VARCHAR(10000) NULL,
-  PRIMARY KEY (`content_id`))
+  PRIMARY KEY (`content_id`),
+  INDEX `attraction_info_to_sido_sido_code_fk_idx` (`sido_code` ASC) VISIBLE,
+  INDEX `attraction_info_to_gugun_gugun_code_fk_idx` (`gugun_code` ASC) VISIBLE,
+  CONSTRAINT `attraction_info_to_sido_sido_code_fk`
+    FOREIGN KEY (`sido_code`)
+    REFERENCES `tripor`.`sido` (`sido_code`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `attraction_info_to_gugun_gugun_code_fk`
+    FOREIGN KEY (`gugun_code`)
+    REFERENCES `tripor`.`gugun` (`gugun_code`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
