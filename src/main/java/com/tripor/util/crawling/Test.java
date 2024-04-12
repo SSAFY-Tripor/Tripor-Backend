@@ -19,11 +19,11 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-/**
- * DB 데이터 없는 경우 초기 세팅용
- */
-public class Main {
-	private static final int DEFAULT_ROWS = 1000;
+import com.tripor.util.DBUtil;
+
+public class Test {
+	private static final int DEFAULT_ROWS = 10;
+	private DBUtil dbUtil = DBUtil.getInstance();
 
 	public static void main(String[] args) throws IOException {
 		StringBuilder urlBuilder = new StringBuilder(
@@ -73,9 +73,10 @@ public class Main {
 
 			NodeList nodeList = document.getElementsByTagName("totalCnt");
 
-			int totalCnt = Integer.parseInt(nodeList.item(0).getTextContent());
-
-			for (int pageNo = 1; pageNo <= totalCnt / DEFAULT_ROWS; pageNo++) {
+//			int totalCnt = Integer.parseInt(nodeList.item(0).getTextContent());
+			int totalCnt = 30;
+			
+			for (int pageNo = 1; pageNo <= totalCnt / DEFAULT_ROWS + 1; pageNo++) {
 				StringBuilder urlBuilder2 = new StringBuilder(
 						"https://apis.data.go.kr/B551011/KorService1/areaBasedList1"); /* URL */
 				urlBuilder2.append("?" + URLEncoder.encode("serviceKey", "UTF-8")
@@ -94,8 +95,9 @@ public class Main {
 						"&" + URLEncoder.encode("listYN", "UTF-8") + "=" + URLEncoder.encode("Y", "UTF-8")); /* Y=목록 */
 				urlBuilder2.append("&" + URLEncoder.encode("arrange", "UTF-8") + "="
 						+ URLEncoder.encode("A", "UTF-8")); /* A=제목순 */
-
-				url = new URL(urlBuilder.toString());
+				System.out.println("만듬");
+				System.out.println(urlBuilder2.toString());
+				url = new URL(urlBuilder2.toString());
 				conn = (HttpURLConnection) url.openConnection();
 				conn.setRequestMethod("GET");
 				conn.setRequestProperty("Content-type", "application/json");
@@ -118,15 +120,66 @@ public class Main {
 
 				nodeList = document.getElementsByTagName("item");
 				int len = nodeList.getLength();
+				System.out.println(len);
 				for (int i = 0; i < len; i++) {
 					Node node = nodeList.item(i);
 					if(node.getNodeType() == Node.ELEMENT_NODE) {
 						Element element = (Element) node;
-						System.out.println("주소 : " + element.getElementsByTagName("addr1").item(0).getTextContent());
-						System.out.println("이미지 : " + element.getElementsByTagName("firstimage").item(0).getTextContent());
-						System.out.println("이름 : " + element.getElementsByTagName("title").item(0).getTextContent());
-						System.out.println("위치x : " + element.getElementsByTagName("mapx").item(0).getTextContent());
-						System.out.println("위치y : " + element.getElementsByTagName("mapy").item(0).getTextContent());
+						System.out.println("----");
+						// contentId는 AutoIncrement
+						String contentTypeId = element.getElementsByTagName("contenttypeid").item(0).getTextContent();
+						if(contentTypeId != null) {
+							System.out.println("콘텐트 타입 : " + contentTypeId);
+						}
+						String title = element.getElementsByTagName("title").item(0).getTextContent();
+						if(title != null) {
+							System.out.println("이름 : " + title);
+						}
+						String addr = element.getElementsByTagName("addr1").item(0).getTextContent();
+						if(addr != null) {
+							System.out.println("주소 : " + addr);
+						}
+						String tel =  element.getElementsByTagName("tel").item(0).getTextContent();
+						if(tel != null) {
+							System.out.println("전화번호 : " + tel);
+						}
+						String firstImage = element.getElementsByTagName("firstimage").item(0).getTextContent();
+						if(firstImage!=null) {
+							System.out.println("이미지 : " + firstImage);
+						}
+						String sidoCode = element.getElementsByTagName("areacode").item(0).getTextContent();
+						if(sidoCode!=null) {
+							System.out.println("시도코드 : " + sidoCode);
+						}
+						String gugunCode = element.getElementsByTagName("sigungucode").item(0).getTextContent();
+						if(gugunCode != null) {
+							System.out.println("구군코드 : " + gugunCode);
+						}
+						String latitude =  element.getElementsByTagName("mapx").item(0).getTextContent();
+						if(latitude != null) {
+							System.out.println("위도 : " + latitude);
+						}
+						String longitude = element.getElementsByTagName("mapy").item(0).getTextContent();
+						if(longitude != null) {
+							System.out.println("경도 : " + longitude);
+						}
+						String mLevel = element.getElementsByTagName("mlevel").item(0).getTextContent();
+						if(mLevel != null) {
+							System.out.println("맵레벨 : " + mLevel);
+						}
+						String cat1 = element.getElementsByTagName("cat1").item(0).getTextContent();
+						if(cat1 != null) {
+							System.out.println("cat1 : " + cat1);
+						}
+						String cat2 = element.getElementsByTagName("cat2").item(0).getTextContent();
+						if(cat2 != null) {
+							System.out.println("cat2 : " + cat2);
+						}
+						String cat3 = element.getElementsByTagName("cat3").item(0).getTextContent();
+						if(cat3 != null) {
+							System.out.println("cat3 : " + cat3);
+						}
+						// description은 5번 공통정보조회에 있음.
 					}
 				}
 			}
