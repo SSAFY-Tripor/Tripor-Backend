@@ -175,15 +175,19 @@ public class Main {
 							continue;
 						}
 //						System.out.println("구군코드 : " + gugunCode);
-						String latitude = element.getElementsByTagName("mapx").item(0).getTextContent();
-						if (latitude == null || latitude.length() == 0) {
+						String mapx = element.getElementsByTagName("mapx").item(0).getTextContent();
+						if (mapx == null || mapx.length() == 0) {
 							continue;
 						}
 //						System.out.println("위도 : " + latitude);
-						String longitude = element.getElementsByTagName("mapy").item(0).getTextContent();
-						if (longitude == null || longitude.length() == 0) {
+						String mapy = element.getElementsByTagName("mapy").item(0).getTextContent();
+						if (mapy == null || mapy.length() == 0) {
 							continue;
 						}
+						double longitude = Double.parseDouble(mapx);
+						if(longitude < 124 || longitude > 132) continue;
+						double latitude = Double.parseDouble(mapy);
+						if(latitude < 33 || latitude > 43) continue;
 //						System.out.println("경도 : " + longitude);
 						String mLevel = element.getElementsByTagName("mlevel").item(0).getTextContent();
 						if (mLevel != null) {
@@ -212,7 +216,7 @@ public class Main {
 							con = dbUtil.getConnection();
 							StringBuilder sql = new StringBuilder();
 							sql.append(
-									"insert into attraction_info (content_id, content_type_id, title, addr, tel, first_image, sido_code, gugun_code, latitude, longitude, mlevel, cat1, cat2, cat3) \n");
+									"insert into attraction_info (content_id, content_type_id, title, addr, tel, first_image, sido_code, gugun_code, longitude, latitude, mlevel, cat1, cat2, cat3) \n");
 							sql.append("values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
 							ps = con.prepareStatement(sql.toString());
 							ps.setInt(1, Integer.parseInt(contentId));
@@ -223,8 +227,8 @@ public class Main {
 							ps.setString(6, firstImage);
 							ps.setInt(7, Integer.parseInt(sidoCode));
 							ps.setInt(8, Integer.parseInt(gugunCode));
-							ps.setDouble(9, Double.parseDouble(latitude));
-							ps.setDouble(10, Double.parseDouble(longitude));
+							ps.setDouble(9, longitude);
+							ps.setDouble(10, latitude);
 							ps.setInt(11, Integer.parseInt(mLevel));
 							ps.setString(12, cat1);
 							ps.setString(13, cat2);
@@ -232,7 +236,7 @@ public class Main {
 							ps.execute();
 						} catch (Exception e) {
 							System.out.println(
-									contentId + " " + sidoCode + " " + gugunCode + " " + latitude + " " + longitude);
+									contentId + " " + sidoCode + " " + gugunCode + " " + longitude + " " + latitude);
 							e.printStackTrace();
 						} finally {
 							dbUtil.close(ps, con);

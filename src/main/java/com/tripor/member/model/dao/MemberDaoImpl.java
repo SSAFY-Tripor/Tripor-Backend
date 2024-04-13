@@ -103,7 +103,7 @@ public class MemberDaoImpl implements MemberDao {
 		PreparedStatement ps = null;
 		try {
 			con = dbUtil.getConnection();
-			String sql = "insert into members (member_id, member_pw, member_name, email_id, email_domain, sido, gugun) "
+			String sql = "insert into member (member_id, member_pw, member_name, email_id, email_domain, sido, gugun) "
 					+ "values (?, ?, ?, ?, ?, ?, ?);";
 			ps = con.prepareStatement(sql);
 			ps.setString(1, memberDto.getUserId());

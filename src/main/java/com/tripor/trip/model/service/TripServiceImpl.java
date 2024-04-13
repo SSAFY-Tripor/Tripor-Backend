@@ -68,6 +68,7 @@ public class TripServiceImpl implements TripService {
 
 	@Override
 	public String getTripList(int planId) throws Exception {
+		System.out.println("getTripList(int planId)");
 		List<TripDto> list = tripDao.searchPlanByPlanId(planId).getTripList();
 		System.out.println(list);
 		Gson gson = new Gson();
@@ -76,6 +77,7 @@ public class TripServiceImpl implements TripService {
 	}
 	@Override
 	public String getTripList(int planId, String mode) throws Exception {
+		System.out.println("getTripList(int planId, String mode)");
 		List<TripDto> list = tripDao.searchPlanByPlanId(planId).getTripList();
 		Gson gson = new Gson();
 
@@ -315,6 +317,7 @@ public class TripServiceImpl implements TripService {
 
 	@Override
 	public List<TripPlanDto> getTripPlan(String userId) throws Exception {
+		System.out.println("getTripPlan(String userId)");
 		List<TripPlanDto> tripPlanDto = tripDao.searchPlansByUserId(userId);
 		return tripPlanDto;
 	}

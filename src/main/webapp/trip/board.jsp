@@ -51,15 +51,14 @@
 						<input type="hidden" name="action" value="list" /> <input
 							type="hidden" name="pgno" value="1" /> <select id="key"
 							name="key" class="form-select form-select-sm ms-5 me-1 w-50"
-							aria-label="검색조건">
-							<option selected>검색조건</option>
+							aria-label="검색조건" required>
 							<option value="subject">제목</option>
-							<option value="user_id">작성자</option>
+							<option value="member_id">작성자</option>
 						</select>
 						<div class="input-group input-group-sm">
-							<input id="word" name="word" type="text" class="form-control"
+							<input id="word" required name="word" type="text" class="form-control"
 								placeholder="검색어..." />
-							<button id="btn-search" class="btn btn-dark" type="button">검색</button>
+							<button id="btn-search" class="btn btn-dark" type="submit">검색</button>
 						</div>
 					</form>
 					<!--  PAGE 및 검색으로 인해 추가 한 부분 -->

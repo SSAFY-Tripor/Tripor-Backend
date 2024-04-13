@@ -131,8 +131,8 @@ CREATE TABLE IF NOT EXISTS `tripor`.`attraction_info` (
   `first_image` VARCHAR(200) NULL,
   `sido_code` INT NULL,
   `gugun_code` INT NULL,
-  `latitude` DECIMAL(20,17) NULL,
-  `longitude` DECIMAL(20,17) NULL,
+  `latitude` DECIMAL(20,17) NULL, -- 위도 (-90 ~ 90, 적도가 0도이며, 한국은 33 ~ 43도에 위치)
+  `longitude` DECIMAL(20,17) NULL, -- 경도 (-180 ~ 180, 한국은 124 ~ 132도에 위치)
   `mlevel` VARCHAR(2) NULL,
   `cat1` VARCHAR(3) NULL,
   `cat2` VARCHAR(5) NULL,
@@ -152,6 +152,10 @@ CREATE TABLE IF NOT EXISTS `tripor`.`attraction_info` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
+
+ALTER TABLE attraction_info
+ADD CONSTRAINT longitude_range CHECK (longitude BETWEEN 124 AND 132),
+ADD CONSTRAINT latitude_range CHECK (latitude BETWEEN 33 AND 43);
 
 
 -- -----------------------------------------------------

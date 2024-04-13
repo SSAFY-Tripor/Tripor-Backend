@@ -8,8 +8,8 @@ public class TripDto {
 	private String firstImage;
 	private int sidoCode;
 	private int gugunCode;
-	private String latitude;
-	private String longitude;
+	private String latitude; // 위도 (-90 ~ 90, 적도가 0도이며, 한국은 33 ~ 43도에 위치)
+	private String longitude; // 경도 (-180 ~ 180, 한국은 124 ~ 132도에 위치)
 	private String tel;
 	private String overview;
 

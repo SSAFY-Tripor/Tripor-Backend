@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -178,14 +179,15 @@ public class TripDaoImpl implements TripDao {
 		String sql = "";
 		try {
 			con = dbUtil.getConnection();
-			sql = "insert into trip_plan (plan_name, plan_member_id) values (?, ?)";
-			ps = con.prepareStatement(sql);
+			sql = "insert into trip_plan (plan_name, member_id) values (?, ?)";
+			ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			ps.setString(1, planName);
 			ps.setString(2, userId);
 			ps.executeUpdate();
 
 			// 생성된 AUTO_INCREMENT 값을 얻기
 			ResultSet generatedKeys = ps.getGeneratedKeys();
+			
 			if (generatedKeys.next()) {
 				int planId = generatedKeys.getInt(1); // 생성된 AUTO_INCREMENT 값
 				for (String contentId : tripList) {
@@ -214,7 +216,7 @@ public class TripDaoImpl implements TripDao {
 		List<TripDto> list = new ArrayList<TripDto>();
 		try {
 			con = dbUtil.getConnection();
-			String sql = "select * from plan_content_relation where plan_id=?";
+			String sql = "select content_id from plan_content_relation where plan_id=?";
 			ps = con.prepareStatement(sql);
 			ps.setInt(1, planId);
 			rs = ps.executeQuery();

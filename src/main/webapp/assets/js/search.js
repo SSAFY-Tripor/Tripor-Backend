@@ -79,29 +79,27 @@ const closeOverlay = (item = null) => {
 	}
 }
 
-const updateMapMarkers = (areaCode, sigunguCode, tour) => {
+const updateMapMarkers = async (areaCode, sigunguCode, tour) => {
 	let bounds = new kakao.maps.LatLngBounds(); // 모든 마커를 포함할 수 있는 LatLngBounds 객체 생성
 	let flag = false;
 
-	
+	console.log('86번 줄 updateMapMarkers()')
+	console.log(areaCode, sigunguCode, tour)
 	// tourData는 API 호출 결과로 얻은 데이터 배열
-	tourData.forEach((item) => {
-		if (tour == "all" || tour == item.contentTypeId) {
-			flag = true;
-			const position = new kakao.maps.LatLng(item.latitude, item.longitude); // 각 항목의 위경도를 사용하여 위치 객체 생성
+	 for (const item of tourData) {
+        if (tour == "all" || tour == item.contentTypeId) {
+            flag = true;
+            const position = new kakao.maps.LatLng(item.latitude, item.longitude);
 
-			// 커스텀 이미지의 URL 생성
-			const imageUrl = contextPath + "/img/" + item.contentTypeId + ".png"; // 예: item.contentid 값이 "12"이면, 이미지 URL은 "./img/12.png"
-			const imageSize = new kakao.maps.Size(45, 45); // 마커 이미지의 크기 설정
-			// 마커 이미지 생성
-			const markerImage = new kakao.maps.MarkerImage(imageUrl, imageSize);
-			const marker = new kakao.maps.Marker({
-				position: position, // 마커 위치 설정
-				image: markerImage, // 커스텀 마커 이미지 설정
-			});
+            const imageUrl = contextPath + "/img/" + item.contentTypeId + ".png";
+            const imageSize = new kakao.maps.Size(45, 45);
+            const markerImage = new kakao.maps.MarkerImage(imageUrl, imageSize);
+            const marker = new kakao.maps.Marker({
+                position: position,
+                image: markerImage,
+            });
 
-			// 커스텀 오버레이에 표시될 내용 생성
-			const content = `<div class="wrap">
+            const content = `<div class="wrap">
                                 <div class="info">
                                     <div class="title">
                                         ${item.title}
@@ -114,41 +112,36 @@ const updateMapMarkers = (areaCode, sigunguCode, tour) => {
                                         <div class="desc">
                                             <div class="ellipsis">주소: ${item.addr ? item.addr : "정보 없음"}</div>
                                             <div class="jibun ellipsis">전화번호: ${item.tel ? item.tel : "정보 없음"}</div>
-
                                             <div><a onclick="showPlaceDetail(event, '${encodeURIComponent(JSON.stringify(item))}');"  href="#">상세보기</a></div>
                                         </div>
                                     </div>
                                 </div>
                             </div>`;
-			// 커스텀 오버레이 생성 및 지도에 추가하지 않음 (초기에는 숨김)
-			const overlay = new kakao.maps.CustomOverlay({
-				content: content,
-				map: null,
-				position: position,
-				// xAnchor: 0.3,
-				// yAnchor: 0.91,
-				// zIndex: 3,
-			});
 
-			// 마커 클릭 시 커스텀 오버레이 표시
-			kakao.maps.event.addListener(marker, "click", () => {
-				closeOverlay();
-				overlay.setMap(map); // 현재 오버레이 표시
-				currentOverlay = overlay; // 참조 업데이트
-				map.setCenter(position);
-			});
+            const overlay = new kakao.maps.CustomOverlay({
+                content: content,
+                map: null,
+                position: position,
+            });
 
-			marker.setMap(map); // 마커를 지도에 표시
-			markers.push(marker); // 생성된 마커를 markers 배열에 추가
-			bounds.extend(position); // LatLngBounds 객체에 현재 마커의 위치를 추가
-		}
-	});
+            kakao.maps.event.addListener(marker, "click", () => {
+                closeOverlay();
+                overlay.setMap(map);
+                currentOverlay = overlay;
+                map.setCenter(position);
+            });
+
+            marker.setMap(map);
+            markers.push(marker);
+            bounds.extend(position);
+        }
+    }
 	// 모든 마커가 포함되도록 지도의 중심과 줌 레벨 조정
 	if (flag) {
 		map.setBounds(bounds);
 	} else {
 		alert("해당 관광 정보 지역이 없습니다.");
-		fetchAllTourData(areaCode, sigunguCode);
+		await fetchAllTourData(areaCode, sigunguCode);
 	}
 }
 const print = (e, item) => {
@@ -313,7 +306,7 @@ const fetchAllTourData = async (areaCode, sigunguCode, tourType = "all") => {
 		tourData.push(item);
 	});
 	// 데이터를 모두 가져온 후의 추가 처리
-	updateMapMarkers(areaCode, sigunguCode, tourType);
+	await updateMapMarkers(areaCode, sigunguCode, tourType);
 }
 
 const tourChangeListener = async (region, subRegion, tourSelect) => {
@@ -699,8 +692,11 @@ const planMap = document.querySelector("#plan-map");
 const getContents = async () => {
 	const planId = document.querySelector("#plan-div-id").innerText;
 	const planIdParam = `/trip?action=mappingPlan&planid=${planId}`;
+	console.log('696 번줄')
+	console.log(`${url}${planIdParam}`);
 	const response = await fetch(`${url}${planIdParam}`);
 	const data = await response.json();
+	console.log(data);
 	return data;
 }
 let planOverlay = [];
