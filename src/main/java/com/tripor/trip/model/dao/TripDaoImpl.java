@@ -15,6 +15,7 @@ import com.tripor.trip.model.dto.TripDto;
 import com.tripor.trip.model.dto.TripPlanDto;
 import com.tripor.trip.model.dto.TripSearchDto;
 import com.tripor.util.DBUtil;
+import com.tripor.util.crawling.PublicAPI;
 
 public class TripDaoImpl implements TripDao {
 	private DBUtil dbUtil = DBUtil.getInstance();
@@ -187,7 +188,7 @@ public class TripDaoImpl implements TripDao {
 
 			// 생성된 AUTO_INCREMENT 값을 얻기
 			ResultSet generatedKeys = ps.getGeneratedKeys();
-			
+
 			if (generatedKeys.next()) {
 				int planId = generatedKeys.getInt(1); // 생성된 AUTO_INCREMENT 값
 				for (String contentId : tripList) {
@@ -289,6 +290,7 @@ public class TripDaoImpl implements TripDao {
 				tripDto.setLongitude(rs.getString(9));
 				tripDto.setTel(rs.getString(10));
 				tripDto.setOverview(rs.getString(11));
+				
 			}
 			return tripDto;
 		} catch (SQLException e) {
