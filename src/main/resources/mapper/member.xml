@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tripor.member.model.mapper.MemberMapper">
+
+	<resultMap type="memberDto" id="member">
+		<result column="member_id" property="memberId"/>
+		<result column="member_pw" property="memberPw"/>
+		<result column="member_name" property="memberName"/>
+		<result column="email_id" property="emailId"/>
+		<result column="email_domain" property="emailDomain"/>
+		<result column="sido" property="sido"/>
+		<result column="gugun" property="gugun"/>
+		<result column="join_date" property="joinDate"/>
+	</resultMap>
+
+	<select id="countMemberById" parameterType="String" resultType="int">
+		select count(member_id)
+		from member
+		where member_id = #{memberId}
+	</select>
+
+	<insert id="insertMember" parameterType="memberDto">
+		insert into member (member_id, member_pw, member_name, email_id, email_domain, sido, gugun, join_date)
+		values (#{memberId}, #{memberPw}, #{memberName}, #{emailId}, #{emailDomain}, #{sido}, #{gugun}, now())
+	</insert>
+
+	<select id="findByIdAndPassword" parameterType="map" resultMap="member">
+		select * 
+		from member 
+		where member_id=#{memberId} and member_pw=#{memberPw}
+	</select>
+	
+	<select id="findById" parameterType="string" resultMap="member">
+		select * 
+		from member 
+		where member_id=#{memberId}
+	</select>
+	
+	<delete id="deleteMember" parameterType="String">
+		delete from member
+		where member_id = #{memberId}
+	</delete>
+	
+    <update id="updateMember" parameterType="memberDto">
+        UPDATE member
+        SET member_name = #{memberName}, email_id = #{emailId}, email_domain = #{emailDomain}, member_pw = #{memberPw}
+        WHERE member_id = #{memberId}
+    </update>
+	
+</mapper>

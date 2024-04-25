@@ -1,14 +1,19 @@
 package com.tripor.member.model.service;
 
+import java.util.Map;
+
 import com.tripor.member.model.dto.MemberDto;
 
-import jakarta.servlet.http.HttpServletRequest;
-
 public interface MemberService {
-	int join(MemberDto memberDto);
-	MemberDto login(String userId, String userPw);
-	MemberDto findById(String userId);
-	String findPassword(String userId);
-	void remove(String userId);
-	void modify(MemberDto memberDto);
+	int idCheck(String memberId) throws Exception;
+
+	MemberDto loginMember(Map<String, String> map) throws Exception;
+
+	MemberDto getMember(String memberId) throws Exception;
+
+	void joinMember(MemberDto memberDto) throws Exception;
+
+	void updateMember(MemberDto memberDto) throws Exception;
+
+	void deleteMember(String memberId) throws Exception;
 }

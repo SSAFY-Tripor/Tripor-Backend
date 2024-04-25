@@ -1,93 +1,47 @@
 package com.tripor.member.model.service;
 
-import java.io.IOException;
-import java.sql.SQLException;
+import java.util.Map;
 
-import com.tripor.member.model.dao.MemberDao;
-import com.tripor.member.model.dao.MemberDaoImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.tripor.member.model.dto.MemberDto;
+import com.tripor.member.model.mapper.MemberMapper;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-
-public class MemberServiceImpl implements MemberService{
-	private static MemberService instance = new MemberServiceImpl();
-	private MemberDao memberDao = MemberDaoImpl.getInstance();
-	private MemberServiceImpl() {}
-	
-	public static MemberService getInstance() {
-		return instance;
-	}
+@Service
+public class MemberServiceImpl implements MemberService {
+	@Autowired
+	MemberMapper memberMapper;
 
 	@Override
-	public int join(MemberDto memberDto) {
-		try {
-			return memberDao.insert(memberDto);
-		}catch(SQLException e) {
-			e.printStackTrace();
-			return -1;
-		}
-	}
-	
-	@Override
-	public MemberDto login(String userId, String userPw) {
-		MemberDto loginUser;
-		try {
-			loginUser = memberDao.searchByIdAndPassword(userId, userPw);
-			if(loginUser == null) {
-				return null;
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
-		}
-		return loginUser;
-	}
-	
-	
-	
-	@Override
-	public void modify(MemberDto memberDto) {
-		try {
-			memberDao.update(memberDto);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	public int idCheck(String memberId) throws Exception {
+		return memberMapper.countMemberById(memberId);
 	}
 
 	@Override
-	public String findPassword(String userId) {
-		MemberDto user;
-		try {
-			user = memberDao.searchById(userId);
-			return user.getUserPw();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
-		}
+	public MemberDto loginMember(Map<String, String> map) throws Exception {
+		return memberMapper.findByIdAndPassword(map);
 	}
 
 	@Override
-	public MemberDto findById(String userId) {
-		MemberDto user;
-		try {
-			user = memberDao.searchById(userId);
-			return user;
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
-		}
+	public MemberDto getMember(String memberId) throws Exception {
+		return memberMapper.findById(memberId);
 	}
 
 	@Override
-	public void remove(String userId) {
-		try {
-			memberDao.delete(userId);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	public void joinMember(MemberDto memberDto) throws Exception {
+		System.out.println(memberDto);
+		memberMapper.insertMember(memberDto);
 	}
-	
-	
-	
+
+	@Override
+	public void updateMember(MemberDto memberDto) throws Exception {
+		memberMapper.updateMember(memberDto);
+	}
+
+	@Override
+	public void deleteMember(String memberId) throws Exception {
+		memberMapper.deleteMember(memberId);
+	}
+
 }

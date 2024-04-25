@@ -1,29 +1,29 @@
 package com.tripor.member.model.dto;
 
 public class MemberDto {
-	private String userId, userPw, userName, emailId, emailDomain;
+	private String memberId, memberPw, memberName, emailId, emailDomain;
 	private int sido, gugun;
 	private String joinDate;
 
-	public MemberDto(String userId, String userPw, String userName, String emailId, String emailDomain, int sido,
+	public MemberDto(String memberId, String memberPw, String memberName, String emailId, String emailDomain, int sido,
 			int gugun, String joinDate) {
 		super();
-		this.userId = userId;
-		this.userPw = userPw;
-		this.userName = userName;
+		this.memberId = memberId;
+		this.memberPw = memberPw;
+		this.memberName = memberName;
 		this.emailId = emailId;
 		this.emailDomain = emailDomain;
 		this.sido = sido;
 		this.gugun = gugun;
 		this.joinDate = joinDate;
 	}
-	
-	public MemberDto(String userId, String userPw, String userName, String emailId, String emailDomain, int sido,
+
+	public MemberDto(String memberId, String memberPw, String memberName, String emailId, String emailDomain, int sido,
 			int gugun) {
 		super();
-		this.userId = userId;
-		this.userPw = userPw;
-		this.userName = userName;
+		this.memberId = memberId;
+		this.memberPw = memberPw;
+		this.memberName = memberName;
 		this.emailId = emailId;
 		this.emailDomain = emailDomain;
 		this.sido = sido;
@@ -31,31 +31,31 @@ public class MemberDto {
 	}
 
 	public MemberDto() {
-		super();
+		// TODO Auto-generated constructor stub
 	}
 
-	public String getUserId() {
-		return userId;
+	public String getMemberId() {
+		return memberId;
 	}
 
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setMemberId(String memberId) {
+		this.memberId = memberId;
 	}
 
-	public String getUserPw() {
-		return userPw;
+	public String getMemberPw() {
+		return memberPw;
 	}
 
-	public void setUserPw(String userPw) {
-		this.userPw = userPw;
+	public void setMemberPw(String memberPw) {
+		this.memberPw = memberPw;
 	}
 
-	public String getUserName() {
-		return userName;
+	public String getMemberName() {
+		return memberName;
 	}
 
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setMemberName(String memberName) {
+		this.memberName = memberName;
 	}
 
 	public String getEmailId() {
@@ -100,8 +100,9 @@ public class MemberDto {
 
 	@Override
 	public String toString() {
-		return "MemberDto [userId=" + userId + ", userPw=" + userPw + ", userName=" + userName + ", emailId=" + emailId
-				+ ", emailDomain=" + emailDomain + ", sido=" + sido + ", gugun=" + gugun + ", joinDate=" + joinDate
-				+ "]";
+		return "MemberDto [memberId=" + memberId + ", memberPw=" + memberPw + ", memberName=" + memberName
+				+ ", emailId=" + emailId + ", emailDomain=" + emailDomain + ", sido=" + sido + ", gugun=" + gugun
+				+ ", joinDate=" + joinDate + "]";
 	}
+
 }

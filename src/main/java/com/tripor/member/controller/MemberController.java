@@ -1,200 +1,157 @@
 package com.tripor.member.controller;
 
-import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import java.io.IOException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.tripor.member.model.dto.MemberDto;
 import com.tripor.member.model.service.MemberService;
-import com.tripor.member.model.service.MemberServiceImpl;
 
-@WebServlet("/member")
-public class MemberController extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-	private MemberService memberService = MemberServiceImpl.getInstance();
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 
-	public MemberController() {
-		super();
+@Slf4j
+@RestController
+@RequestMapping("/member")
+@CrossOrigin("*")
+public class MemberController {
+	@Autowired
+	MemberService memberService;
+
+	@GetMapping("/login")
+	public String loginForm() {
+		return "user/login";
 	}
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		String action = request.getParameter("action");
-		String path = "";
-		String root = request.getContextPath();
-		System.out.println(action);
+	// ============================== REST API =================================
+	@PostMapping("/login")
+	public ResponseEntity<?> login(@RequestParam Map<String, String> map,
+			@RequestParam(name = "saveid", required = false) String saveid) {
+		log.debug("login Form map : {}", map);
 		try {
-			if ("mvLogin".equals(action)) {
-				path = "/user/login.jsp";
-				forward(path, request, response);
-			} else if ("login".equals(action)) {
-				String userId = request.getParameter("userid");
-				String userPw = request.getParameter("userpwd");
-				String saveId = request.getParameter("saveid");
-				MemberDto member = memberService.login(userId, userPw);
-				if (member == null) {
-					path = "/user/login.jsp";
-					request.setAttribute("msg", "아이디 또는 비밀번호가 틀렸습니다.");
-					forward(path, request, response);
-					return;
-				}
-				path = "";
-				// 세션 설정
-				HttpSession session = request.getSession();
-				session.setAttribute("member", member);
-				// 쿠키 설정
-				if ("on".equals(saveId)) {
-					// 쿠키 생성
-					Cookie cookie = new Cookie("saveid", userId);
-					cookie.setPath(root);
-					cookie.setMaxAge(60 * 60 * 24 * 365);
-					response.addCookie(cookie);
-				} else {
-					// 쿠키 삭제
-					Cookie[] cookies = request.getCookies();
-					if (cookies != null) {
-						for (Cookie cookie : cookies) {
-							if ("saveid".equals(cookie.getName())) {
-								cookie.setMaxAge(0);
-								response.addCookie(cookie);
-								break;
-							}
-						}
-					}
-				}
-				redirect(path, root, response);
-			} else if ("mvJoin".equals(action)) {
-				path = "/user/join.jsp";
-				forward(path, request, response);
-			} else if ("join".equals(action)) {
-				String userName = request.getParameter("username");
-				String userId = request.getParameter("userid");
-				String userPw = request.getParameter("userpwd");
-				String userPwCk = request.getParameter("userpwdcheck");
-				if (userPw == null || !userPw.equals(userPwCk)) {
-					request.setAttribute("pwck", "비밀번호가 틀렸습니다.");
-					path = "/user/join.jsp";
-					forward(path, request, response);
-					return;
-				}
-				String emailId = request.getParameter("emailid");
-				String emailDomain = request.getParameter("emaildomain");
-			    int sido = Integer.parseInt(request.getParameter("sido"));
-			    int gugun = Integer.parseInt(request.getParameter("gugun"));
-				MemberDto joinMember = new MemberDto(userId, userPw, userName, emailId, emailDomain, sido, gugun);
-				if (memberService.join(joinMember) == -1) {
-					request.setAttribute("msg", "이미 존재하는 회원입니다.");
-					path = "/user/join.jsp";
-					forward(path, request, response);
-					return;
-				}
-				path = "/member?action=mvJoinOK";
-				redirect(path, root, response);
-			} else if ("mvJoinOK".equals(action)) {
-				path = "/user/join_ok.jsp";
-				forward(path, request, response);
-			} else if ("logout".equals(action)) {
-				HttpSession session = request.getSession();
-				session.removeAttribute("member");
-				path = "";
-				redirect(path, root, response);
-			} else if ("mvFindPwd".equals(action)) {
-				path = "/user/findpwd.jsp";
-				forward(path, request, response);
-			} else if ("findpwd".equals(action)) {
-				String userId = request.getParameter("userid");
-				MemberDto member = memberService.findById(userId);
-				path = "/user/findpwd.jsp";
-				if(member == null) {
-					request.setAttribute("msg", "아이디가 틀렸습니다.");
-					forward(path, request, response);
-					return;
-				}
-				System.out.println(member);
-				String userEmail = request.getParameter("useremail");
-				String userName = request.getParameter("username");
-				String[] email = userEmail.split("@");
-				if (!email[0].equals(member.getEmailId())
-						|| !email[1].equals(member.getEmailDomain()) || !userName.equals(member.getUserName())) {
-					System.out.println("이메일 또는 이름");
-					request.setAttribute("msg", "아이디가 틀렸습니다.");
-					forward(path, request, response);
-					return;
-				}
-				request.setAttribute("findpwd", member.getUserPw());
-				forward(path, request, response);
-			}else if("mvMypage".equals(action)) {
-				HttpSession session = request.getSession();
-				MemberDto member = (MemberDto) session.getAttribute("member");
-				if(member == null) {
-					path = "/member?action=mvLogin";
-					redirect(path, root, response);
-					return;
-				}
-				path= "/user/mypage.jsp";
-				forward(path, request, response);
-			}else if("delete".equals(action)) {
-				HttpSession session = request.getSession();
-				MemberDto memberDto = (MemberDto) session.getAttribute("member");
-				if(memberDto == null) {
-					path="";
-					redirect(path, root, response);
-					return;
-				}
-				memberService.remove(memberDto.getUserId());
-				session.removeAttribute("member");
-				path="";
-				redirect(path, root, response);
-			}else if("modify".equals(action)) {
-				HttpSession session = request.getSession();
-				MemberDto memberDto = (MemberDto) session.getAttribute("member");
-				if(memberDto == null) {
-					path="";
-					redirect(path, root, response);
-					return;
-				}
-				String userName = request.getParameter("username"); 
-				String userPwd = request.getParameter("userpwd");
-				String userEmail = request.getParameter("useremail");
-				String[] email = userEmail.split("@");
-				memberDto.setUserName(userName);
-				memberDto.setUserPw(userPwd);
-				memberDto.setEmailId(email[0]);
-				memberDto.setEmailDomain(email[1]);
-				memberService.modify(memberDto);
-				path= "/member?action=mvMypage";
-			}else {
-				path = "";
-				redirect(path, root, response);
-			}
+			MemberDto memberDto = memberService.loginMember(map);
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+			return ResponseEntity.ok().headers(headers).body(memberDto);
+//		return new ResponseEntity<Integer>(cnt, HttpStatus.CREATED);
+//		return ResponseEntity.status(HttpStatus.CREATED).body(cnt);
 		} catch (Exception e) {
-			e.printStackTrace();
-			path = "/error.jsp";
-			RequestDispatcher dispatcher = request.getRequestDispatcher(path);
-			dispatcher.forward(request, response);
+			return exceptionHandling(e);
 		}
-
 	}
 
-	protected void redirect(String path, String root, HttpServletResponse response) throws IOException {
-		response.sendRedirect(root + path);
+	@PostMapping(value = "/")
+	public ResponseEntity<?> join(@org.springframework.web.bind.annotation.RequestBody MemberDto memberDto) {
+		log.debug("userRegister memberDto : {}", memberDto);
+		try {
+			System.out.println(memberDto);
+			memberService.joinMember(memberDto);
+//			return new ResponseEntity<List<MemberDto>>(list, HttpStatus.OK);
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+			return ResponseEntity.ok().headers(headers).body(memberDto);
+//			return new ResponseEntity<Integer>(cnt, HttpStatus.CREATED);
+//			return ResponseEntity.status(HttpStatus.CREATED).body(cnt);
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
 	}
 
-	protected void forward(String path, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		RequestDispatcher dispatcher = request.getRequestDispatcher(path);
-		dispatcher.forward(request, response);
+	@PutMapping(value = "/")
+	public ResponseEntity<?> modify(@org.springframework.web.bind.annotation.RequestBody MemberDto memberDto) {
+		log.debug("userModify memberDto : {}", memberDto);
+		try {
+			// form에서 hidden 필드 memberId도 전송 추가 해야함
+			if (memberDto.getMemberId() == null)
+				throw new Exception("ID 없음");
+			memberService.updateMember(memberDto);
+
+			MemberDto modifiedUser = memberService.getMember(memberDto.getMemberId());
+			Map<String, Object> map = new HashMap<>();
+			map.put("result", "ok");
+			map.put("modifiedUser", modifiedUser);
+
+//			return new ResponseEntity<List<MemberDto>>(list, HttpStatus.OK);
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+			return ResponseEntity.ok().headers(headers).body(map);
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		doGet(request, response);
+	@DeleteMapping(value = "/{memberid}")
+	public ResponseEntity<?> delete(@PathVariable("memberid") String memberId) {
+		log.debug("delete memberid : {}", memberId);
+		try {
+			memberService.deleteMember(memberId);
+//			return new ResponseEntity<List<MemberDto>>(list, HttpStatus.OK);
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+			return ResponseEntity.ok().headers(headers).body(Collections.singletonMap("resultCode", "ok"));
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
 	}
 
+	@GetMapping(value = "/{memberid}")
+	public ResponseEntity<?> detail(@PathVariable("memberid") String memberId) {
+		log.debug("detail memberid : {}", memberId);
+		try {
+			MemberDto memberDto = memberService.getMember(memberId);
+
+			Map<String, Object> map = new HashMap<>();
+			map.put("result", "ok");
+			map.put("member", memberDto);
+
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+			return ResponseEntity.ok().headers(headers).body(map);
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
+
+	@GetMapping(value = "/exist/{memberid}")
+	public ResponseEntity<?> checkExistence(@PathVariable("memberid") String memberId) {
+		log.debug("exist memberid : {}", memberId);
+		try {
+			int count = memberService.idCheck(memberId);
+
+			Map<String, Object> map = new HashMap<>();
+			map.put("result", "ok");
+			map.put("cnt", count);
+
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+			return ResponseEntity.ok().headers(headers).body(map);
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
+
+	private ResponseEntity<String> exceptionHandling(Exception e) {
+		e.printStackTrace();
+//		return new ResponseEntity<String>("Error : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error : " + e.getMessage());
+	}
 }
