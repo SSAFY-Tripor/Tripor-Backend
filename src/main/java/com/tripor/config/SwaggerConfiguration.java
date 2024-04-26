@@ -31,27 +31,30 @@ public class SwaggerConfiguration {
 
 	@Bean
 	public OpenAPI openAPI() {
-		Info info = new Info().title("SSAFY Board API 명세서").description(
-				"<h3>SSAFY API Reference for Developers</h3>Swagger를 이용한 Board API<br><img src=\"/assets/img/ssafy_logo.png\" width=\"150\">")
-				.version("v1").contact(new io.swagger.v3.oas.models.info.Contact().name("hissam")
-						.email("hissam@ssafy.com").url("http://edu.ssafy.com"));
+		Info info = new Info().title("Tripor API 명세서");
+				
+				
+//				.description(
+//				"<h3>SSAFY API Reference for Developers</h3>Swagger를 이용한 Board API<br><img src=\"/assets/img/ssafy_logo.png\" width=\"150\">")
+//				.version("v1").contact(new io.swagger.v3.oas.models.info.Contact().name("hissam")
+//						.email("hissam@ssafy.com").url("http://edu.ssafy.com"));
 
 		return new OpenAPI().components(new Components()).info(info);
 	}
 
 	@Bean
 	public GroupedOpenApi publicApi() {
-		return GroupedOpenApi.builder().group("ssafy-admin").pathsToMatch("/admin/**").build();
+		return GroupedOpenApi.builder().group("tripor-article").pathsToMatch("/article/**").build();
 	}
 
 	@Bean
 	public GroupedOpenApi adminApi() {
-		return GroupedOpenApi.builder().group("ssafy-user").pathsToMatch("/user/**").build();
+		return GroupedOpenApi.builder().group("tripor-member").pathsToMatch("/member/**").build();
 	}
-	
-	@Bean
-	public GroupedOpenApi fileApi() {
-		return GroupedOpenApi.builder().group("ssafy-file").pathsToMatch("/file/**").build();
-	}
+//	
+//	@Bean
+//	public GroupedOpenApi fileApi() {
+//		return GroupedOpenApi.builder().group("ssafy-file").pathsToMatch("/file/**").build();
+//	}
 
 }
