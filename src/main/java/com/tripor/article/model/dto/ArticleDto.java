@@ -7,6 +7,13 @@ public class ArticleDto {
 	private String content;
 	private int hit;
 	private String registerDate;
+	
+	public ArticleDto(int articleId, String subject, String content) {
+		super();
+		this.articleId = articleId;
+		this.subject = subject;
+		this.content = content;
+	}
 
 	public ArticleDto(String memberId, String subject, String content) {
 		super();
@@ -81,14 +88,6 @@ public class ArticleDto {
 
 	public void setHit(int hit) {
 		this.hit = hit;
-	}
-
-	public String getregisterDate() {
-		return registerDate;
-	}
-
-	public void setregisterDate(String registerDate) {
-		this.registerDate = registerDate;
 	}
 
 }

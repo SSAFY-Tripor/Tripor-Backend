@@ -3,6 +3,34 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.tripor.trip.model.mapper.TripMapper">
+	<resultMap type="tripDto" id="trip">
+		<result column="content_id" property="contentId" />
+		<result column="content_type_id" property="contentTypeId" />
+		<result column="title" property="title" />
+		<result column="addr" property="addr" />
+		<result column="first_image" property="firstImage" />
+		<result column="sido_code" property="sidoCode" />
+		<result column="gugun_code" property="gugunCode" />
+		<result column="latitude" property="latitude" />
+		<result column="longitude" property="longitude" />
+		<result column="tel" property="tel" />
+		<result column="overview" property="overview" />
+	</resultMap>
+	
+	<resultMap type="tripDto" id="trip">
+		<result column="content_id" property="contentId" />
+		<result column="content_type_id" property="contentTypeId" />
+		<result column="title" property="title" />
+		<result column="addr" property="addr" />
+		<result column="first_image" property="firstImage" />
+		<result column="sido_code" property="sidoCode" />
+		<result column="gugun_code" property="gugunCode" />
+		<result column="latitude" property="latitude" />
+		<result column="longitude" property="longitude" />
+		<result column="tel" property="tel" />
+		<result column="overview" property="overview" />
+	</resultMap>
+	
 
 	
 	

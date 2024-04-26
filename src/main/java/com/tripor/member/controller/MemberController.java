@@ -59,7 +59,7 @@ public class MemberController {
 		}
 	}
 
-	@PostMapping(value = "/")
+	@PostMapping(value = "")
 	public ResponseEntity<?> join(@org.springframework.web.bind.annotation.RequestBody MemberDto memberDto) {
 		log.debug("userRegister memberDto : {}", memberDto);
 		try {
@@ -76,7 +76,7 @@ public class MemberController {
 		}
 	}
 
-	@PutMapping(value = "/")
+	@PutMapping(value = "")
 	public ResponseEntity<?> modify(@org.springframework.web.bind.annotation.RequestBody MemberDto memberDto) {
 		log.debug("userModify memberDto : {}", memberDto);
 		try {
