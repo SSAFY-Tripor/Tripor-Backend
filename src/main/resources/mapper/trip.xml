@@ -14,24 +14,97 @@
 		<result column="latitude" property="latitude" />
 		<result column="longitude" property="longitude" />
 		<result column="tel" property="tel" />
-		<result column="overview" property="overview" />
+		<result column="description" property="description" />
 	</resultMap>
 	
-	<resultMap type="tripDto" id="trip">
-		<result column="content_id" property="contentId" />
-		<result column="content_type_id" property="contentTypeId" />
-		<result column="title" property="title" />
-		<result column="addr" property="addr" />
-		<result column="first_image" property="firstImage" />
+	<resultMap type="sidoDto" id="sido">
 		<result column="sido_code" property="sidoCode" />
-		<result column="gugun_code" property="gugunCode" />
-		<result column="latitude" property="latitude" />
-		<result column="longitude" property="longitude" />
-		<result column="tel" property="tel" />
-		<result column="overview" property="overview" />
+		<result column="sido_name" property="sidoName" />
 	</resultMap>
 	
-
+	<resultMap type="gugunDto" id="gugun">
+		<result column="gugun_code" property="gugunCode" />
+		<result column="gugun_name" property="gugunName" />
+		<result column="sido_code" property="sidoCode" />
+	</resultMap>
+<!-- 	
+	<resultMap type="tripPlanDto" id="tripPlan">
+		<result column="plan_id" property="planId" />
+		<result column="plan_name" property="planName" />
+		<result column="member_id" property="memberId" />
+		<result column="plan_register_date" property="planRegisterDate" />
+	</resultMap>
 	
+	<resultMap type="tripPlanDto" id="viewPlan" extends="tripPlan">
+		<collection property="tripList" column="plan_id" javaType="list" ofType="tripDto" select="tripDtoList"/>
+	</resultMap>
+	
+	<resultMap type="tripPlanDto" id="tripPlan">
+		<result column="plan_id" property="planId" />
+		<result column="plan_name" property="planName" />
+		<result column="member_id" property="memberId" />
+		<result column="plan_register_date" property="planRegisterDate" />
+	</resultMap>
+	
+	<select id="tripDtoList" resultMap="tripDto">
+		SELECT t.content_id, t.content_type_id, t.title, t.addr, t.first_image,
+       		t.sido_code, t.gugun_code, t.latitude, t.longitude, t.tel, t.description
+       	FROM attraction_info t
+		JOIN plan_content_relation p 
+		ON t.content_id = p.content_id
+		WHERE p.plan_id = #{planId};
+	</select>
+	
+	 -->
+<!-- 	
+	<select id="findPlanByMemberId" parameterType="string" resultMap="tripPlan">
+		select plan_id, plan_name, member_id, plan_register_date
+		from trip_plan
+		where member_id = #{memberId}
+	</select>
+	 -->
+	<select id="findSidoAll" resultMap="sido">
+		select *
+		from sido
+	</select>
+	
+	<select id="findGugunBySido" parameterType="int" resultMap="gugun">
+		select *
+		from gugun
+		where sido_code = #{sidoCode}
+	</select>
+<!-- 	
+	<select id="findPlanByPlanId" parameterType="int" resultMap="viewPlan">
+		select plan_id, plan_name, member_id, plan_register_date
+		from trip_plan
+		where member_id = #{memberId}
+	</select>
+	 -->
+	 
+	<select id="findByContentId" parameterType="int" resultMap="trip">
+		select *
+		from attraction_info
+		where content_id = #{contentId}
+	</select>
+	
+	<select id="findAll">
+		select * from attraction_info
+	</select>
+	
+	<insert id="insertTripPlan" parameterType="tripPlanDto">
+        insert into trip_plan (plan_name, member_id)
+        values (#{planName}, #{memberId})
+        <selectKey resultType="int" keyProperty="planId" order="AFTER">
+			select last_insert_id()
+		</selectKey>
+    </insert>
+
+    <insert id="insertPlanContentRelation" parameterType="map">
+    	insert into plan_content_relation (plan_id, content_id)
+        values
+        <foreach collection="contentIds" item="contentId" separator=" , ">
+             (#{planId}, #{contentId})
+        </foreach>
+    </insert>
 	
 </mapper>

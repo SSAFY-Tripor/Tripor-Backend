@@ -11,10 +11,10 @@ public class TripDto {
 	private String latitude; // 위도 (-90 ~ 90, 적도가 0도이며, 한국은 33 ~ 43도에 위치)
 	private String longitude; // 경도 (-180 ~ 180, 한국은 124 ~ 132도에 위치)
 	private String tel;
-	private String overview;
+	private String description;
 
 	public TripDto(String contentId, int contentTypeId, String title, String addr, String firstImage, int sidoCode,
-			int gugunCode, String latitude, String longitude, String tel, String overview) {
+			int gugunCode, String latitude, String longitude, String tel, String description) {
 		super();
 		this.contentId = contentId;
 		this.contentTypeId = contentTypeId;
@@ -26,7 +26,7 @@ public class TripDto {
 		this.latitude = latitude;
 		this.longitude = longitude;
 		this.tel = tel;
-		this.overview = overview;
+		this.description = description;
 	}
 
 	public TripDto() {
@@ -105,14 +105,6 @@ public class TripDto {
 		this.longitude = longitude;
 	}
 
-	public String getOverview() {
-		return overview;
-	}
-
-	public void setOverview(String overview) {
-		this.overview = overview;
-	}
-
 	public String getTel() {
 		return tel;
 	}
@@ -121,12 +113,20 @@ public class TripDto {
 		this.tel = tel;
 	}
 
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	@Override
 	public String toString() {
 		return "TripDto [contentId=" + contentId + ", contentTypeId=" + contentTypeId + ", title=" + title + ", addr="
 				+ addr + ", firstImage=" + firstImage + ", sidoCode=" + sidoCode + ", gugunCode=" + gugunCode
-				+ ", latitude=" + latitude + ", longitude=" + longitude + ", tel=" + tel + ", overview=" + overview
-				+ "]";
+				+ ", latitude=" + latitude + ", longitude=" + longitude + ", tel=" + tel + ", description="
+				+ description + "]";
 	}
 
 }

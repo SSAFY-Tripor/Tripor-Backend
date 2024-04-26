@@ -5,8 +5,8 @@ import java.util.List;
 public class TripPlanDto {
 	int planId;
 	String planName;
-	List<TripDto> tripList;
-	String planUserId;
+	List<String> tripList;
+	String memberId;
 	String planRegisterDate;
 
 	public int getPlanId() {
@@ -25,20 +25,12 @@ public class TripPlanDto {
 		this.planName = planName;
 	}
 
-	public List<TripDto> getTripList() {
+	public List<String> getTripList() {
 		return tripList;
 	}
 
-	public void setTripList(List<TripDto> tripList) {
+	public void setTripList(List<String> tripList) {
 		this.tripList = tripList;
-	}
-
-	public String getPlanUserId() {
-		return planUserId;
-	}
-
-	public void setPlanUserId(String planUserId) {
-		this.planUserId = planUserId;
 	}
 
 	public String getPlanRegisterDate() {
@@ -53,20 +45,27 @@ public class TripPlanDto {
 		super();
 	}
 
-	public TripPlanDto(int planId, String planName, List<TripDto> tripList, String planUserId,
-			String planRegisterDate) {
+	public String getMemberId() {
+		return memberId;
+	}
+
+	public void setMemberId(String memberId) {
+		this.memberId = memberId;
+	}
+
+	public TripPlanDto(int planId, String planName, List<String> tripList, String memberId, String planRegisterDate) {
 		super();
 		this.planId = planId;
 		this.planName = planName;
 		this.tripList = tripList;
-		this.planUserId = planUserId;
+		this.memberId = memberId;
 		this.planRegisterDate = planRegisterDate;
 	}
 
 	@Override
 	public String toString() {
-		return "TripPlanDto [planId=" + planId + ", planName=" + planName + ", tripList=" + tripList + ", planUserId="
-				+ planUserId + ", planRegisterDate=" + planRegisterDate + "]";
+		return "TripPlanDto [planId=" + planId + ", planName=" + planName + ", tripList=" + tripList + ", memberId="
+				+ memberId + ", planRegisterDate=" + planRegisterDate + "]";
 	}
 
 }
