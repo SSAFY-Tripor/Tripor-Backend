@@ -3,7 +3,6 @@ package com.tripor.member.controller;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,14 +23,18 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tripor.member.model.dto.MemberDto;
 import com.tripor.member.model.service.MemberService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
-import jakarta.servlet.http.HttpSession;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
 @RequestMapping("/member")
 @CrossOrigin("*")
+@Tag(name="회원관리")
 public class MemberController {
 	@Autowired
 	MemberService memberService;
@@ -43,11 +45,17 @@ public class MemberController {
 	}
 
 	// ============================== REST API =================================
+	@Operation(summary="로그인")
 	@PostMapping("/login")
-	public ResponseEntity<?> login(@RequestParam Map<String, String> map,
+	public ResponseEntity<?> login(@RequestParam("memberId") String memberId, @RequestParam("memberPw") String memberPw,
 			@RequestParam(name = "saveid", required = false) String saveid) {
-		log.debug("login Form map : {}", map);
+		log.debug("login Form memberId : {}, memberPw : {}", memberId, memberPw);
 		try {
+			
+			Map<String, String> map = new HashMap<>();
+			map.put("memberId", memberId);
+			map.put("memberPw", memberPw);
+			
 			MemberDto memberDto = memberService.loginMember(map);
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
@@ -59,8 +67,10 @@ public class MemberController {
 		}
 	}
 
+	@Operation(summary="회원가입")
 	@PostMapping(value = "")
-	public ResponseEntity<?> join(@org.springframework.web.bind.annotation.RequestBody MemberDto memberDto) {
+	public ResponseEntity<?> join(
+		@RequestBody(required = true, content = @Content(schema = @Schema(implementation = MemberDto.class))) @org.springframework.web.bind.annotation.RequestBody MemberDto memberDto) {
 		log.debug("userRegister memberDto : {}", memberDto);
 		try {
 			System.out.println(memberDto);
@@ -76,6 +86,7 @@ public class MemberController {
 		}
 	}
 
+	@Operation(summary="회원정보 수정")
 	@PutMapping(value = "")
 	public ResponseEntity<?> modify(@org.springframework.web.bind.annotation.RequestBody MemberDto memberDto) {
 		log.debug("userModify memberDto : {}", memberDto);
@@ -99,6 +110,7 @@ public class MemberController {
 		}
 	}
 
+	@Operation(summary="회원탈퇴")
 	@DeleteMapping(value = "/{memberid}")
 	public ResponseEntity<?> delete(@PathVariable("memberid") String memberId) {
 		log.debug("delete memberid : {}", memberId);
@@ -113,6 +125,7 @@ public class MemberController {
 		}
 	}
 
+	@Operation(summary="회원정보 조회")
 	@GetMapping(value = "/{memberid}")
 	public ResponseEntity<?> detail(@PathVariable("memberid") String memberId) {
 		log.debug("detail memberid : {}", memberId);
@@ -131,6 +144,7 @@ public class MemberController {
 		}
 	}
 
+	@Operation(summary="회원 존재여부 확인")
 	@GetMapping(value = "/exist/{memberid}")
 	public ResponseEntity<?> checkExistence(@PathVariable("memberid") String memberId) {
 		log.debug("exist memberid : {}", memberId);

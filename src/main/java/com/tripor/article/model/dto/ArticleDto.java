@@ -1,11 +1,20 @@
 package com.tripor.article.model.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(title="ArticleDto (게시물정보)")
 public class ArticleDto {
+	@Schema(description="게시물아이디")
 	private int articleId;
+	@Schema(description="작성자아이디")
 	private String memberId;
+	@Schema(description="제목")
 	private String subject;
+	@Schema(description="내용")
 	private String content;
+	@Schema(description="조회수")
 	private int hit;
+	@Schema(description="작성일")
 	private String registerDate;
 	
 	public ArticleDto(int articleId, String subject, String content) {
