@@ -5,7 +5,7 @@ import java.util.List;
 public class TripPlanDto {
 	int planId;
 	String planName;
-	List<String> tripList;
+	List<Integer> tripList;
 	String memberId;
 	String planRegisterDate;
 
@@ -25,11 +25,11 @@ public class TripPlanDto {
 		this.planName = planName;
 	}
 
-	public List<String> getTripList() {
+	public List<Integer> getTripList() {
 		return tripList;
 	}
 
-	public void setTripList(List<String> tripList) {
+	public void setTripList(List<Integer> tripList) {
 		this.tripList = tripList;
 	}
 
@@ -53,7 +53,7 @@ public class TripPlanDto {
 		this.memberId = memberId;
 	}
 
-	public TripPlanDto(int planId, String planName, List<String> tripList, String memberId, String planRegisterDate) {
+	public TripPlanDto(int planId, String planName, List<Integer> tripList, String memberId, String planRegisterDate) {
 		super();
 		this.planId = planId;
 		this.planName = planName;

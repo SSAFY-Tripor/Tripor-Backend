@@ -9,6 +9,7 @@ import com.tripor.trip.model.dto.GugunDto;
 import com.tripor.trip.model.dto.SidoDto;
 import com.tripor.trip.model.dto.TripDto;
 import com.tripor.trip.model.dto.TripPlanDto;
+import com.tripor.trip.model.dto.TripSearchDto;
 
 @Mapper
 public interface TripMapper {
@@ -16,9 +17,19 @@ public interface TripMapper {
 
 	List<GugunDto> findGugunBySido(int sidoCode);
 
+	List<TripDto> findByPlanId(int planId);
+
+	List<TripDto> findByOption(TripSearchDto tripSearchDto);
+
+	List<TripDto> findAll(String keyword);
+
 	TripDto findByContentId(int contentId);
+
+	TripPlanDto findTripPlanByPlanId(int planId);
 	
+	int findContentIdByPlanId(int planId);
+
 	void insertTripPlan(TripPlanDto tripPlanDto);
-	
+
 	void insertPlanContentRelation(Map<String, Object> map);
 }

@@ -36,7 +36,7 @@ class Node implements Comparable<Node> {
 
 @Service
 public class TripServiceImpl implements TripService {
-	
+
 	@Autowired
 	TripMapper tripMapper;
 
@@ -57,6 +57,18 @@ public class TripServiceImpl implements TripService {
 
 	@Override
 	public List<TripDto> getTripList(Map<String, Object> map) throws Exception {
+		String mode = (String) map.get("mode");
+		if ("planId".equals(mode)) {
+			int planId = (int) map.get("planId");
+			return tripMapper.findByPlanId(planId);
+		} else if ("option".equals(mode)) {
+			TripSearchDto tripSearchDto = (TripSearchDto) map.get("param");
+			return tripMapper.findByOption(tripSearchDto);
+		}else if("search".equals(mode)) {
+			String keyword = (String) map.get("keyword");
+			return tripMapper.findAll(keyword);
+		}
+
 		return null;
 	}
 
@@ -76,14 +88,12 @@ public class TripServiceImpl implements TripService {
 
 	@Override
 	public TripPlanDto getTripPlanDetail(int planId) throws Exception {
-		return null;
+		return tripMapper.findTripPlanByPlanId(planId);
 	}
 
 	@Override
 	public void removeTripPlan(int planId) throws Exception {
-		
+
 	}
-	
-	
 
 }

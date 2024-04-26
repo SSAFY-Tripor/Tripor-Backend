@@ -27,7 +27,7 @@
 		<result column="gugun_name" property="gugunName" />
 		<result column="sido_code" property="sidoCode" />
 	</resultMap>
-<!-- 	
+
 	<resultMap type="tripPlanDto" id="tripPlan">
 		<result column="plan_id" property="planId" />
 		<result column="plan_name" property="planName" />
@@ -36,17 +36,23 @@
 	</resultMap>
 	
 	<resultMap type="tripPlanDto" id="viewPlan" extends="tripPlan">
-		<collection property="tripList" column="plan_id" javaType="list" ofType="tripDto" select="tripDtoList"/>
+		<collection property="tripList" column="plan_id" javaType="list" ofType="string" select="findContentIdByPlanId"/>
 	</resultMap>
 	
-	<resultMap type="tripPlanDto" id="tripPlan">
-		<result column="plan_id" property="planId" />
-		<result column="plan_name" property="planName" />
-		<result column="member_id" property="memberId" />
-		<result column="plan_register_date" property="planRegisterDate" />
-	</resultMap>
+	<select id="findContentIdByPlanId" parameterType="int">
+		select content_id
+		from plan_content_relation
+		where plan_id = #{plan_id}
+	</select>
 	
-	<select id="tripDtoList" resultMap="tripDto">
+	<select id="findTripPlanByPlanId" resultMap="viewPlan" parameterType="int">
+		select plan_id, plan_name, member_id, plan_register_date 
+		from trip_plan 
+		where plan_id = #{planId};
+	</select>
+	
+		 
+	<select id="findByPlanId" resultMap="trip" parameterType="int">
 		SELECT t.content_id, t.content_type_id, t.title, t.addr, t.first_image,
        		t.sido_code, t.gugun_code, t.latitude, t.longitude, t.tel, t.description
        	FROM attraction_info t
@@ -55,7 +61,27 @@
 		WHERE p.plan_id = #{planId};
 	</select>
 	
-	 -->
+	<select id="findByOption" resultMap="trip" parameterType="tripSearchDto">
+		select content_id, content_type_id, title, addr, first_image,
+       		sido_code, gugun_code, latitude, longitude, tel, description
+    	from attraction_info
+    	where sido_code=#{sido} and gugun_code=#{gugun}
+    	<if test="type != null and type != ''">
+    		and content_type_id=#{type}
+    	</if>
+	</select>
+	
+	<select id="findAll" resultMap="trip" parameterType="string">
+		select content_id, content_type_id, title, addr, first_image,
+       		sido_code, gugun_code, latitude, longitude, tel, description
+    	from attraction_info
+    	<where>
+    		<if test="keyword != null and keyword != ''">
+    			and title like concat('%', #{keyword}, '%')
+    		</if>
+    	</where>
+	</select>
+	
 <!-- 	
 	<select id="findPlanByMemberId" parameterType="string" resultMap="tripPlan">
 		select plan_id, plan_name, member_id, plan_register_date
@@ -73,6 +99,9 @@
 		from gugun
 		where sido_code = #{sidoCode}
 	</select>
+	
+	
+	
 <!-- 	
 	<select id="findPlanByPlanId" parameterType="int" resultMap="viewPlan">
 		select plan_id, plan_name, member_id, plan_register_date
@@ -85,10 +114,6 @@
 		select *
 		from attraction_info
 		where content_id = #{contentId}
-	</select>
-	
-	<select id="findAll">
-		select * from attraction_info
 	</select>
 	
 	<insert id="insertTripPlan" parameterType="tripPlanDto">

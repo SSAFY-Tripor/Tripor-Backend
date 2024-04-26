@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tripor.member.model.dto.MemberDto;
 import com.tripor.member.model.service.MemberService;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -39,6 +40,7 @@ public class MemberController {
 	@Autowired
 	MemberService memberService;
 
+	@Hidden
 	@GetMapping("/login")
 	public String loginForm() {
 		return "user/login";
