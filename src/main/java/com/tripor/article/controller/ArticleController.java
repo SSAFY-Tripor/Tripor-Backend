@@ -27,22 +27,32 @@ import com.tripor.article.model.dto.ArticleDto;
 import com.tripor.article.model.service.ArticleService;
 import com.tripor.member.model.dto.MemberDto;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/article")
+@Tag(name="게시물")
 public class ArticleController {
 	@Autowired
 	ArticleService articleService;
 
+	@Operation(summary="전체 게시물 목록 조회")
 	@GetMapping("")
-	public ResponseEntity<?> listArticle(@RequestParam Map<String, Object> map) {
-		log.debug("listArticle map : {}", map);
+	public ResponseEntity<?> listArticle(@RequestParam(name="pgno", required=false) String pgno,
+			@RequestParam(name="key", required=false) String key,
+			@RequestParam(name="word", required=false) String word) {
+		//log.debug("listArticle map : {}", map);
 		try {
 			// pgno, key, word
+			Map<String, Object> map = new HashMap<>();
+			map.put("pgno", pgno);
+			map.put("key", key);
+			map.put("word", word);
 			List<ArticleDto> list = articleService.listArticle(map);
 
 			Map<String, Object> returnMap = new HashMap<>();
@@ -57,6 +67,7 @@ public class ArticleController {
 		}
 	}
 
+	@Operation(summary="게시물 조회")
 	@GetMapping("/{articleId}")
 	public ResponseEntity<?> getArticle(@PathVariable("articleId") int articleId) {
 		log.debug("getArticle articleId : {}", articleId);
@@ -75,6 +86,7 @@ public class ArticleController {
 		}
 	}
 
+	@Operation(summary="게시물 삭제")
 	@DeleteMapping("/{articleId}")
 	public ResponseEntity<?> deleteArticle(@PathVariable("articleId") int articleId) {
 		log.debug("deleteArticle articleId : {}", articleId);
@@ -93,6 +105,7 @@ public class ArticleController {
 		}
 	}
 
+	@Operation(summary="조회수 업데이트")
 	@PutMapping("/hit/{articleId}")
 	public ResponseEntity<?> updateHit(@PathVariable("articleId") int articleId) {
 		log.debug("updateHit articleId : {}", articleId);
@@ -111,6 +124,7 @@ public class ArticleController {
 		}
 	}
 
+	@Operation(summary="게시물 수정")
 	@PutMapping("")
 	public ResponseEntity<?> modifyArticle(@org.springframework.web.bind.annotation.RequestBody ArticleDto articleDto) {
 		log.debug("modifyArticle articleDto : {}", articleDto);
@@ -129,6 +143,7 @@ public class ArticleController {
 		}
 	}
 
+	@Operation(summary="게시물 작성")
 	@PostMapping(value = "")
 	public ResponseEntity<?> writeArticle(@org.springframework.web.bind.annotation.RequestBody ArticleDto articleDto) {
 		log.debug("writeArticle articleDto : {}", articleDto);

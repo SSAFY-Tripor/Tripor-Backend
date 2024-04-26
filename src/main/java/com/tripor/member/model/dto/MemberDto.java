@@ -1,8 +1,24 @@
 package com.tripor.member.model.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(title="MemberDto (회원정보)")
 public class MemberDto {
-	private String memberId, memberPw, memberName, emailId, emailDomain;
-	private int sido, gugun;
+	@Schema(description="아이디")
+	private String memberId;
+	@Schema(description="비밀번호")
+	private String memberPw;
+	@Schema(description="이름")
+	private String memberName;
+	@Schema(description="이메일아이디")
+	private String emailId;
+	@Schema(description="이메일도메인")
+	private String emailDomain;
+	@Schema(description="시도")
+	private int sido;
+	@Schema(description="구군")
+	private int gugun;
+	@Schema(description="가입일")
 	private String joinDate;
 
 	public MemberDto(String memberId, String memberPw, String memberName, String emailId, String emailDomain, int sido,
