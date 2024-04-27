@@ -64,7 +64,7 @@ public class TripServiceImpl implements TripService {
 		} else if ("option".equals(mode)) {
 			TripSearchDto tripSearchDto = (TripSearchDto) map.get("param");
 			return tripMapper.findByOption(tripSearchDto);
-		}else if("search".equals(mode)) {
+		} else if ("search".equals(mode)) {
 			String keyword = (String) map.get("keyword");
 			return tripMapper.findAll(keyword);
 		}
@@ -82,8 +82,9 @@ public class TripServiceImpl implements TripService {
 	}
 
 	@Override
-	public List<TripPlanDto> getTripPlan(String userId) throws Exception {
-		return null;
+	public List<TripPlanDto> getTripPlan(String memberId) throws Exception {
+		System.out.println(memberId);
+		return tripMapper.findPlanByMemberId(memberId);
 	}
 
 	@Override

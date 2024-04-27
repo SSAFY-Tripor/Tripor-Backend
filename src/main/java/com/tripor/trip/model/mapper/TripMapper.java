@@ -26,7 +26,9 @@ public interface TripMapper {
 	TripDto findByContentId(int contentId);
 
 	TripPlanDto findTripPlanByPlanId(int planId);
-	
+
+	List<TripPlanDto> findPlanByMemberId(String memberId);
+
 	int findContentIdByPlanId(int planId);
 
 	void insertTripPlan(TripPlanDto tripPlanDto);

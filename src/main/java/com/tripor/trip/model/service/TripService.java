@@ -36,7 +36,7 @@ public interface TripService {
 
 	void registerTripPlan(TripPlanDto tripPlanDto) throws Exception;
 
-	List<TripPlanDto> getTripPlan(String userId) throws Exception;
+	List<TripPlanDto> getTripPlan(String memberId) throws Exception;
 
 	TripPlanDto getTripPlanDetail(int planId) throws Exception;
 

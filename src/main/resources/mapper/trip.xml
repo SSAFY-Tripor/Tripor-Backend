@@ -51,6 +51,12 @@
 		where plan_id = #{planId};
 	</select>
 	
+	<select id="findPlanByMemberId" parameterType="string" resultMap="viewPlan">
+		select * 
+		from trip_plan 
+		where member_id=#{memberId};
+	</select>	
+	
 		 
 	<select id="findByPlanId" resultMap="trip" parameterType="int">
 		SELECT t.content_id, t.content_type_id, t.title, t.addr, t.first_image,
@@ -100,8 +106,7 @@
 		where sido_code = #{sidoCode}
 	</select>
 	
-	
-	
+
 <!-- 	
 	<select id="findPlanByPlanId" parameterType="int" resultMap="viewPlan">
 		select plan_id, plan_name, member_id, plan_register_date

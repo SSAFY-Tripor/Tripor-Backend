@@ -187,13 +187,41 @@ public class TripController {
 			returnMap.put("items", tripPlanDto);
 			System.out.println(tripPlanDto);
 			System.out.println(returnMap);
-			
+
 			List<TripDto> tripDtos = new ArrayList<>();
 			for (int contentId : tripPlanDto.getTripList()) {
 				tripDtos.add(tripService.getTrip(contentId));
 			}
-			
+
 			returnMap.put("tripList", tripDtos);
+
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+			return ResponseEntity.ok().headers(headers).body(returnMap);
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
+
+	// URL 수정 필요
+	@GetMapping("/plan/m/{memberId}")
+	public ResponseEntity<?> getPlanTripList(@PathVariable("memberId") String memberId) {
+		log.debug("getPlanTripList memberId : {}", memberId);
+		try {
+			List<TripPlanDto> list = tripService.getTripPlan(memberId);
+
+			Map<String, Object> returnMap = new HashMap<>();
+			returnMap.put("items", list);
+
+			List<List> tripList = new ArrayList<>();
+			for (TripPlanDto tripPlanDto : list) {
+				List<TripDto> tripDtos = new ArrayList<>();
+				for (int contentId : tripPlanDto.getTripList()) {
+					tripDtos.add(tripService.getTrip(contentId));
+				}
+				tripList.add(tripDtos);
+			}
+			returnMap.put("tripList", tripList);
 
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
