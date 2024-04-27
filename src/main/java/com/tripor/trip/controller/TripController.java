@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -178,15 +179,13 @@ public class TripController {
 	}
 
 	@GetMapping("/plan/{planId}")
-	public ResponseEntity<?> getPlanTripList(@PathVariable("planId") int planId) {
+	public ResponseEntity<?> getPlanTrip(@PathVariable("planId") int planId) {
 		log.debug("getPlanTripList planId : {}", planId);
 		try {
 			TripPlanDto tripPlanDto = tripService.getTripPlanDetail(planId);
 
 			Map<String, Object> returnMap = new HashMap<>();
 			returnMap.put("items", tripPlanDto);
-			System.out.println(tripPlanDto);
-			System.out.println(returnMap);
 
 			List<TripDto> tripDtos = new ArrayList<>();
 			for (int contentId : tripPlanDto.getTripList()) {
@@ -222,6 +221,23 @@ public class TripController {
 				tripList.add(tripDtos);
 			}
 			returnMap.put("tripList", tripList);
+
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+			return ResponseEntity.ok().headers(headers).body(returnMap);
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
+	
+	@DeleteMapping("/plan/{planId}")
+	public ResponseEntity<?> deletePlanTrip(@PathVariable("planId") int planId) {
+		log.debug("deletePlanTrip planId : {}", planId);
+		try {
+			tripService.removeTripPlan(planId);
+
+			Map<String, Object> returnMap = new HashMap<>();
+			returnMap.put("result", "ok");
 
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));

@@ -34,4 +34,8 @@ public interface TripMapper {
 	void insertTripPlan(TripPlanDto tripPlanDto);
 
 	void insertPlanContentRelation(Map<String, Object> map);
+	
+	void deletePlanRelation(int planId);
+	
+	void deletePlan(int planId);
 }

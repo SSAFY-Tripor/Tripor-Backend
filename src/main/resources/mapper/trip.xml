@@ -136,5 +136,13 @@
              (#{planId}, #{contentId})
         </foreach>
     </insert>
+    
+    <delete id="deletePlanRelation" parameterType="int">
+		delete from plan_content_relation where plan_id=#{planId}
+	</delete>
+    
+    <delete id="deletePlan" parameterType="int">
+        delete from trip_plan where plan_id=#{planId}
+	</delete>
 	
 </mapper>

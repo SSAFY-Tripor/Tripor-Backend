@@ -94,7 +94,8 @@ public class TripServiceImpl implements TripService {
 
 	@Override
 	public void removeTripPlan(int planId) throws Exception {
-
+		tripMapper.deletePlanRelation(planId);
+		tripMapper.deletePlan(planId);
 	}
 
 }
