@@ -38,13 +38,13 @@ import lombok.extern.slf4j.Slf4j;
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/trip")
-@Tag(name="여행")
+@Tag(name = "여행")
 public class TripController {
 
 	@Autowired
 	TripService tripService;
 
-	@Operation(summary="전체 시도 현황 정보 조회")
+	@Operation(summary = "전체 시도 현황 정보 조회")
 	@GetMapping("/sido")
 	public ResponseEntity<?> sidoAll() {
 		log.debug("sidoAll method");
@@ -64,7 +64,7 @@ public class TripController {
 		}
 	}
 
-	@Operation(summary="전체 구군 현황 정보 조회")
+	@Operation(summary = "전체 구군 현황 정보 조회")
 	@GetMapping("/{sidoCode}/gugun")
 	public ResponseEntity<?> gugunAll(@PathVariable int sidoCode) {
 		log.debug("gugunAll sidoCode : {}", sidoCode);
@@ -83,7 +83,7 @@ public class TripController {
 		}
 	}
 
-	@Operation(summary="여행 콘텐츠 정보 조회")
+	@Operation(summary = "여행 콘텐츠 정보 조회")
 	@GetMapping("/{contentId}")
 	public ResponseEntity<?> getAttraction(@PathVariable int contentId) {
 		log.debug("getAttraction contentId : {}", contentId);
@@ -101,7 +101,7 @@ public class TripController {
 		}
 	}
 
-	@Operation(summary="여행 일정 계획 생성")
+	@Operation(summary = "여행 일정 계획 생성")
 	@PostMapping("/plan")
 	public ResponseEntity<?> addTripPlan(@org.springframework.web.bind.annotation.RequestBody TripPlanDto tripPlanDto) {
 		log.debug("addTripPlan tripPlanDto : {}", tripPlanDto);
@@ -119,7 +119,7 @@ public class TripController {
 		}
 	}
 
-	@Operation(summary="여행 일정에 포함된 여행 콘텐츠 정보 조회")
+	@Operation(summary = "여행 일정에 포함된 여행 콘텐츠 정보 조회")
 	@GetMapping("/plan/{planId}/trip")
 	public ResponseEntity<?> getAttractionByPlanId(@PathVariable("planId") int planId) {
 		log.debug("getAttractionByPlanId planId : {}", planId);
@@ -141,7 +141,29 @@ public class TripController {
 		}
 	}
 
-	@Operation(summary="지역에 따른 여행 콘텐츠 조회")
+	@Operation(summary = "여행 일정에 포함된 여행 콘텐츠 정보 조회")
+	@GetMapping("/plan/{planId}/trip/s")
+	public ResponseEntity<?> getAttractionByPlanIdToShort(@PathVariable("planId") int planId) {
+		log.debug("getAttractionByPlanId planId : {}", planId);
+		try {
+			Map<String, Object> map = new HashMap<>();
+			map.put("mode", "shortest");
+			map.put("planId", planId);
+			System.out.println(map.get("mode"));
+			List<TripDto> tripDto = tripService.getTripList(map);
+			System.out.println(tripDto);
+			Map<String, Object> returnMap = new HashMap<>();
+			returnMap.put("items", tripDto);
+
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+			return ResponseEntity.ok().headers(headers).body(returnMap);
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
+
+	@Operation(summary = "지역에 따른 여행 콘텐츠 조회")
 	@GetMapping("/option")
 	public ResponseEntity<?> getAttractionByOption(
 			@org.springframework.web.bind.annotation.RequestBody TripSearchDto tripSearchDto) {
@@ -165,7 +187,7 @@ public class TripController {
 		}
 	}
 
-	@Operation(summary="여행 콘텐츠 검색 조회")
+	@Operation(summary = "여행 콘텐츠 검색 조회")
 	@GetMapping("")
 	public ResponseEntity<?> getAttractionList(@RequestParam(name = "keyword", required = false) String keyword) {
 		log.debug("getAttractionList keyword : {}", keyword);
@@ -188,7 +210,7 @@ public class TripController {
 		}
 	}
 
-	@Operation(summary="여행 일정 조회")
+	@Operation(summary = "여행 일정 조회")
 	@GetMapping("/plan/{planId}")
 	public ResponseEntity<?> getPlanTrip(@PathVariable("planId") int planId) {
 		log.debug("getPlanTripList planId : {}", planId);
@@ -204,6 +226,7 @@ public class TripController {
 			}
 
 			returnMap.put("tripList", tripDtos);
+			returnMap.put("tripCnt", tripDtos.size());
 
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
@@ -214,7 +237,7 @@ public class TripController {
 	}
 
 	// URL 수정 필요
-	@Operation(summary="사용자 여행 일정 전체 조회")
+	@Operation(summary = "사용자 여행 일정 전체 조회")
 	@GetMapping("/plan/m/{memberId}")
 	public ResponseEntity<?> getPlanTripList(@PathVariable("memberId") String memberId) {
 		log.debug("getPlanTripList memberId : {}", memberId);
@@ -241,8 +264,8 @@ public class TripController {
 			return exceptionHandling(e);
 		}
 	}
-	
-	@Operation(summary="여행 일정 삭제")
+
+	@Operation(summary = "여행 일정 삭제")
 	@DeleteMapping("/plan/{planId}")
 	public ResponseEntity<?> deletePlanTrip(@PathVariable("planId") int planId) {
 		log.debug("deletePlanTrip planId : {}", planId);
