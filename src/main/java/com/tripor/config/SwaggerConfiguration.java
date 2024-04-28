@@ -43,13 +43,18 @@ public class SwaggerConfiguration {
 	}
 
 	@Bean
-	public GroupedOpenApi publicApi() {
+	public GroupedOpenApi articleApi() {
 		return GroupedOpenApi.builder().group("tripor-article").pathsToMatch("/article/**").build();
 	}
 
 	@Bean
-	public GroupedOpenApi adminApi() {
+	public GroupedOpenApi memberApi() {
 		return GroupedOpenApi.builder().group("tripor-member").pathsToMatch("/member/**").build();
+	}
+	
+	@Bean
+	public GroupedOpenApi tripApi() {
+		return GroupedOpenApi.builder().group("tripor-trip").pathsToMatch("/trip/**").build();
 	}
 //	
 //	@Bean

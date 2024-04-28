@@ -1,8 +1,14 @@
 package com.tripor.trip.model.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(title="GugunDto (구군 정보)")
 public class GugunDto {
+	@Schema(description="구군 코드")
 	int gugunCode;
+	@Schema(description="구군 이름")
 	String gugunName;
+	@Schema(description="시도 코드")
 	int sidoCode;
 
 	public int getGugunCode() {

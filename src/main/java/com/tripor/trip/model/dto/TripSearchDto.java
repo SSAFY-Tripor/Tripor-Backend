@@ -1,8 +1,14 @@
 package com.tripor.trip.model.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(title="TripSearchDto (여행 검색 정보)")
 public class TripSearchDto {
+	@Schema(description="시도")
 	private String sido;
+	@Schema(description="구군")
 	private String gugun;
+	@Schema(description="콘텐츠 타입")
 	private String type;
 
 	public String getSido() {

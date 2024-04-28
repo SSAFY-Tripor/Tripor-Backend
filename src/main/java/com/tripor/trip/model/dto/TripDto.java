@@ -1,16 +1,30 @@
 package com.tripor.trip.model.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(title="TripDto (여행 정보)")
 public class TripDto {
+	@Schema(description="콘텐츠 ID")
 	private String contentId;
+	@Schema(description="콘텐츠 타입 ID")
 	private int contentTypeId;
+	@Schema(description="장소")
 	private String title;
+	@Schema(description="주소")
 	private String addr;
+	@Schema(description="이미지 주소")
 	private String firstImage;
+	@Schema(description="시도 코드")
 	private int sidoCode;
+	@Schema(description="구군 코드")
 	private int gugunCode;
+	@Schema(description="위도")
 	private String latitude; // 위도 (-90 ~ 90, 적도가 0도이며, 한국은 33 ~ 43도에 위치)
+	@Schema(description="경도")
 	private String longitude; // 경도 (-180 ~ 180, 한국은 124 ~ 132도에 위치)
+	@Schema(description="번호")
 	private String tel;
+	@Schema(description="장소 설명")
 	private String description;
 
 	public TripDto(String contentId, int contentTypeId, String title, String addr, String firstImage, int sidoCode,
