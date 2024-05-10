@@ -13,6 +13,7 @@
 		<result column="sido" property="sido"/>
 		<result column="gugun" property="gugun"/>
 		<result column="join_date" property="joinDate"/>
+		<result column="token" property="refreshToken"/>
 	</resultMap>
 
 	<select id="countMemberById" parameterType="String" resultType="int">
@@ -27,8 +28,8 @@
 	</insert>
 
 	<select id="findByIdAndPassword" parameterType="map" resultMap="member">
-		select * 
-		from member 
+		select member_id, member_name, token
+		from member
 		where member_id=#{memberId} and member_pw=#{memberPw}
 	</select>
 	
@@ -48,5 +49,23 @@
         SET member_name = #{memberName}, email_id = #{emailId}, email_domain = #{emailDomain}, member_pw = #{memberPw}
         WHERE member_id = #{memberId}
     </update>
+	
+	<update id="saveRefreshToken" parameterType="map">
+		update members
+		set token = #{token}
+		where user_id = #{userId}
+	</update>
+	
+	<select id="getRefreshToken" parameterType="string" resultType="string">
+		select token
+		from members
+		where user_id = #{userId}
+	</select>
+	
+	<update id="deleteRefreshToken" parameterType="map">
+		update members
+		set token = #{token, jdbcType=VARCHAR}
+		where user_id = #{userId}
+	</update>
 	
 </mapper>

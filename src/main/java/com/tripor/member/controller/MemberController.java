@@ -22,58 +22,128 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tripor.member.model.dto.MemberDto;
 import com.tripor.member.model.service.MemberService;
+import com.tripor.util.JWTUtil;
 
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
 @RequestMapping("/member")
 @CrossOrigin("*")
-@Tag(name="회원관리")
+@Tag(name = "회원관리")
 public class MemberController {
 	@Autowired
 	MemberService memberService;
-
-	@Hidden
-	@GetMapping("/login")
-	public String loginForm() {
-		return "user/login";
-	}
+	@Autowired
+	JWTUtil jwtUtil;
 
 	// ============================== REST API =================================
-	@Operation(summary="로그인")
+	@Operation(summary = "로그인")
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestParam("memberId") String memberId, @RequestParam("memberPw") String memberPw,
 			@RequestParam(name = "saveid", required = false) String saveid) {
 		log.debug("login Form memberId : {}, memberPw : {}", memberId, memberPw);
+
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.ACCEPTED;
 		try {
-			
 			Map<String, String> map = new HashMap<>();
 			map.put("memberId", memberId);
 			map.put("memberPw", memberPw);
-			
+
 			MemberDto memberDto = memberService.loginMember(map);
+			if (memberDto != null) {
+				String accessToken = jwtUtil.createAccessToken(memberId);
+				String refreshToken = jwtUtil.createRefreshToken(memberId);
+				log.debug("access token : {}", accessToken);
+				log.debug("refresh token : {}", refreshToken);
+
+				// 발급받은 refresh token 을 DB에 저장.
+				memberService.saveRefreshToken(memberId, refreshToken);
+
+				resultMap.put("access-token", accessToken);
+				resultMap.put("refresh-token", refreshToken);
+
+				status = HttpStatus.CREATED;
+			} else {
+				resultMap.put("message", "아이디 또는 패스워드를 확인해 주세요.");
+				status = HttpStatus.UNAUTHORIZED;
+			}
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
-			return ResponseEntity.ok().headers(headers).body(memberDto);
+			return new ResponseEntity<Map<String, Object>>(resultMap, status);
 //		return new ResponseEntity<Integer>(cnt, HttpStatus.CREATED);
 //		return ResponseEntity.status(HttpStatus.CREATED).body(cnt);
 		} catch (Exception e) {
 			return exceptionHandling(e);
 		}
 	}
+	
+	@Operation(summary = "회원인증", description = "회원 정보를 담은 Token 을 반환한다.")
+	@GetMapping("/info/{memberId}")
+	public ResponseEntity<Map<String, Object>> getInfo(
+			@PathVariable("memberId") @Parameter(description = "인증할 회원의 아이디.", required = true) String memberId,
+			HttpServletRequest request) {
+		log.debug("memberId : {} ", memberId);
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.ACCEPTED;
+		if (jwtUtil.checkToken(request.getHeader("Authorization"))) {
+			log.info("사용 가능한 토큰!!!");
+			try {
+//				로그인 사용자 정보.
+				MemberDto memberDto = memberService.getMember(memberId);
+				resultMap.put("member", memberDto);
+				status = HttpStatus.OK;
+			} catch (Exception e) {
+				log.error("정보조회 실패 : {}", e);
+				resultMap.put("message", e.getMessage());
+				status = HttpStatus.INTERNAL_SERVER_ERROR;
+			}
+		} else {
+			log.error("사용 불가능 토큰!!!");
+			status = HttpStatus.UNAUTHORIZED;
+		}
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
+	}
+	
+	@Operation(summary = "Access Token 재발급", description = "만료된 access token 을 재발급 받는다.")
+	@PostMapping("/refresh")
+	public ResponseEntity<?> refreshToken(@RequestBody MemberDto memberDto, HttpServletRequest request)
+			throws Exception {
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.ACCEPTED;
+		String token = request.getHeader("refreshToken");
+		log.debug("token : {}, memberDto : {}", token, memberDto);
+		if (jwtUtil.checkToken(token)) {
+			if (token.equals(memberService.getRefreshToken(memberDto.getMemberId()))) {
+				String accessToken = jwtUtil.createAccessToken(memberDto.getMemberId());
+				log.debug("token : {}", accessToken);
+				log.debug("정상적으로 access token 재발급!!!");
+				resultMap.put("access-token", accessToken);
+				status = HttpStatus.CREATED;
+			}
+		} else {
+			log.debug("refresh token 도 사용 불가!!!!!!!");
+			status = HttpStatus.UNAUTHORIZED;
+		}
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
+	}
+	
 
-	@Operation(summary="회원가입")
+	@Operation(summary = "회원가입")
 	@PostMapping(value = "")
 	public ResponseEntity<?> join(
-		@RequestBody(required = true, content = @Content(schema = @Schema(implementation = MemberDto.class))) @org.springframework.web.bind.annotation.RequestBody MemberDto memberDto) {
+			@RequestBody(required = true, content = @Content(schema = @Schema(implementation = MemberDto.class))) @org.springframework.web.bind.annotation.RequestBody MemberDto memberDto) {
 		log.debug("userRegister memberDto : {}", memberDto);
+		
 		try {
 			System.out.println(memberDto);
 			memberService.joinMember(memberDto);
@@ -88,7 +158,7 @@ public class MemberController {
 		}
 	}
 
-	@Operation(summary="회원정보 수정")
+	@Operation(summary = "회원정보 수정")
 	@PutMapping(value = "")
 	public ResponseEntity<?> modify(@org.springframework.web.bind.annotation.RequestBody MemberDto memberDto) {
 		log.debug("userModify memberDto : {}", memberDto);
@@ -111,8 +181,25 @@ public class MemberController {
 			return exceptionHandling(e);
 		}
 	}
+	
+	@Operation(summary = "로그아웃", description = "회원 정보를 담은 Token 을 제거한다.")
+	@GetMapping("/logout/{userId}")
+	@Hidden
+	public ResponseEntity<?> removeToken(@PathVariable ("userId") @Parameter(description = "로그아웃 할 회원의 아이디.", required = true) String userId) {
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.ACCEPTED;
+		try {
+			memberService.deleRefreshToken(userId);
+			status = HttpStatus.OK;
+		} catch (Exception e) {
+			log.error("로그아웃 실패 : {}", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
+	}
 
-	@Operation(summary="회원탈퇴")
+	@Operation(summary = "회원탈퇴")
 	@DeleteMapping(value = "/{memberid}")
 	public ResponseEntity<?> delete(@PathVariable("memberid") String memberId) {
 		log.debug("delete memberid : {}", memberId);
@@ -127,7 +214,7 @@ public class MemberController {
 		}
 	}
 
-	@Operation(summary="회원정보 조회")
+	@Operation(summary = "회원정보 조회")
 	@GetMapping(value = "/{memberid}")
 	public ResponseEntity<?> detail(@PathVariable("memberid") String memberId) {
 		log.debug("detail memberid : {}", memberId);
@@ -146,7 +233,7 @@ public class MemberController {
 		}
 	}
 
-	@Operation(summary="회원 존재여부 확인")
+	@Operation(summary = "회원 존재여부 확인")
 	@GetMapping(value = "/exist/{memberid}")
 	public ResponseEntity<?> checkExistence(@PathVariable("memberid") String memberId) {
 		log.debug("exist memberid : {}", memberId);

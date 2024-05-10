@@ -1,5 +1,6 @@
 package com.tripor.member.model.mapper;
 
+import java.sql.SQLException;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -19,4 +20,10 @@ public interface MemberMapper {
 	void updateMember(MemberDto memberDto);
 
 	void deleteMember(String memberId);
+
+	void saveRefreshToken(Map<String, String> map) throws SQLException;
+
+	Object getRefreshToken(String userid) throws SQLException;
+
+	void deleteRefreshToken(Map<String, String> map) throws SQLException;
 }

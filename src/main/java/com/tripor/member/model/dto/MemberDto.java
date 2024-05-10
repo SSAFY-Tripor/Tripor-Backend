@@ -20,9 +20,11 @@ public class MemberDto {
 	private int gugun;
 	@Schema(description="가입일")
 	private String joinDate;
+	@Schema(description = "refreshToken")
+	private String refreshToken;
 
 	public MemberDto(String memberId, String memberPw, String memberName, String emailId, String emailDomain, int sido,
-			int gugun, String joinDate) {
+			int gugun, String joinDate, String refreshToken) {
 		super();
 		this.memberId = memberId;
 		this.memberPw = memberPw;
@@ -32,6 +34,7 @@ public class MemberDto {
 		this.sido = sido;
 		this.gugun = gugun;
 		this.joinDate = joinDate;
+		this.refreshToken = refreshToken;
 	}
 
 	public MemberDto(String memberId, String memberPw, String memberName, String emailId, String emailDomain, int sido,
@@ -114,11 +117,19 @@ public class MemberDto {
 		this.joinDate = joinDate;
 	}
 
+	public String getRefreshToken() {
+		return refreshToken;
+	}
+
+	public void setRefreshToken(String refreshToken) {
+		this.refreshToken = refreshToken;
+	}
+
 	@Override
 	public String toString() {
 		return "MemberDto [memberId=" + memberId + ", memberPw=" + memberPw + ", memberName=" + memberName
 				+ ", emailId=" + emailId + ", emailDomain=" + emailDomain + ", sido=" + sido + ", gugun=" + gugun
-				+ ", joinDate=" + joinDate + "]";
+				+ ", joinDate=" + joinDate + ", refreshToken=" + refreshToken + "]";
 	}
 
 }

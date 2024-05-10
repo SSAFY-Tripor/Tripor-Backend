@@ -1,5 +1,6 @@
 package com.tripor.member.model.service;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,27 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public void deleteMember(String memberId) throws Exception {
 		memberMapper.deleteMember(memberId);
+	}
+	
+	@Override
+	public void saveRefreshToken(String memberId, String refreshToken) throws Exception {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("memberId", memberId);
+		map.put("token", refreshToken);
+		memberMapper.saveRefreshToken(map);
+	}
+
+	@Override
+	public Object getRefreshToken(String memberId) throws Exception {
+		return memberMapper.getRefreshToken(memberId);
+	}
+
+	@Override
+	public void deleRefreshToken(String memberId) throws Exception {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("memberId", memberId);
+		map.put("token", null);
+		memberMapper.deleteRefreshToken(map);
 	}
 
 }
