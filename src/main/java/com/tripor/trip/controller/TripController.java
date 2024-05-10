@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -166,7 +167,7 @@ public class TripController {
 	@Operation(summary = "지역에 따른 여행 콘텐츠 조회")
 	@GetMapping("/option")
 	public ResponseEntity<?> getAttractionByOption(
-			@org.springframework.web.bind.annotation.RequestBody TripSearchDto tripSearchDto) {
+			@ModelAttribute TripSearchDto tripSearchDto) {
 		log.debug("getAttractionByOption tripSearchDto : {}", tripSearchDto);
 		try {
 			Map<String, Object> map = new HashMap<>();
