@@ -51,21 +51,21 @@
     </update>
 	
 	<update id="saveRefreshToken" parameterType="map">
-		update members
+		update member
 		set token = #{token}
-		where user_id = #{userId}
+		where member_id = #{memberId}
 	</update>
 	
 	<select id="getRefreshToken" parameterType="string" resultType="string">
 		select token
-		from members
-		where user_id = #{userId}
+		from member
+		where member_id = #{memberId}
 	</select>
 	
 	<update id="deleteRefreshToken" parameterType="map">
-		update members
+		update member
 		set token = #{token, jdbcType=VARCHAR}
-		where user_id = #{userId}
+		where member_id = #{memberId}
 	</update>
 	
 </mapper>

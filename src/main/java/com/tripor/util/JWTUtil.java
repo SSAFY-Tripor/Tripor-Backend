@@ -28,13 +28,13 @@ public class JWTUtil {
 	@Value("${jwt.refresh-token.expiretime}")
 	private long refreshTokenExpireTime;
 
-	public String createAccessToken(String userId) {
-		return create(userId, "access-token", accessTokenExpireTime);
+	public String createAccessToken(String memberId) {
+		return create(memberId, "access-token", accessTokenExpireTime);
 	}
 
 //	AccessToken에 비해 유효기간을 길게 설정.
-	public String createRefreshToken(String userId) {
-		return create(userId, "refresh-token", refreshTokenExpireTime);
+	public String createRefreshToken(String memberId) {
+		return create(memberId, "refresh-token", refreshTokenExpireTime);
 	}
 
 //	Token 발급
@@ -43,7 +43,7 @@ public class JWTUtil {
 //	subject : payload에 sub의 value로 들어갈 subject값
 //	expire : 토큰 유효기간 설정을 위한 값
 //	jwt 토큰의 구성 : header + payload + signature
-	private String create(String userId, String subject, long expireTime) {
+	private String create(String memberId, String subject, long expireTime) {
 //	Payload 설정 : 생성일 (IssuedAt), 유효기간 (Expiration), 
 //	토큰 제목 (Subject), 데이터 (Claim) 등 정보 세팅.
 		Claims claims = Jwts.claims().setSubject(subject) // 토큰 제목 설정 ex) access-token, refresh-token
@@ -51,7 +51,7 @@ public class JWTUtil {
 				.setExpiration(new Date(System.currentTimeMillis() + expireTime)); // 만료일 설정 (유효기간)
 
 //	저장할 data의 key, value
-		claims.put("userId", userId);
+		claims.put("memberId", memberId);
 
 		// JWT 토큰 생성
 		String jwt = Jwts.builder().setHeaderParam("typ", "JWT").setClaims(claims) // Header 설정 : 토큰의 타입, 해쉬 알고리즘 정보 세팅.
@@ -83,6 +83,7 @@ public class JWTUtil {
 //		setSigningKey : JWS 서명 검증을 위한  secret key 세팅
 //		parseClaimsJws : 파싱하여 원본 jws 만들기
 			Jws<Claims> claims = Jwts.parser().setSigningKey(this.generateKey()).parseClaimsJws(token);
+			System.out.println(claims);
 //		Claims 는 Map 구현체 형태
 			log.debug("claims: {}", claims);
 			return true;
@@ -92,7 +93,7 @@ public class JWTUtil {
 		}
 	}
 
-	public String getUserId(String authorization) {
+	public String getMemberId(String authorization) {
 		Jws<Claims> claims = null;
 		try {
 			claims = Jwts.parser().setSigningKey(this.generateKey()).parseClaimsJws(authorization);
@@ -102,6 +103,6 @@ public class JWTUtil {
 		}
 		Map<String, Object> value = claims.getBody();
 		log.info("value : {}", value);
-		return (String) value.get("userId");
+		return (String) value.get("memberId");
 	}
 }

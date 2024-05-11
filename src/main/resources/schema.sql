@@ -74,6 +74,8 @@ CREATE TABLE IF NOT EXISTS `tripor`.`member` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+ALTER TABLE `tripor`.`member`
+ADD COLUMN `token` VARCHAR(32) NULL AFTER `join_date`;
 
 -- -----------------------------------------------------
 -- Table `tripor`.`article`
