@@ -4,12 +4,13 @@ import java.util.List;
 import java.util.Map;
 
 import com.tripor.article.model.dto.ArticleDto;
+import com.tripor.article.model.dto.ArticleListDto;
 import com.tripor.util.PageNavigation;
 
 public interface ArticleService {
 	void writeArticle(ArticleDto articleDto) throws Exception;
 
-	List<ArticleDto> listArticle(Map<String, Object> map) throws Exception;
+	ArticleListDto listArticle(Map<String, String> map) throws Exception;
 
 	ArticleDto getArticle(int articleId) throws Exception;
 

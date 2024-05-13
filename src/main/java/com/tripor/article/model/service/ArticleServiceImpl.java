@@ -1,5 +1,6 @@
 package com.tripor.article.model.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tripor.article.model.dto.ArticleDto;
+import com.tripor.article.model.dto.ArticleListDto;
 import com.tripor.article.model.mapper.ArticleMapper;
 import com.tripor.util.BoardSize;
 import com.tripor.util.PageNavigation;
@@ -22,19 +24,49 @@ public class ArticleServiceImpl implements ArticleService {
 	}
 
 	@Override
-	public List<ArticleDto> listArticle(Map<String, Object> map) throws Exception {
+	public ArticleListDto listArticle(Map<String, String> map) throws Exception {
 		int pgno = 1;
 		System.out.println(pgno);
 		String pg = (String) map.get("pgno");
-		if (map.containsKey("pgno") && pg != null && pg.length() > 0)
-			pgno = Integer.parseInt(pg);
-		System.out.println(pgno);
-		int listSize = BoardSize.LIST.getBoardSize();
-		int start = (pgno - 1) * listSize;
-		map.put("start", start);
-		map.put("listSize", listSize);
-		System.out.println(map);
-		return articleMapper.findAll(map);
+		int currentPage = Integer.parseInt(map.get("pgno") == null ? "1" : map.get("pgno"));
+		int sizePerPage = Integer.parseInt(map.get("spp") == null ? "20" : map.get("spp"));
+
+		System.out.println(currentPage + " " + sizePerPage);
+		Map<String, Object> param = new HashMap<>();
+		// 페이지 Navigation 관련
+		int start = currentPage * sizePerPage - sizePerPage;
+		
+
+		param.put("start", start);
+		param.put("listSize", sizePerPage);
+
+		// 검색 관련
+		param.put("word", map.get("word") == null ? "" : map.get("word"));
+		String key = map.get("key");
+		param.put("key", key == null ? "" : key);
+//		if ("member_id".equals(key))
+//			param.put("key", key == null ? "" : "article.member_id");
+
+		List<ArticleDto> list = articleMapper.findAll(param);
+
+		int totalArticleCount = articleMapper.getArticleCount(param);
+		int totalPageCount = (totalArticleCount - 1) / sizePerPage + 1;
+
+//		if (map.containsKey("pgno") && pg != null && pg.length() > 0)
+//			pgno = Integer.parseInt(pg);
+//		System.out.println(pgno);
+//		int listSize = BoardSize.LIST.getBoardSize();
+//		int start = (pgno - 1) * listSize;
+//		map.put("start", start);
+//		map.put("listSize", listSize);
+//		System.out.println(map);
+
+		ArticleListDto articleListDto = new ArticleListDto();
+		articleListDto.setArticles(list);
+		articleListDto.setCurrentPage(currentPage);
+		articleListDto.setTotalPageCount(totalPageCount);
+
+		return articleListDto;
 	}
 
 	@Override

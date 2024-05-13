@@ -1,5 +1,6 @@
 package com.tripor.article.model.mapper;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 

@@ -24,11 +24,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tripor.article.model.dto.ArticleDto;
+import com.tripor.article.model.dto.ArticleListDto;
 import com.tripor.article.model.service.ArticleService;
 import com.tripor.member.model.dto.MemberDto;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 
@@ -42,22 +46,21 @@ public class ArticleController {
 	ArticleService articleService;
 
 	@Operation(summary = "전체 게시물 목록 조회")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "404", description = "None Page"),
+			@ApiResponse(responseCode = "500", description = "Server Error") })
 	@GetMapping("")
-	public ResponseEntity<?> listArticle(@RequestParam(name = "pgno", required = false) String pgno,
-			@RequestParam(name = "key", required = false) String key,
-			@RequestParam(name = "word", required = false) String word) {
-		// log.debug("listArticle map : {}", map);
+	public ResponseEntity<?> listArticle(
+			@RequestParam @Parameter(description = "게시글을 얻기위한 부가정보", required = true) Map<String, String> map) {
+		log.debug("listArticle map : {}", map);
+		System.out.println(map);
 		try {
 			// pgno, key, word
-			Map<String, Object> map = new HashMap<>();
-			map.put("pgno", pgno);
-			map.put("key", key);
-			map.put("word", word);
-			List<ArticleDto> list = articleService.listArticle(map);
+			ArticleListDto list = articleService.listArticle(map);
 
 			Map<String, Object> returnMap = new HashMap<>();
 			returnMap.put("items", list);
-			returnMap.put("count", list.size());
+			returnMap.put("count", list.getArticles().size());
 
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
@@ -148,6 +151,11 @@ public class ArticleController {
 	public ResponseEntity<?> writeArticle(@org.springframework.web.bind.annotation.RequestBody ArticleDto articleDto) {
 		log.debug("writeArticle articleDto : {}", articleDto);
 		try {
+//			String subject = articleDto.getSubject();
+//			for(int i=0;i<200;i++) {
+//				articleDto.setSubject(subject+""+i);
+//				articleService.writeArticle(articleDto);
+//			}
 			articleService.writeArticle(articleDto);
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));

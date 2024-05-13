@@ -189,10 +189,13 @@ public class TripController {
 	}
 
 	@Operation(summary = "여행 콘텐츠 검색 조회")
-	@GetMapping("")
+	@GetMapping("/search")
 	public ResponseEntity<?> getAttractionList(@RequestParam(name = "keyword", required = false) String keyword) {
 		log.debug("getAttractionList keyword : {}", keyword);
 		try {
+			if(keyword == null) {
+				throw new Exception("keyword 없음");
+			}
 			Map<String, Object> map = new HashMap<>();
 			map.put("mode", "search");
 			map.put("keyword", keyword);
