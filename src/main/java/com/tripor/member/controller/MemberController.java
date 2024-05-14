@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tripor.member.model.dto.MemberDto;
+import com.tripor.member.model.dto.MemberLoginDto;
 import com.tripor.member.model.service.MemberService;
 import com.tripor.util.JWTUtil;
 
@@ -48,8 +50,10 @@ public class MemberController {
 	// ============================== REST API =================================
 	@Operation(summary = "로그인")
 	@PostMapping("/login")
-	public ResponseEntity<?> login(@RequestParam("memberId") String memberId, @RequestParam("memberPw") String memberPw,
-			@RequestParam(name = "saveid", required = false) String saveid) {
+	public ResponseEntity<?> login(@org.springframework.web.bind.annotation.RequestBody MemberLoginDto memberLoginDto) {
+		String memberId = memberLoginDto.getMemberId();
+		String memberPw = memberLoginDto.getMemberPw();
+		String saveid = memberLoginDto.getSaveid();
 		log.debug("login Form memberId : {}, memberPw : {}", memberId, memberPw);
 
 		Map<String, Object> resultMap = new HashMap<>();
