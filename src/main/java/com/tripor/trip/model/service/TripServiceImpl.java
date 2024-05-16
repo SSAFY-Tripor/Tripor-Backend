@@ -69,9 +69,7 @@ public class TripServiceImpl implements TripService {
 			return tripMapper.findAll(keyword);
 		}else if("shortest".equals(mode)) {
 			int planId = (int) map.get("planId");
-			System.out.println("하이");
 			List<TripDto> list = tripMapper.findByPlanId(planId);
-			System.out.println(list);
 			return shortestPathByTSP(list, 0);
 		}
 

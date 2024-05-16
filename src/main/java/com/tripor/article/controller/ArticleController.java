@@ -73,7 +73,6 @@ public class ArticleController {
 	public ResponseEntity<?> listArticle(
 			@RequestParam @Parameter(description = "게시글을 얻기위한 부가정보", required = true) Map<String, String> map) {
 		log.debug("listArticle map : {}", map);
-		System.out.println(map);
 		try {
 			// pgno, key, word
 			ArticleListDto list = articleService.listArticle(map);

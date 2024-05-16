@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import com.tripor.article.model.dto.ArticleDto;
 import com.tripor.article.model.dto.ArticleListDto;
 import com.tripor.article.model.mapper.ArticleMapper;
-import com.tripor.util.BoardSize;
 import com.tripor.util.PageNavigation;
 
 @Service
@@ -30,19 +29,18 @@ public class ArticleServiceImpl implements ArticleService {
 	@Override
 	public ArticleListDto listArticle(Map<String, String> map) throws Exception {
 		int pgno = 1;
-		System.out.println(pgno);
 		String pg = (String) map.get("pgno");
 		int currentPage = Integer.parseInt(map.get("pgno") == null ? "1" : map.get("pgno"));
 		int sizePerPage = Integer.parseInt(map.get("spp") == null ? "20" : map.get("spp"));
 
-		System.out.println(currentPage + " " + sizePerPage);
 		Map<String, Object> param = new HashMap<>();
 		// 페이지 Navigation 관련
 		int start = currentPage * sizePerPage - sizePerPage;
 		
-
 		param.put("pgno", Integer.parseInt(map.get("pgno")));
 		param.put("spp", Integer.parseInt(map.get("spp")));
+		param.put("nav", Integer.parseInt(map.get("nav")));
+		
 		param.put("start", start);
 		param.put("listSize", sizePerPage);
 
@@ -54,9 +52,6 @@ public class ArticleServiceImpl implements ArticleService {
 //			param.put("key", key == null ? "" : "article.member_id");
 
 		List<ArticleDto> list = articleMapper.findAll(param);
-
-		int totalArticleCount = articleMapper.getArticleCount(param);
-		int totalPageCount = (totalArticleCount - 1) / sizePerPage + 1;
 
 //		if (map.containsKey("pgno") && pg != null && pg.length() > 0)
 //			pgno = Integer.parseInt(pg);
@@ -86,7 +81,7 @@ public class ArticleServiceImpl implements ArticleService {
 	public PageNavigation makePageNavigation(Map<String, Object> map) throws Exception {
 		PageNavigation pageNavigation = new PageNavigation();
 		int currentPage = (int) map.get("pgno");
-		int naviSize = BoardSize.NAVIGATION.getBoardSize();
+		int naviSize = (int) map.get("nav");
 		int listSize = (int) map.get("spp");
 		pageNavigation.setCurrentPage(currentPage);
 		pageNavigation.setNaviSize(naviSize);

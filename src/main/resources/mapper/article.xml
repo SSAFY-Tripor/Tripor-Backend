@@ -47,11 +47,11 @@
 	
 	<sql id="search">
 		<if test="key != null and key != '' and word != null and word != ''">
-			<if test="key == subject">
-				and subject like '%#{word}%' 			
+			<if test="key == 'subject'">
+				and subject like concat('%', #{word}, '%') 			
 			</if>
-			<if test="key != subject">
-				and #{key} = #{word}
+			<if test="key != 'subject'">
+				and ${key} = #{word}
 			</if>
 		</if>
 	</sql>
