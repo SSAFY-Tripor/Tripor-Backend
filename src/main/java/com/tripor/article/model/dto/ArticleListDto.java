@@ -2,6 +2,8 @@ package com.tripor.article.model.dto;
 
 import java.util.List;
 
+import com.tripor.util.PageNavigation;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,9 +19,7 @@ public class ArticleListDto {
 
 	@Schema(description = "글목록")
 	private List<ArticleDto> articles;
-	@Schema(description = "현재 페이지번호")
-	private int currentPage;
-	@Schema(description = "전체 페이지 수")
-	private int totalPageCount;
+	@Schema(description = "글목록 meta 정보")
+	private PageNavigation pageNavigation;
 
 }

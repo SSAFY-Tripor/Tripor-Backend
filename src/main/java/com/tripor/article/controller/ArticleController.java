@@ -80,7 +80,7 @@ public class ArticleController {
 
 			Map<String, Object> returnMap = new HashMap<>();
 			returnMap.put("items", list);
-			returnMap.put("count", list.getArticles().size());
+			returnMap.put("meta", list.getPageNavigation());
 
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));

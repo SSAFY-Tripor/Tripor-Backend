@@ -41,6 +41,8 @@ public class ArticleServiceImpl implements ArticleService {
 		int start = currentPage * sizePerPage - sizePerPage;
 		
 
+		param.put("pgno", Integer.parseInt(map.get("pgno")));
+		param.put("spp", Integer.parseInt(map.get("spp")));
 		param.put("start", start);
 		param.put("listSize", sizePerPage);
 
@@ -66,9 +68,11 @@ public class ArticleServiceImpl implements ArticleService {
 //		System.out.println(map);
 
 		ArticleListDto articleListDto = new ArticleListDto();
+		PageNavigation pageNavigation = makePageNavigation(param);
+		System.out.println(pageNavigation);
+		
 		articleListDto.setArticles(list);
-		articleListDto.setCurrentPage(currentPage);
-		articleListDto.setTotalPageCount(totalPageCount);
+		articleListDto.setPageNavigation(pageNavigation);
 
 		return articleListDto;
 	}
@@ -83,18 +87,13 @@ public class ArticleServiceImpl implements ArticleService {
 		PageNavigation pageNavigation = new PageNavigation();
 		int currentPage = (int) map.get("pgno");
 		int naviSize = BoardSize.NAVIGATION.getBoardSize();
-		int listSize = BoardSize.LIST.getBoardSize();
+		int listSize = (int) map.get("spp");
 		pageNavigation.setCurrentPage(currentPage);
 		pageNavigation.setNaviSize(naviSize);
 		int totalCount = articleMapper.getArticleCount(map);
 		pageNavigation.setTotalCount(totalCount);
 		int totalPageCount = (totalCount - 1) / listSize + 1;
 		pageNavigation.setTotalPageCount(totalPageCount);
-		boolean startRange = (currentPage <= naviSize);
-		pageNavigation.setStartRange(startRange);
-		boolean endRange = ((totalPageCount - 1) / naviSize * naviSize < currentPage);
-		pageNavigation.setEndRange(endRange);
-		pageNavigation.makeNavigator();
 		return pageNavigation;
 	}
 
