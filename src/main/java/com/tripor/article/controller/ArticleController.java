@@ -172,9 +172,8 @@ public class ArticleController {
 			@RequestPart(name="images", required = false) MultipartFile[] images) {
 		log.debug("writeArticle articleDto : {}", articleDto);
 		try {
-			log.debug("uploadPath : {}, uploadImagePath : {}, uploadFilePath : {}", uploadPath, uploadImagePath, uploadFilePath);
-			log.debug("MultipartFile.isEmpty : {}", images[0].isEmpty());
-			if (!images[0].isEmpty()) {
+			if (images != null && !images[0].isEmpty()) {
+				log.debug("uploadPath : {}, uploadImagePath : {}, uploadFilePath : {}", uploadPath, uploadImagePath, uploadFilePath);
 				String today = new SimpleDateFormat("yyMMdd").format(new Date());
 				String saveFolder = uploadPath + File.separator + today;
 				log.debug("저장 폴더 : {}", saveFolder);
