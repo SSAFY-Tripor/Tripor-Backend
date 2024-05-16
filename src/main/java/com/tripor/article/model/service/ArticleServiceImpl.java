@@ -21,6 +21,10 @@ public class ArticleServiceImpl implements ArticleService {
 	@Override
 	public void writeArticle(ArticleDto articleDto) throws Exception {
 		articleMapper.insert(articleDto);
+		List<com.tripor.article.model.dto.FileInfoDto> fileInfos = articleDto.getFileInfos();
+		if (fileInfos != null && !fileInfos.isEmpty()) {
+			articleMapper.registerFile(articleDto);
+		}
 	}
 
 	@Override

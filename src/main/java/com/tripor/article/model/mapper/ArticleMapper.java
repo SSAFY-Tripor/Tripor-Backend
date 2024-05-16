@@ -7,6 +7,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.tripor.article.model.dto.ArticleDto;
+import com.tripor.article.model.dto.FileInfoDto;
 
 @Mapper
 public interface ArticleMapper {
@@ -23,4 +24,8 @@ public interface ArticleMapper {
 	void update(ArticleDto articleDto);
 
 	void delete(int articleId);
+	
+	void registerFile(ArticleDto articleDto) throws Exception;
+
+	List<FileInfoDto> fileInfoList(int articleNo) throws Exception;
 }

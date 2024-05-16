@@ -1,22 +1,26 @@
 package com.tripor.article.model.dto;
 
+import java.util.List;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(title="ArticleDto (게시물정보)")
+@Schema(title = "ArticleDto (게시물정보)")
 public class ArticleDto {
-	@Schema(description="게시물아이디")
+	@Schema(description = "게시물아이디")
 	private int articleId;
-	@Schema(description="작성자아이디")
+	@Schema(description = "작성자아이디")
 	private String memberId;
-	@Schema(description="제목")
+	@Schema(description = "제목")
 	private String subject;
-	@Schema(description="내용")
+	@Schema(description = "내용")
 	private String content;
-	@Schema(description="조회수")
+	@Schema(description = "조회수")
 	private int hit;
-	@Schema(description="작성일")
+	@Schema(description = "작성일")
 	private String registerDate;
-	
+	@Schema(description = "업로드 파일정보")
+	private List<FileInfoDto> fileInfos;
+
 	public ArticleDto(int articleId, String subject, String content) {
 		super();
 		this.articleId = articleId;
@@ -39,6 +43,18 @@ public class ArticleDto {
 		this.content = content;
 		this.hit = hit;
 		this.registerDate = registerDate;
+	}
+
+	public ArticleDto(int articleId, String memberId, String subject, String content, int hit, String registerDate,
+			List<FileInfoDto> fileInfos) {
+		super();
+		this.articleId = articleId;
+		this.memberId = memberId;
+		this.subject = subject;
+		this.content = content;
+		this.hit = hit;
+		this.registerDate = registerDate;
+		this.fileInfos = fileInfos;
 	}
 
 	public ArticleDto() {
@@ -72,7 +88,7 @@ public class ArticleDto {
 	@Override
 	public String toString() {
 		return "ArticleDto [articleId=" + articleId + ", memberId=" + memberId + ", subject=" + subject + ", content="
-				+ content + ", hit=" + hit + ", registerDate=" + registerDate + "]";
+				+ content + ", hit=" + hit + ", registerDate=" + registerDate + ", fileInfos=" + fileInfos + "]";
 	}
 
 	public String getSubject() {
@@ -97,6 +113,14 @@ public class ArticleDto {
 
 	public void setHit(int hit) {
 		this.hit = hit;
+	}
+
+	public List<FileInfoDto> getFileInfos() {
+		return fileInfos;
+	}
+
+	public void setFileInfos(List<FileInfoDto> fileInfos) {
+		this.fileInfos = fileInfos;
 	}
 
 }

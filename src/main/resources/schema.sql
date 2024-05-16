@@ -220,17 +220,17 @@ DROP TABLE IF EXISTS `tripor`.`article_image` ;
 CREATE TABLE IF NOT EXISTS `tripor`.`article_image` (
   `image_id` INT NOT NULL AUTO_INCREMENT,
   `article_id` INT NOT NULL,
-  `image_name` VARCHAR(20) NOT NULL,
-  `image_path` VARCHAR(20) NOT NULL,
+  `save_folder` VARCHAR(45) NULL,
+  `original_file` VARCHAR(50) NULL,
+  `save_file` VARCHAR(50) NULL,
   PRIMARY KEY (`image_id`),
-  INDEX `article_image_to_article_artice_id_fk_idx` (`article_id` ASC) VISIBLE,
-  CONSTRAINT `article_image_to_article_artice_id_fk`
+  INDEX `article_image_to_article_article_id_fk_idx` (`article_id` ASC) VISIBLE,
+  CONSTRAINT `article_image_to_article_article_id_fk`
     FOREIGN KEY (`article_id`)
     REFERENCES `tripor`.`article` (`article_id`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
+    ON UPDATE NO ACTION
+) ENGINE = InnoDB;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
