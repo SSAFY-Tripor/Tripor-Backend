@@ -1,6 +1,7 @@
 package com.tripor.article.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.tripor.article.model.dto.ArticleDto;
 import com.tripor.article.model.dto.ArticleListDto;
+import com.tripor.article.model.dto.ArticlePostDto;
 import com.tripor.article.model.dto.FileInfoDto;
 import com.tripor.article.model.service.ArticleService;
 import com.tripor.member.model.dto.MemberDto;
@@ -167,43 +169,134 @@ public class ArticleController {
 
 	@Operation(summary = "게시물 작성")
 	@PostMapping(value = "")
-	public ResponseEntity<?> writeArticle(@RequestPart(name="article") @Valid ArticleDto articleDto,
-			@RequestPart(name="images", required = false) MultipartFile[] images) {
-		log.debug("writeArticle articleDto : {}", articleDto);
+	public ResponseEntity<?> writeArticle(
+			@org.springframework.web.bind.annotation.RequestBody ArticlePostDto articlePostDto) {
+		log.debug("writeArticle requestBody : {}", articlePostDto);
 		try {
-			if (images != null && !images[0].isEmpty()) {
-				log.debug("uploadPath : {}, uploadImagePath : {}, uploadFilePath : {}", uploadPath, uploadImagePath, uploadFilePath);
+			int articleId = articleService.writeArticle(articlePostDto);
+			// 응답으로 보낼 JSON 데이터 구성
+			Map<String, Object> response = new HashMap<>();
+			response.put("result", "ok");
+			response.put("data", articleId);
+
+			// 응답 반환
+			return new ResponseEntity<>(response, HttpStatus.CREATED);
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
+//	@Operation(summary = "게시물 작성")
+//	@PostMapping(value = "")
+//	public ResponseEntity<?> writeArticle(@RequestPart(name = "article") @Valid ArticleDto articleDto,
+//			@RequestPart(name = "images", required = false) MultipartFile[] images) {
+//		log.debug("writeArticle articleDto : {}", articleDto);
+//		try {
+//			if (images != null && !images[0].isEmpty()) {
+//				log.debug("uploadPath : {}, uploadImagePath : {}, uploadFilePath : {}", uploadPath, uploadImagePath,
+//						uploadFilePath);
+//				String today = new SimpleDateFormat("yyMMdd").format(new Date());
+//				String saveFolder = uploadPath + File.separator + today;
+//				log.debug("저장 폴더 : {}", saveFolder);
+//				File folder = new File(saveFolder);
+//				if (!folder.exists())
+//					folder.mkdirs();
+//				List<FileInfoDto> fileInfos = new ArrayList<FileInfoDto>();
+//				for (MultipartFile mfile : images) {
+//					FileInfoDto fileInfoDto = new FileInfoDto();
+//					String originalFileName = mfile.getOriginalFilename();
+//					if (!originalFileName.isEmpty()) {
+//						String saveFileName = UUID.randomUUID().toString()
+//								+ originalFileName.substring(originalFileName.lastIndexOf('.'));
+//						fileInfoDto.setSaveFolder(today);
+//						fileInfoDto.setOriginalFile(originalFileName);
+//						fileInfoDto.setSaveFile(saveFileName);
+//						log.debug("원본 파일 이름 : {}, 실제 저장 파일 이름 : {}", mfile.getOriginalFilename(), saveFileName);
+//						mfile.transferTo(new File(folder, saveFileName));
+//					}
+//					fileInfos.add(fileInfoDto);
+//				}
+//				articleDto.setFileInfos(fileInfos);
+//			}
+//			articleService.writeArticle(articleDto);
+//			// 응답으로 보낼 JSON 데이터 구성
+//			Map<String, Object> response = new HashMap<>();
+//			response.put("response", "ok");
+//			response.put("data", articleDto.getArticleId());
+//
+//			// 응답 반환
+//			return new ResponseEntity<>(response, HttpStatus.CREATED);
+//		} catch (Exception e) {
+//			return exceptionHandling(e);
+//		}
+//	}
+
+	@Operation(summary = "이미지 저장")
+	@PostMapping(value = "/image")
+	public ResponseEntity<?> insertImage(@RequestPart(name = "image", required = false) MultipartFile image) {
+		log.debug("writeArticle articleDto : {}", image);
+
+		System.out.println(image.isEmpty());
+		System.out.println(image.getContentType());
+		System.out.println(image.getOriginalFilename());
+		System.out.println(image.getName());
+		System.out.println(image.getSize());
+		try {
+			System.out.println(image.getBytes());
+			System.out.println(image.getInputStream());
+		} catch (IOException e) {
+			System.out.println("에러");
+		}
+		System.out.println(image.getResource());
+		System.out.println("-------------------------------------------------------------");
+
+		try {
+			if (image != null && !image.isEmpty()) {
+				log.debug("uploadPath : {}, uploadImagePath : {}, uploadFilePath : {}", uploadPath, uploadImagePath,
+						uploadFilePath);
 				String today = new SimpleDateFormat("yyMMdd").format(new Date());
 				String saveFolder = uploadPath + File.separator + today;
 				log.debug("저장 폴더 : {}", saveFolder);
 				File folder = new File(saveFolder);
 				if (!folder.exists())
 					folder.mkdirs();
-				List<FileInfoDto> fileInfos = new ArrayList<FileInfoDto>();
-				for (MultipartFile mfile : images) {
-					FileInfoDto fileInfoDto = new FileInfoDto();
-					String originalFileName = mfile.getOriginalFilename();
-					if (!originalFileName.isEmpty()) {
-						String saveFileName = UUID.randomUUID().toString()
-								+ originalFileName.substring(originalFileName.lastIndexOf('.'));
-						fileInfoDto.setSaveFolder(today);
-						fileInfoDto.setOriginalFile(originalFileName);
-						fileInfoDto.setSaveFile(saveFileName);
-						log.debug("원본 파일 이름 : {}, 실제 저장 파일 이름 : {}", mfile.getOriginalFilename(), saveFileName);
-						mfile.transferTo(new File(folder, saveFileName));
-					}
-					fileInfos.add(fileInfoDto);
+				FileInfoDto fileInfoDto = new FileInfoDto();
+				String originalFileName = image.getOriginalFilename();
+				if (!originalFileName.isEmpty()) {
+					String saveFileName = UUID.randomUUID().toString()
+							+ originalFileName.substring(originalFileName.lastIndexOf('.'));
+					fileInfoDto.setSaveFolder(today);
+					fileInfoDto.setOriginalFile(originalFileName);
+					fileInfoDto.setSaveFile(saveFileName);
+					log.debug("원본 파일 이름 : {}, 실제 저장 파일 이름 : {}", image.getOriginalFilename(), saveFileName);
+					log.info("image - {}", fileInfoDto);
+					image.transferTo(new File(folder, saveFileName));
 				}
-				articleDto.setFileInfos(fileInfos);
+				FileInfoDto registed = articleService.registerImage(fileInfoDto);
+				// 응답으로 보낼 JSON 데이터 구성
+				Map<String, Object> response = new HashMap<>();
+				response.put("response", "ok");
+				response.put("fileInfo", registed);
+//				response.put("data", articleDto.getArticleId());
+				return new ResponseEntity<>(response, HttpStatus.CREATED);
+			} else {
+				throw new Exception("이미지 누락");
 			}
-			articleService.writeArticle(articleDto);
-			// 응답으로 보낼 JSON 데이터 구성
-	        Map<String, Object> response = new HashMap<>();
-	        response.put("response", "ok");
-	        response.put("data", articleDto.getArticleId());
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
 
-	        // 응답 반환
-	        return new ResponseEntity<>(response, HttpStatus.CREATED);
+	@Operation(summary = "이미지 삭제")
+	@DeleteMapping(value = "/image/{imageId}")
+	public ResponseEntity<?> deleteImage(@PathVariable String imageId) {
+		log.debug("imageId : {}", imageId);
+		try {
+			articleService.deleteImage(Integer.parseInt(imageId));
+			// 응답으로 보낼 JSON 데이터 구성
+			Map<String, Object> response = new HashMap<>();
+			response.put("response", "ok");
+//				response.put("data", articleDto.getArticleId());
+			return new ResponseEntity<>(response, HttpStatus.CREATED);
 		} catch (Exception e) {
 			return exceptionHandling(e);
 		}

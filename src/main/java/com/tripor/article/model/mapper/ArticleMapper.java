@@ -22,10 +22,22 @@ public interface ArticleMapper {
 	void increaseHit(int articleId);
 
 	void update(ArticleDto articleDto);
+	
+	List<Integer> getRelationImageIdsByArticleId(int articleId);
+	
+	void deleteImageByImageId(int imageId);
+	
+	void deleteRelationByImageId(int imageId);
+	
+	void deleteRelationByArticleId(int articleId);
 
 	void delete(int articleId);
 	
 	void registerFile(ArticleDto articleDto) throws Exception;
+	
+	void registerImage(FileInfoDto image) throws Exception;
+	
+	int lastKey() throws Exception;
 
 	List<FileInfoDto> fileInfoList(int articleNo) throws Exception;
 }

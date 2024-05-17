@@ -17,24 +17,55 @@
 	</resultMap>
 	
 	<resultMap type="fileInfoDto" id="file">
+		<result column="image_id" property="imageId"/>
 		<result column="save_folder" property="saveFolder"/>
 		<result column="original_file" property="originalFile"/>
 		<result column="save_file" property="saveFile"/>
 	</resultMap>
 	
+	<insert id="registerImage" parameterType="fileInfoDto">
+		insert into article_image (save_folder, original_file, save_file) 
+		values (#{saveFolder}, #{originalFile}, #{saveFile});
+	</insert>
+	
+	<select id="lastKey" resultType="int">
+		select last_insert_id()
+	</select>
 		
 	<insert id="registerFile" parameterType="articleDto">
-		insert into article_image (article_id, save_folder, original_file, save_file)
+		insert into article_image_relation (article_id, image_id)
 		values
 		<foreach collection="fileInfos" item="fileinfo" separator=" , ">
-			(#{articleId}, #{fileinfo.saveFolder}, #{fileinfo.originalFile}, #{fileinfo.saveFile})
+			(#{articleId}, #{fileinfo.imageId})
 		</foreach>
 	</insert>
 	
+	<!-- deleteFiles 메서드 -->
+	<select id="getRelationImageIdsByArticleId" resultType="int" parameterType="int">
+	    SELECT image_id FROM article_image_relation WHERE article_id=#{article_id};
+	</select>
+	
+	<delete id="deleteImageByImageId" parameterType="int">
+	    delete from article_image
+		where image_id=#{imageId}
+    </delete>
+    
+    <delete id="deleteRelationByImageId" parameterType="int">
+	    delete from article_image
+		where image_id=#{imageId}
+    </delete>
+
+	<delete id="deleteRelationByArticleId" parameterType="int">
+	    delete from article_image_relation
+		where article_id=#{article_id};
+    </delete>
+	
 	<select id="fileInfoList" resultMap="file">
-		select save_folder, original_file, save_file
-		from article_image
-		where article_id = #{articleId}
+		SELECT r.image_id, i.save_folder, i.original_file, i.save_file
+		FROM article_image_relation AS r
+		JOIN article_image AS i ON r.image_id = i.image_id
+		JOIN article AS a ON a.article_id = r.article_id
+		where a.article_id = #{articleId};
 	</select>
 
 	<select id="getArticleCount" parameterType="map" resultType="int">

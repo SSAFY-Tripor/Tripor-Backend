@@ -6,9 +6,12 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.tripor.article.model.dto.ArticleDto;
 import com.tripor.article.model.dto.ArticleListDto;
+import com.tripor.article.model.dto.ArticlePostDto;
+import com.tripor.article.model.dto.FileInfoDto;
 import com.tripor.article.model.mapper.ArticleMapper;
 import com.tripor.util.PageNavigation;
 
@@ -18,13 +21,29 @@ public class ArticleServiceImpl implements ArticleService {
 	ArticleMapper articleMapper;
 
 	@Override
-	public void writeArticle(ArticleDto articleDto) throws Exception {
+	public int writeArticle(ArticlePostDto articlePostDto) throws Exception {
+		ArticleDto articleDto = articlePostDto.getArticleDto();
 		articleMapper.insert(articleDto);
-		List<com.tripor.article.model.dto.FileInfoDto> fileInfos = articleDto.getFileInfos();
+		int aritcleId = articleMapper.lastKey();
+		System.out.println("articleId : " + aritcleId);
+		List<FileInfoDto> fileInfos = articlePostDto.getFileInfos();
 		if (fileInfos != null && !fileInfos.isEmpty()) {
+			articleDto.setFileInfos(fileInfos);
 			articleMapper.registerFile(articleDto);
 		}
+		return aritcleId;
 	}
+	
+	
+
+	@Override
+	public FileInfoDto registerImage(FileInfoDto image) throws Exception {
+		articleMapper.registerImage(image);
+		image.setImageId(articleMapper.lastKey());
+		return image;
+	}
+
+
 
 	@Override
 	public ArticleListDto listArticle(Map<String, String> map) throws Exception {
@@ -92,6 +111,15 @@ public class ArticleServiceImpl implements ArticleService {
 		return pageNavigation;
 	}
 
+	
+	
+	@Override
+	public void deleteImage(int imageId) throws Exception {
+		articleMapper.deleteImageByImageId(imageId);
+	}
+
+
+
 	@Override
 	public void updateHit(int articleId) throws Exception {
 		articleMapper.increaseHit(articleId);
@@ -100,10 +128,19 @@ public class ArticleServiceImpl implements ArticleService {
 	@Override
 	public void modifyArticle(ArticleDto articleDto) throws Exception {
 		articleMapper.update(articleDto);
+		System.out.println(articleDto.getArticleId());
+		List<Integer> imageIds = articleMapper.getRelationImageIdsByArticleId(articleDto.getArticleId());
+		articleMapper.deleteRelationByArticleId(articleDto.getArticleId());
+		articleMapper.registerFile(articleDto);
 	}
 
 	@Override
 	public void deleteArticle(int articleId) throws Exception {
+		articleMapper.deleteRelationByArticleId(articleId);
+		List<Integer> imageIds = articleMapper.getRelationImageIdsByArticleId(articleId);
+		for(Integer imageId : imageIds) {
+			articleMapper.deleteImageByImageId(imageId);
+		}
 		articleMapper.delete(articleId);
 	}
 

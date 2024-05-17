@@ -215,19 +215,35 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `tripor`.`article_image`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `tripor`.`article_image` ;
+DROP TABLE IF EXISTS `tripor`.`article_image`;
 
 CREATE TABLE IF NOT EXISTS `tripor`.`article_image` (
   `image_id` INT NOT NULL AUTO_INCREMENT,
-  `article_id` INT NOT NULL,
   `save_folder` VARCHAR(45) NULL,
   `original_file` VARCHAR(50) NULL,
   `save_file` VARCHAR(50) NULL,
-  PRIMARY KEY (`image_id`),
-  INDEX `article_image_to_article_article_id_fk_idx` (`article_id` ASC) VISIBLE,
-  CONSTRAINT `article_image_to_article_article_id_fk`
+  PRIMARY KEY (`image_id`)
+) ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `tripor`.`article_image_relation`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `tripor`.`article_image_relation`;
+
+CREATE TABLE IF NOT EXISTS `tripor`.`article_image_relation` (
+  `article_id` INT NOT NULL,
+  `image_id` INT NOT NULL,
+  PRIMARY KEY (`article_id`, `image_id`),
+  INDEX `article_image_relation_article_idx` (`article_id` ASC) VISIBLE,
+  INDEX `article_image_relation_image_idx` (`image_id` ASC) VISIBLE,
+  CONSTRAINT `article_image_relation_article_fk`
     FOREIGN KEY (`article_id`)
     REFERENCES `tripor`.`article` (`article_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `article_image_relation_image_fk`
+    FOREIGN KEY (`image_id`)
+    REFERENCES `tripor`.`article_image` (`image_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
 ) ENGINE = InnoDB;
