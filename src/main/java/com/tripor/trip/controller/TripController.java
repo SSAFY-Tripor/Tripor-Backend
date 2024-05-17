@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -111,6 +112,24 @@ public class TripController {
 
 			Map<String, Object> returnMap = new HashMap<>();
 			returnMap.put("result", "ok");
+
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
+			return ResponseEntity.ok().headers(headers).body(returnMap);
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
+	
+	@Operation(summary = "여행 일정에 메모 수정")
+	@PatchMapping("/plan/{planId}/memo")
+	public ResponseEntity<?> saveMemo(@PathVariable("planId") String planId, @org.springframework.web.bind.annotation.RequestBody TripPlanDto tripPlanDto) {
+		try {
+			System.out.println(tripPlanDto);
+			tripService.modifyPlan(tripPlanDto);
+			Map<String, Object> returnMap = new HashMap<>();
+			returnMap.put("result", "ok");
+			returnMap.put("msg", "메모가 저장되었습니다.");
 
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
@@ -220,6 +239,7 @@ public class TripController {
 		log.debug("getPlanTripList planId : {}", planId);
 		try {
 			TripPlanDto tripPlanDto = tripService.getTripPlanDetail(planId);
+			System.out.println(tripPlanDto);
 
 			Map<String, Object> returnMap = new HashMap<>();
 			returnMap.put("items", tripPlanDto);

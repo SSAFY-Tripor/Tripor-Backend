@@ -54,6 +54,11 @@ public class TripServiceImpl implements TripService {
 	public TripDto getTrip(int contentId) throws Exception {
 		return tripMapper.findByContentId(contentId);
 	}
+	
+	@Override
+	public void modifyPlan(TripPlanDto tripPlanDto) throws Exception {
+		tripMapper.saveMemo(tripPlanDto);
+	}
 
 	@Override
 	public List<TripDto> getTripList(Map<String, Object> map) throws Exception {

@@ -38,4 +38,6 @@ public interface TripMapper {
 	void deletePlanRelation(int planId);
 	
 	void deletePlan(int planId);
+	
+	void saveMemo(TripPlanDto tripPlanDto);
 }

@@ -118,6 +118,9 @@ CREATE TABLE IF NOT EXISTS `tripor`.`trip_plan` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+ALTER TABLE tripor.trip_plan
+ADD COLUMN memo VARCHAR(2000) NULL;
+
 
 -- -----------------------------------------------------
 -- Table `tripor`.`attraction_info`

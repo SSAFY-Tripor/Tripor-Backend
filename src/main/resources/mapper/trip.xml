@@ -33,11 +33,18 @@
 		<result column="plan_name" property="planName" />
 		<result column="member_id" property="memberId" />
 		<result column="plan_register_date" property="planRegisterDate" />
+		<result column="memo" property="memo"/>
 	</resultMap>
 	
 	<resultMap type="tripPlanDto" id="viewPlan" extends="tripPlan">
 		<collection property="tripList" column="plan_id" javaType="list" ofType="string" select="findContentIdByPlanId"/>
 	</resultMap>
+	
+	<update id="saveMemo" parameterType="tripPlanDto">
+		 UPDATE trip_plan
+		 SET memo = #{memo}
+		 WHERE plan_id = #{planId};
+	</update>
 	
 	<select id="findContentIdByPlanId" parameterType="int">
 		select content_id
@@ -46,7 +53,7 @@
 	</select>
 	
 	<select id="findTripPlanByPlanId" resultMap="viewPlan" parameterType="int">
-		select plan_id, plan_name, member_id, plan_register_date 
+		select plan_id, plan_name, member_id, plan_register_date, memo 
 		from trip_plan 
 		where plan_id = #{planId};
 	</select>

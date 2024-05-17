@@ -41,4 +41,6 @@ public interface TripService {
 	TripPlanDto getTripPlanDetail(int planId) throws Exception;
 
 	void removeTripPlan(int planId) throws Exception;
+	
+	void modifyPlan(TripPlanDto tripPlanDto) throws Exception;
 }
