@@ -135,7 +135,7 @@ public class TripController {
 			headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
 			return ResponseEntity.ok().headers(headers).body(returnMap);
 		} catch (Exception e) {
-			return exceptionHandling(e);
+			return exceptionHandling("메모 변경이 실패했습니다.");
 		}
 	}
 
@@ -307,6 +307,12 @@ public class TripController {
 		}
 	}
 
+	private ResponseEntity<Map<String, Object>> exceptionHandling(String msg) {
+		Map<String, Object> returnMap = new HashMap<>();
+		returnMap.put("result", "err");
+		returnMap.put("msg", msg);
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(returnMap);
+	}
 	private ResponseEntity<String> exceptionHandling(Exception e) {
 		e.printStackTrace();
 //		return new ResponseEntity<String>("Error : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

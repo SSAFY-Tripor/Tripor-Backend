@@ -64,6 +64,7 @@ public class MemberController {
 			map.put("memberPw", memberPw);
 
 			MemberDto memberDto = memberService.loginMember(map);
+			log.info("memberDto - {}", memberDto);
 			if (memberDto != null) {
 				String accessToken = jwtUtil.createAccessToken(memberId);
 				String refreshToken = jwtUtil.createRefreshToken(memberId);
@@ -73,13 +74,16 @@ public class MemberController {
 				// 발급받은 refresh token 을 DB에 저장.
 				memberService.saveRefreshToken(memberId, refreshToken);
 
+				resultMap.put("result", "ok");
 				resultMap.put("access-token", accessToken);
 				resultMap.put("refresh-token", refreshToken);
 
 				status = HttpStatus.CREATED;
 			} else {
+				resultMap.put("result", "err");
 				resultMap.put("message", "아이디 또는 패스워드를 확인해 주세요.");
 				status = HttpStatus.UNAUTHORIZED;
+				return exceptionHandling("아이디 또는 패스워드를 확인해 주세요.", status);
 			}
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
@@ -257,6 +261,13 @@ public class MemberController {
 		} catch (Exception e) {
 			return exceptionHandling(e);
 		}
+	}
+
+	private ResponseEntity<Map<String, Object>> exceptionHandling(String msg, HttpStatus status) {
+		Map<String, Object> returnMap = new HashMap<>();
+		returnMap.put("result", "err");
+		returnMap.put("msg", msg);
+		return ResponseEntity.status(status).body(returnMap);
 	}
 
 	private ResponseEntity<String> exceptionHandling(Exception e) {
