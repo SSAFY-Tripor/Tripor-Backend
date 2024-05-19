@@ -131,7 +131,8 @@ public class ArticleServiceImpl implements ArticleService {
 		System.out.println(articleDto.getArticleId());
 		List<Integer> imageIds = articleMapper.getRelationImageIdsByArticleId(articleDto.getArticleId());
 		articleMapper.deleteRelationByArticleId(articleDto.getArticleId());
-		articleMapper.registerFile(articleDto);
+		if(!imageIds.isEmpty())
+			articleMapper.registerFile(articleDto);
 	}
 
 	@Override
