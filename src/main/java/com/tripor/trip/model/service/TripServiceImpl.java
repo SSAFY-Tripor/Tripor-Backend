@@ -54,7 +54,7 @@ public class TripServiceImpl implements TripService {
 	public TripDto getTrip(int contentId) throws Exception {
 		return tripMapper.findByContentId(contentId);
 	}
-	
+
 	@Override
 	public void modifyPlan(TripPlanDto tripPlanDto) throws Exception {
 		tripMapper.saveMemo(tripPlanDto);
@@ -72,7 +72,7 @@ public class TripServiceImpl implements TripService {
 		} else if ("search".equals(mode)) {
 			String keyword = (String) map.get("keyword");
 			return tripMapper.findAll(keyword);
-		}else if("shortest".equals(mode)) {
+		} else if ("shortest".equals(mode)) {
 			int planId = (int) map.get("planId");
 			List<TripDto> list = tripMapper.findByPlanId(planId);
 			return shortestPathByTSP(list, 0);
@@ -108,8 +108,11 @@ public class TripServiceImpl implements TripService {
 	}
 
 	private List<TripDto> shortestPathByTSP(List<TripDto> list, int start) {
-//		return tspImplPermutaion(list, start);
-		return tspImplDP(list, start);
+		if(list.size() > 5) {
+			return tspImplDP(list, start);
+		}else {
+			return tspImplPermutaion(list, start);
+		}
 	}
 
 	private List<TripDto> tspImplDP(List<TripDto> list, int start) {
@@ -135,8 +138,9 @@ public class TripServiceImpl implements TripService {
 			}
 		}
 
-		for (int i = 0; i < N; i++)
+		for (int i = 0; i < N; i++) {
 			Arrays.fill(dp[i], -1);
+		}
 		dfs(start, (1 << start), N, Graph, dp, path, start);
 
 		// 외판원 순회 끝
@@ -144,7 +148,7 @@ public class TripServiceImpl implements TripService {
 		List<TripDto> returnList = new ArrayList<>();
 		int flag = (1 << start);
 		returnList.add(list.get(start));
-		int last = 0;
+		int last = start;
 		while (flag != (1 << N) - 1) {
 			int next = path[last][flag];
 			returnList.add(list.get(next));
@@ -177,8 +181,10 @@ public class TripServiceImpl implements TripService {
 					continue;
 				TripDto A = list.get(i);
 				TripDto B = list.get(j);
-				double weight = latDiff(Double.parseDouble(A.getLatitude()), Double.parseDouble(B.getLatitude()))
-						+ lngDiff(Double.parseDouble(A.getLongitude()), Double.parseDouble(B.getLongitude()));
+				double weight = Math.sqrt(Math
+						.pow(latDiff(Double.parseDouble(A.getLatitude()), Double.parseDouble(B.getLatitude())), 2)
+						+ Math.pow(lngDiff(Double.parseDouble(A.getLongitude()), Double.parseDouble(B.getLongitude())),
+								2));
 				Graph[i][j] = weight;
 			}
 		}
@@ -304,10 +310,10 @@ public class TripServiceImpl implements TripService {
 	}
 
 	private double latDiff(double latA, double latB) {
-		return Math.abs(latA - latB);
+		return latA - latB;
 	}
 
 	private double lngDiff(double lngA, double lngB) {
-		return Math.abs(lngA - lngB);
+		return lngA - lngB;
 	}
 }
