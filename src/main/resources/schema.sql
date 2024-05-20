@@ -254,6 +254,39 @@ CREATE TABLE IF NOT EXISTS `tripor`.`article_image_relation` (
     ON UPDATE CASCADE
 ) ENGINE = InnoDB;
 
+-- -----------------------------------------------------
+-- Table `tripor`.`comment`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `tripor`.`comment`;
+
+CREATE TABLE IF NOT EXISTS `tripor`.`comment` (
+  `comment_id` INT NOT NULL AUTO_INCREMENT,
+  `article_id` INT NOT NULL,
+  `member_id` VARCHAR(16) NOT NULL,
+  `comment_content` VARCHAR(1000) NOT NULL,
+  `comment_register_date` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  `parent_comment_id` INT NULL,
+  PRIMARY KEY (`comment_id`),
+  INDEX `comment_to_article_article_id_fk_idx` (`article_id` ASC) VISIBLE,
+  INDEX `comment_to_member_member_id_fk_idx` (`member_id` ASC) VISIBLE,
+  INDEX `comment_to_parent_comment_id_fk_idx` (`parent_comment_id` ASC) VISIBLE,
+  CONSTRAINT `comment_to_article_article_id_fk`
+    FOREIGN KEY (`article_id`)
+    REFERENCES `tripor`.`article` (`article_id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `comment_to_member_member_id_fk`
+    FOREIGN KEY (`member_id`)
+    REFERENCES `tripor`.`member` (`member_id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `comment_to_parent_comment_id_fk`
+    FOREIGN KEY (`parent_comment_id`)
+    REFERENCES `tripor`.`comment` (`comment_id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+) ENGINE = InnoDB;
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

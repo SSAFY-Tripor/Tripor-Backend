@@ -6,19 +6,29 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.tripor.article.model.dto.ArticleDto;
 import com.tripor.article.model.dto.ArticleListDto;
 import com.tripor.article.model.dto.ArticlePostDto;
+import com.tripor.article.model.dto.CommentDto;
 import com.tripor.article.model.dto.FileInfoDto;
 import com.tripor.article.model.mapper.ArticleMapper;
+import com.tripor.article.model.mapper.CommentMapper;
 import com.tripor.util.PageNavigation;
 
 @Service
 public class ArticleServiceImpl implements ArticleService {
+
+	private final ArticleMapper articleMapper;
+	private final CommentMapper commentMapper;
+
 	@Autowired
-	ArticleMapper articleMapper;
+	public ArticleServiceImpl(ArticleMapper articleMapper, CommentMapper commentMapper) {
+		this.articleMapper = articleMapper;
+		this.commentMapper = commentMapper;
+	}
+
+
 
 	@Override
 	public int writeArticle(ArticlePostDto articlePostDto) throws Exception {
@@ -145,4 +155,32 @@ public class ArticleServiceImpl implements ArticleService {
 		articleMapper.delete(articleId);
 	}
 
+
+
+	@Override
+	public void addComment(CommentDto commentDto) throws Exception {
+		 commentMapper.insertComment(commentDto);
+	}
+
+
+
+	@Override
+	public List<CommentDto> getCommentsByArticleId(int articleId) throws Exception {
+		return commentMapper.findByArticleId(articleId);
+	}
+
+
+
+	@Override
+	public void updateComment(CommentDto commentDto) throws Exception {
+		commentMapper.updateComment(commentDto);
+	}
+
+
+
+	@Override
+	public void deleteComment(int commentId) throws Exception {
+		commentMapper.deleteChildComment(commentId);
+		commentMapper.deleteComment(commentId);
+	}
 }

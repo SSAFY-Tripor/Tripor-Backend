@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.tripor.article.model.dto.ArticleDto;
 import com.tripor.article.model.dto.ArticleListDto;
 import com.tripor.article.model.dto.ArticlePostDto;
+import com.tripor.article.model.dto.CommentDto;
 import com.tripor.article.model.dto.FileInfoDto;
 import com.tripor.util.PageNavigation;
 
@@ -29,4 +30,12 @@ public interface ArticleService {
 	FileInfoDto registerImage(FileInfoDto image) throws Exception;
 
 	void deleteArticle(int articleId) throws Exception;
+	
+    public void addComment(CommentDto commentDto)  throws Exception;
+
+    public List<CommentDto> getCommentsByArticleId(int articleId)  throws Exception;
+
+    public void updateComment(CommentDto commentDto)  throws Exception;
+
+    public void deleteComment(int commentId) throws Exception;
 }

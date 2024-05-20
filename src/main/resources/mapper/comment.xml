@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tripor.article.model.mapper.CommentMapper">
+	<resultMap type="commentDto" id="comment">
+		<result column="comment_id" property="commentId" />
+		<result column="article_id" property="articleId" />
+		<result column="member_id" property="memberId" />
+		<result column="comment_content" property="commentContent" />
+		<result column="comment_register_date" property="commentRegisterDate" />
+		<result column="parent_comment_id" property="parentCommentId" />
+	</resultMap>
+	
+	<!-- 댓글 추가 -->
+    <insert id="insertComment" parameterType="commentDto">
+        INSERT INTO comment (article_id, member_id, comment_content, parent_comment_id, comment_register_date)
+        VALUES (#{articleId}, #{memberId}, #{commentContent}, NULL, NOW())
+    </insert>
+
+    <!-- 특정 게시글의 모든 댓글 가져오기 -->
+    <select id="findByArticleId" parameterType="int" resultMap="comment">
+        SELECT comment_id, article_id, member_id, comment_content, parent_comment_id, comment_register_date
+        FROM comment
+        WHERE article_id = #{articleId}
+        ORDER BY comment_register_date
+    </select>
+
+    <!-- 댓글 수정 -->
+    <update id="updateComment" parameterType="commentDto">
+        UPDATE comment
+        SET comment_content = #{commentContent}
+        WHERE comment_id = #{commentId}
+    </update>
+
+    <!-- 댓글 삭제 -->
+    <delete id="deleteComment" parameterType="int">
+        DELETE FROM comment
+        WHERE comment_id = #{commentId}
+    </delete>
+
+    <!-- 댓글 삭제 -->
+    <delete id="deleteChildComment" parameterType="int">
+        DELETE FROM comment
+        WHERE parent_comment_id = #{parentCommentId}
+    </delete>
+
+</mapper>
