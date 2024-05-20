@@ -47,7 +47,7 @@
 	
     <update id="updateMember" parameterType="memberDto">
         UPDATE member
-        SET member_name = #{memberName}, email_id = #{emailId}, email_domain = #{emailDomain}, member_pw = #{memberPw}
+        SET member_name = #{memberName}, email_id = #{emailId}, email_domain = #{emailDomain}, member_pw = #{memberPw}, profile=#{profile}
         WHERE member_id = #{memberId}
     </update>
 	
