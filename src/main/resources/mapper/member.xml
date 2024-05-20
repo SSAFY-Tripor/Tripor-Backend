@@ -14,6 +14,7 @@
 		<result column="gugun" property="gugun"/>
 		<result column="join_date" property="joinDate"/>
 		<result column="token" property="refreshToken"/>
+		<result column="profile" property="profile" />
 	</resultMap>
 
 	<select id="countMemberById" parameterType="String" resultType="int">
@@ -23,8 +24,8 @@
 	</select>
 
 	<insert id="insertMember" parameterType="memberDto">
-		insert into member (member_id, member_pw, member_name, email_id, email_domain, sido, gugun, join_date)
-		values (#{memberId}, #{memberPw}, #{memberName}, #{emailId}, #{emailDomain}, #{sido}, #{gugun}, now())
+		insert into member (member_id, member_pw, member_name, email_id, email_domain, sido, gugun, join_date, profile)
+		values (#{memberId}, #{memberPw}, #{memberName}, #{emailId}, #{emailDomain}, #{sido}, #{gugun}, now(), #{profile})
 	</insert>
 
 	<select id="findByIdAndPassword" parameterType="map" resultMap="member">

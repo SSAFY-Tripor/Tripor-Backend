@@ -2,29 +2,31 @@ package com.tripor.member.model.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(title="MemberDto (회원정보)")
+@Schema(title = "MemberDto (회원정보)")
 public class MemberDto {
-	@Schema(description="아이디")
+	@Schema(description = "아이디")
 	private String memberId;
-	@Schema(description="비밀번호")
+	@Schema(description = "비밀번호")
 	private String memberPw;
-	@Schema(description="이름")
+	@Schema(description = "이름")
 	private String memberName;
-	@Schema(description="이메일아이디")
+	@Schema(description = "이메일아이디")
 	private String emailId;
-	@Schema(description="이메일도메인")
+	@Schema(description = "이메일도메인")
 	private String emailDomain;
-	@Schema(description="시도")
+	@Schema(description = "시도")
 	private int sido;
-	@Schema(description="구군")
+	@Schema(description = "구군")
 	private int gugun;
-	@Schema(description="가입일")
+	@Schema(description = "가입일")
 	private String joinDate;
 	@Schema(description = "refreshToken")
 	private String refreshToken;
+	@Schema(description = "프로필 이미지")
+	private String profile;
 
 	public MemberDto(String memberId, String memberPw, String memberName, String emailId, String emailDomain, int sido,
-			int gugun, String joinDate, String refreshToken) {
+			int gugun, String joinDate, String refreshToken, String profile) {
 		super();
 		this.memberId = memberId;
 		this.memberPw = memberPw;
@@ -35,10 +37,11 @@ public class MemberDto {
 		this.gugun = gugun;
 		this.joinDate = joinDate;
 		this.refreshToken = refreshToken;
+		this.profile = profile;
 	}
 
 	public MemberDto(String memberId, String memberPw, String memberName, String emailId, String emailDomain, int sido,
-			int gugun) {
+			int gugun, String profile) {
 		super();
 		this.memberId = memberId;
 		this.memberPw = memberPw;
@@ -47,6 +50,7 @@ public class MemberDto {
 		this.emailDomain = emailDomain;
 		this.sido = sido;
 		this.gugun = gugun;
+		this.profile = profile;
 	}
 
 	public MemberDto() {
@@ -124,12 +128,20 @@ public class MemberDto {
 	public void setRefreshToken(String refreshToken) {
 		this.refreshToken = refreshToken;
 	}
+	
+	public String getProfile() {
+		return profile;
+	}
+
+	public void setProfile(String profile) {
+		this.profile = profile;
+	}
 
 	@Override
 	public String toString() {
 		return "MemberDto [memberId=" + memberId + ", memberPw=" + memberPw + ", memberName=" + memberName
 				+ ", emailId=" + emailId + ", emailDomain=" + emailDomain + ", sido=" + sido + ", gugun=" + gugun
-				+ ", joinDate=" + joinDate + ", refreshToken=" + refreshToken + "]";
+				+ ", joinDate=" + joinDate + ", refreshToken=" + refreshToken + ", profile=" + profile + "]";
 	}
 
 }

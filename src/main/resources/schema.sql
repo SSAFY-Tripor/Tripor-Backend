@@ -77,6 +77,9 @@ ENGINE = InnoDB;
 ALTER TABLE `tripor`.`member`
 ADD COLUMN `token` VARCHAR(1000) NULL AFTER `join_date`;
 
+ALTER TABLE `tripor`.`member`
+ADD COLUMN `profile` VARCHAR(100) NULL AFTER `token`;
+
 -- -----------------------------------------------------
 -- Table `tripor`.`article`
 -- -----------------------------------------------------
