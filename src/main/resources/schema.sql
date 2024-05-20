@@ -40,8 +40,8 @@ CREATE TABLE IF NOT EXISTS `tripor`.`gugun` (
   CONSTRAINT `gugun_info_to_sido_sido_code_fk`
     FOREIGN KEY (`sido_code`)
     REFERENCES `tripor`.`sido` (`sido_code`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -65,12 +65,12 @@ CREATE TABLE IF NOT EXISTS `tripor`.`member` (
   CONSTRAINT `member_to_sido_sido_code_fk`
     FOREIGN KEY (`sido`)
     REFERENCES `tripor`.`sido` (`sido_code`)
-    ON DELETE NO ACTION
+    ON DELETE SET NULL
     ON UPDATE NO ACTION,
   CONSTRAINT `member_to_gugun_gugun_code_fk`
     FOREIGN KEY (`gugun`)
     REFERENCES `tripor`.`gugun` (`gugun_code`)
-    ON DELETE NO ACTION
+    ON DELETE SET NULL
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
@@ -94,8 +94,8 @@ CREATE TABLE IF NOT EXISTS `tripor`.`article` (
   CONSTRAINT `article_to_member_member_id_fk`
     FOREIGN KEY (`member_id`)
     REFERENCES `tripor`.`member` (`member_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -114,8 +114,8 @@ CREATE TABLE IF NOT EXISTS `tripor`.`trip_plan` (
   CONSTRAINT `trip_plan_to_member_member_id_fk`
     FOREIGN KEY (`member_id`)
     REFERENCES `tripor`.`member` (`member_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 ALTER TABLE tripor.trip_plan
@@ -149,12 +149,12 @@ CREATE TABLE IF NOT EXISTS `tripor`.`attraction_info` (
   CONSTRAINT `attraction_info_to_sido_sido_code_fk`
     FOREIGN KEY (`sido_code`)
     REFERENCES `tripor`.`sido` (`sido_code`)
-    ON DELETE NO ACTION
+    ON DELETE SET NULL
     ON UPDATE NO ACTION,
   CONSTRAINT `attraction_info_to_gugun_gugun_code_fk`
     FOREIGN KEY (`gugun_code`)
     REFERENCES `tripor`.`gugun` (`gugun_code`)
-    ON DELETE NO ACTION
+    ON DELETE SET NULL
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
@@ -178,13 +178,13 @@ CREATE TABLE IF NOT EXISTS `tripor`.`plan_content_relation` (
   CONSTRAINT `relation_to_trip_plan_plan_id_fk`
     FOREIGN KEY (`plan_id`)
     REFERENCES `tripor`.`trip_plan` (`plan_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `relaction_to_attraction_info_content_id_fk`
     FOREIGN KEY (`content_id`)
     REFERENCES `tripor`.`attraction_info` (`content_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -205,13 +205,13 @@ CREATE TABLE IF NOT EXISTS `tripor`.`trip_review` (
   CONSTRAINT `trip_review_to_member_member_id_fk`
     FOREIGN KEY (`member_id`)
     REFERENCES `tripor`.`member` (`member_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `trip_review_to_attraction_info_content_id_fk`
     FOREIGN KEY (`content_id`)
     REFERENCES `tripor`.`attraction_info` (`content_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -242,13 +242,13 @@ CREATE TABLE IF NOT EXISTS `tripor`.`article_image_relation` (
   CONSTRAINT `article_image_relation_article_fk`
     FOREIGN KEY (`article_id`)
     REFERENCES `tripor`.`article` (`article_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `article_image_relation_image_fk`
     FOREIGN KEY (`image_id`)
     REFERENCES `tripor`.`article_image` (`image_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
 ) ENGINE = InnoDB;
 
 SET SQL_MODE=@OLD_SQL_MODE;
