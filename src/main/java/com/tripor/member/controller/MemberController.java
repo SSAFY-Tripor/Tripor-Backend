@@ -225,6 +225,28 @@ public class MemberController {
 		}
 	}
 
+	@Operation(summary = "회원 프로필 가져오기")
+	@GetMapping(value = "/{memberid}/profile")
+	public ResponseEntity<?> getProfile(@PathVariable("memberid") String memberId) {
+		log.debug("profile memberid : {}", memberId);
+		try {
+			MemberDto memberDto = memberService.getMember(memberId);
+			String profile = memberDto.getProfile();
+//			return new ResponseEntity<List<MemberDto>>(list, HttpStatus.OK);
+			Map<String, Object> resultMap = new HashMap<>();
+			HttpStatus status = HttpStatus.OK;
+			if(profile == null) {
+				resultMap.put("result", null);
+			}else {
+				resultMap.put("result", "ok");
+			}
+			resultMap.put("profile", profile);
+			return new ResponseEntity<Map<String, Object>>(resultMap, status);
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
+
 	@Operation(summary = "회원정보 조회")
 	@GetMapping(value = "/{memberid}")
 	public ResponseEntity<?> detail(@PathVariable("memberid") String memberId) {
