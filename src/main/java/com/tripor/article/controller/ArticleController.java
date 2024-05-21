@@ -4,9 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -40,6 +43,7 @@ import com.tripor.article.model.dto.FileInfoDto;
 import com.tripor.article.model.service.ArticleService;
 import com.tripor.member.model.dto.MemberDto;
 
+import io.jsonwebtoken.lang.Collections;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -302,14 +306,16 @@ public class ArticleController {
 			return exceptionHandling(e);
 		}
 	}
-	
+
 	// 댓글 추가
-    @PostMapping("/{articleId}/comment")
-    public ResponseEntity<?> addComment(@PathVariable int articleId, @org.springframework.web.bind.annotation.RequestBody CommentDto commentDto) {
-        commentDto.setArticleId(articleId);
-        try {
+	@PostMapping("/{articleId}/comment")
+	public ResponseEntity<?> addComment(@PathVariable int articleId,
+			@org.springframework.web.bind.annotation.RequestBody CommentDto commentDto) {
+		commentDto.setArticleId(articleId);
+		log.info("댓글 - {}", commentDto);
+		try {
 			articleService.addComment(commentDto);
-			
+
 			Map<String, Object> response = new HashMap<>();
 			response.put("result", "ok");
 			return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -317,47 +323,52 @@ public class ArticleController {
 			// TODO Auto-generated catch block
 			return exceptionHandling(e);
 		}
-    }
+	}
 
-    // 특정 게시글의 모든 댓글 가져오기
-    @GetMapping("/{articleId}/comments")
-    public ResponseEntity<?> getComments(@PathVariable int articleId) {
-        try {
-			List<CommentDto> commentDtos =  articleService.getCommentsByArticleId(articleId);
-			
+	// 특정 게시글의 모든 댓글 가져오기
+	@GetMapping("/{articleId}/comments")
+	public ResponseEntity<?> getComments(@PathVariable int articleId) {
+		try {
+			List<CommentDto> commentDtos = articleService.getCommentsByArticleId(articleId);
+
+			java.util.Collections.sort(commentDtos, (o1, o2) -> {
+				return o1.getCommentId() - o2.getCommentId();
+			});
+
+			Map<Integer, CommentDto> comments = new HashMap<>();
+
+			for (CommentDto comment : commentDtos) {
+				if (comment.getParentCommentId() == null) {
+					comments.put(comment.getCommentId(), comment);
+				} else {
+					comments.get(comment.getParentCommentId()).getChildComments().add(comment);
+				}
+			}
+
+			List<CommentDto> returnComments = new ArrayList<>();
+			for (int commentId : comments.keySet()) {
+				returnComments.add(comments.get(commentId));
+			}
+
 			Map<String, Object> response = new HashMap<>();
 			response.put("result", "ok");
-			response.put("items", commentDtos);
+			response.put("items", returnComments);
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			return exceptionHandling(e);
 		}
-    }
+	}
 
-    // 댓글 수정
-    @PutMapping("/{articleId}/comments/{commentId}")
-    public ResponseEntity<?> updateComment(@PathVariable int articleId, @PathVariable int commentId, @org.springframework.web.bind.annotation.RequestBody CommentDto commentDto) {
-        commentDto.setCommentId(commentId);
-        commentDto.setArticleId(articleId);
-        try {
+	// 댓글 수정
+	@PutMapping("/{articleId}/comments/{commentId}")
+	public ResponseEntity<?> updateComment(@PathVariable int articleId, @PathVariable int commentId,
+			@org.springframework.web.bind.annotation.RequestBody CommentDto commentDto) {
+		commentDto.setCommentId(commentId);
+		commentDto.setArticleId(articleId);
+		try {
 			articleService.updateComment(commentDto);
-			
-			Map<String, Object> response = new HashMap<>();
-			response.put("result", "ok");
-			return new ResponseEntity<>(response, HttpStatus.OK);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			return exceptionHandling(e);
-		}
-    }
 
-    // 댓글 삭제
-    @DeleteMapping("/{articleId}/comments/{commentId}")
-    public ResponseEntity<?> deleteComment(@PathVariable int articleId, @PathVariable int commentId) {
-        try {
-			articleService.deleteComment(commentId);
-			
 			Map<String, Object> response = new HashMap<>();
 			response.put("result", "ok");
 			return new ResponseEntity<>(response, HttpStatus.OK);
@@ -365,7 +376,22 @@ public class ArticleController {
 			// TODO Auto-generated catch block
 			return exceptionHandling(e);
 		}
-    }
+	}
+
+	// 댓글 삭제
+	@DeleteMapping("/{articleId}/comments/{commentId}")
+	public ResponseEntity<?> deleteComment(@PathVariable int articleId, @PathVariable int commentId) {
+		try {
+			articleService.deleteComment(commentId);
+
+			Map<String, Object> response = new HashMap<>();
+			response.put("result", "ok");
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			return exceptionHandling(e);
+		}
+	}
 
 	private ResponseEntity<String> exceptionHandling(Exception e) {
 		e.printStackTrace();

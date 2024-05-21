@@ -15,7 +15,7 @@
 	<!-- 댓글 추가 -->
     <insert id="insertComment" parameterType="commentDto">
         INSERT INTO comment (article_id, member_id, comment_content, parent_comment_id, comment_register_date)
-        VALUES (#{articleId}, #{memberId}, #{commentContent}, NULL, NOW())
+        VALUES (#{articleId}, #{memberId}, #{commentContent}, #{parentCommentId}, NOW())
     </insert>
 
     <!-- 특정 게시글의 모든 댓글 가져오기 -->
