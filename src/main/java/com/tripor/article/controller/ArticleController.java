@@ -349,6 +349,9 @@ public class ArticleController {
 			for (int commentId : comments.keySet()) {
 				returnComments.add(comments.get(commentId));
 			}
+			java.util.Collections.sort(returnComments, (o1, o2) -> {
+				return o1.getCommentId() - o2.getCommentId();
+			});
 
 			Map<String, Object> response = new HashMap<>();
 			response.put("result", "ok");
