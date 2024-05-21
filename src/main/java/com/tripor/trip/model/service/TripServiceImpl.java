@@ -75,6 +75,7 @@ public class TripServiceImpl implements TripService {
 		} else if ("shortest".equals(mode)) {
 			int planId = (int) map.get("planId");
 			List<TripDto> list = tripMapper.findByPlanId(planId);
+			System.out.println(list);
 			return shortestPathByTSP(list, 0);
 		}
 
@@ -108,9 +109,11 @@ public class TripServiceImpl implements TripService {
 	}
 
 	private List<TripDto> shortestPathByTSP(List<TripDto> list, int start) {
-		if(list.size() > 5) {
+		if (list.size() > 18) {
+			return shortestPathByGreedy(list, start);
+		} else if (list.size() > 10) {
 			return tspImplDP(list, start);
-		}else {
+		} else {
 			return tspImplPermutaion(list, start);
 		}
 	}
@@ -132,8 +135,9 @@ public class TripServiceImpl implements TripService {
 					continue;
 				TripDto A = list.get(i);
 				TripDto B = list.get(j);
-				double weight = latDiff(Double.parseDouble(A.getLatitude()), Double.parseDouble(B.getLatitude()))
-						+ lngDiff(Double.parseDouble(A.getLongitude()), Double.parseDouble(B.getLongitude()));
+				double weight = calculateDistance(Double.parseDouble(A.getLatitude()),
+						Double.parseDouble(A.getLongitude()), Double.parseDouble(B.getLatitude()),
+						Double.parseDouble(B.getLongitude()));
 				Graph[i][j] = weight;
 			}
 		}
@@ -141,7 +145,7 @@ public class TripServiceImpl implements TripService {
 		for (int i = 0; i < N; i++) {
 			Arrays.fill(dp[i], -1);
 		}
-		dfs(start, (1 << start), N, Graph, dp, path, start);
+		System.out.println(dfs(start, (1 << start), N, Graph, dp, path, start));
 
 		// 외판원 순회 끝
 		// path를 활용하여, 최적 경로 반환
@@ -181,10 +185,9 @@ public class TripServiceImpl implements TripService {
 					continue;
 				TripDto A = list.get(i);
 				TripDto B = list.get(j);
-				double weight = Math.sqrt(Math
-						.pow(latDiff(Double.parseDouble(A.getLatitude()), Double.parseDouble(B.getLatitude())), 2)
-						+ Math.pow(lngDiff(Double.parseDouble(A.getLongitude()), Double.parseDouble(B.getLongitude())),
-								2));
+				double weight = calculateDistance(Double.parseDouble(A.getLatitude()),
+						Double.parseDouble(A.getLongitude()), Double.parseDouble(B.getLatitude()),
+						Double.parseDouble(B.getLongitude()));
 				Graph[i][j] = weight;
 			}
 		}
@@ -203,7 +206,37 @@ public class TripServiceImpl implements TripService {
 				}
 			}
 		} while (np(perm, perm.length));
+		System.out.println(answer);
 		return maxList;
+	}
+
+	// 두 좌표 사이의 거리를 구하는 함수
+	// dsitance(첫번쨰 좌표의 위도, 첫번째 좌표의 경도, 두번째 좌표의 위도, 두번째 좌표의 경도)
+	public Double distance(double lat1, double lon1, double lat2, double lon2) {
+		Double theta = lon1 - lon2;
+		Double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2))
+				+ Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
+		dist = Math.acos(dist);
+		dist = rad2deg(dist);
+		dist = dist * 60 * 1.1515 * 1609.344;
+
+		return dist; // 단위 meter
+	}
+
+	// 10진수를 radian(라디안)으로 변환
+	private Double deg2rad(Double deg) {
+		return (deg * Math.PI / 180.0);
+	}
+
+	// radian(라디안)을 10진수로 변환
+	private Double rad2deg(Double rad) {
+		return (rad * 180 / Math.PI);
+	}
+
+	public double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+		double latDiff = lat2 - lat1;
+		double lonDiff = lon2 - lon1;
+		return Math.sqrt(latDiff * latDiff + lonDiff * lonDiff);
 	}
 
 	private List<TripDto> shortestPathByGreedy(List<TripDto> list, int start) {
@@ -218,8 +251,9 @@ public class TripServiceImpl implements TripService {
 					continue;
 				TripDto A = list.get(i);
 				TripDto B = list.get(j);
-				double weight = latDiff(Double.parseDouble(A.getLatitude()), Double.parseDouble(B.getLatitude()))
-						+ lngDiff(Double.parseDouble(A.getLongitude()), Double.parseDouble(B.getLongitude()));
+				double weight = calculateDistance(Double.parseDouble(A.getLatitude()),
+						Double.parseDouble(A.getLongitude()), Double.parseDouble(B.getLatitude()),
+						Double.parseDouble(B.getLongitude()));
 				tripGraph[i].add(new Node(j, weight));
 				tripGraph[j].add(new Node(i, weight));
 			}
@@ -303,17 +337,5 @@ public class TripServiceImpl implements TripService {
 		int tmp = arr[i];
 		arr[i] = arr[j];
 		arr[j] = tmp;
-	}
-
-	private double diffDistance(double latA, double latB, double lngA, double lngB) {
-		return Math.sqrt(Math.pow(latDiff(latA, latB), 2) + Math.pow(lngDiff(lngA, lngB), 2));
-	}
-
-	private double latDiff(double latA, double latB) {
-		return latA - latB;
-	}
-
-	private double lngDiff(double lngA, double lngB) {
-		return lngA - lngB;
 	}
 }

@@ -91,6 +91,7 @@
     	<where>
     		<if test="keyword != null and keyword != ''">
     			and title like concat('%', #{keyword}, '%')
+    			or addr like concat('%', #{keyword}, '%')
     		</if>
     	</where>
 	</select>
