@@ -160,3 +160,6 @@ HELP.md
 build/
 .classpath
 .project
+
+# intelliJ
+.idea/

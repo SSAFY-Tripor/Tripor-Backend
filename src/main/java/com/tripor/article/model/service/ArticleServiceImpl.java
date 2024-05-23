@@ -138,10 +138,11 @@ public class ArticleServiceImpl implements ArticleService {
 	@Override
 	public void modifyArticle(ArticleDto articleDto) throws Exception {
 		articleMapper.update(articleDto);
+		List<FileInfoDto> fileInfos = articleDto.getFileInfos();
+		
 		System.out.println(articleDto.getArticleId());
-		List<Integer> imageIds = articleMapper.getRelationImageIdsByArticleId(articleDto.getArticleId());
 		articleMapper.deleteRelationByArticleId(articleDto.getArticleId());
-		if(!imageIds.isEmpty())
+		if(!fileInfos.isEmpty())
 			articleMapper.registerFile(articleDto);
 	}
 
